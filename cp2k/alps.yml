@@ -7,7 +7,7 @@ shebang: '#!/bin/bash -l'
 mpiprocs_per_machine: 256
 default_memory_per_machine: 268435456
 work_dir: /capstor/scratch/cscs/{username}/aiida/
-mpirun_command: srun --cpu-bind=socket /users/cpi/bin/mps-wrapper.sh
+mpirun_command: srun --cpu-bind=socket /users/cscsuser/bin/mps-wrapper.sh
 use_double_quotes : "False"
 prepend_text: |
     #SBATCH --ntasks-per-core=1

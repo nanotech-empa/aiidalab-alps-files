@@ -9,7 +9,7 @@ prepend_text: |
     #SBATCH --view=cp2k
 
     # set environment
-    export CP2K_DATA_DIR=/users/cpi/src/cp2k/data
+    export CP2K_DATA_DIR=/users/cscsuser/src/cp2k/data
     export CUDA_CACHE_PATH="/dev/shm/$RANDOM"
     export MPICH_GPU_SUPPORT_ENABLED=1
     export MPICH_MALLOC_FALLBACK=1
