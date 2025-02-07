@@ -5,8 +5,3 @@ Host daint.alps.cscs.ch
   ProxyJump cpi@ela.cscs.ch
   IdentityFile /home/jovyan/.ssh/cscs-key 
   ServerAliveInterval 5
-Host ela.cscs.ch
-  Hostname ela.cscs.ch
-  User cpi
-  Port 22
-  IdentityFile  /home/jovyan/.ssh/cscs-key
