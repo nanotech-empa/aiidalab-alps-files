@@ -1,9 +1,8 @@
 label: "dos-7.4:v2"
 description: "dos.x 7.4:v2"
-input_plugin: "quantumespresso.dos"
-remote_abs_path: "/user-environment/env/default/bin/dos.x"
+default_calc_job_plugin: "quantumespresso.dos"
+filepath_executable: "/user-environment/env/default/bin/dos.x"
 computer: "daint.alps"
-on_computer : "True"
 prepend_text: |
     #SBATCH --uenv=quantumespresso/v7.4:v2
 

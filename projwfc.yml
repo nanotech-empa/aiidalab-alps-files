@@ -1,9 +1,8 @@
 label: "projwfc-7.4:v2"
 description: "projwfc.x 7.4:v2"
-input_plugin: "quantumespresso.projwfc"
-remote_abs_path: "/user-environment/env/default/bin/projwfc.x"
+default_calc_job_plugin: "quantumespresso.projwfc"
+filepath_executable: "/user-environment/env/default/bin/projwfc.x"
 computer: "daint.alps"
-on_computer : "True"
 prepend_text: |
     #SBATCH --uenv=quantumespresso/v7.4:v2
 

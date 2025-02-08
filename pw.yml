@@ -1,9 +1,8 @@
 label: "pw-7.4:v2"
 description: "pw.x 7.4:v2"
-input_plugin: "quantumespresso.pw"
-remote_abs_path: "/user-environment/env/default/bin/pw.x"
+default_calc_job_plugin: "quantumespresso.pw"
+filepath_executable: "/user-environment/env/default/bin/pw.x"
 computer: "daint.alps"
-on_computer : "True"
 prepend_text: |
     #SBATCH --uenv=quantumespresso/v7.4:v2
 
