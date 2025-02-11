@@ -3,8 +3,6 @@ description: "stm 1.5.0:1658742098 on daint.alps from https://github.com/nanotec
 default_calc_job_plugin: "nanotech_empa.stm"
 filepath_executable: "/user-environment/env/default/bin/cp2k-stm-sts-wfn"
 computer: "daint.alps"
-prepend_text: " "
-append_text: " "
 use_double_quotes: "False"
 prepend_text: |
     #SBATCH --uenv=cp2k-spm-tools/1.5.0:1658742098
