@@ -1,9 +1,9 @@
 label: 'critic2'
 description: 'critic2 at daint alps'
 default_calc_job_plugin: 'critic2'
-filepath_executable: '/users/{cscsusername}/critic2/build/src/critic2'
+filepath_executable: '/users/cscsusername/critic2/build/src/critic2'
 computer: 'daint.alps'
 use_double_quotes: "False"
 prepend_text: |
-	        
+        
 append_text: ' '
