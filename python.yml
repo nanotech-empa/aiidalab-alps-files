@@ -1,9 +1,10 @@
-label: 'python-py39'
-description: 'python at daint alps'
-default_calc_job_plugin: 'pythonjob.pythonjob'
-filepath_executable: '/users/cscsusername/miniconda3/envs/py39/bin/python'
-computer: 'daint.alps'
-use_double_quotes: "False"
-prepend_text: |
-   conda activate py39
 append_text: ' '
+computer: daint.alps
+default_calc_job_plugin: pythonjob.pythonjob
+description: python at daint alps
+filepath_executable: /users/cscsusername/miniconda3/envs/py39/bin/python
+label: python-py39
+prepend_text: 'conda activate py39
+
+  '
+use_double_quotes: 'False'

@@ -1,12 +1,16 @@
-label: 'phonopy'
-description: 'phonopy at daint alps'
-default_calc_job_plugin: 'phonopy.phonopy'
-filepath_executable: '/users/cscsusername/miniconda3/envs/phonopy/bin/phonopy'
-computer: 'daint.alps'
-use_double_quotes: "False"
-prepend_text: |
-    export MPICH_MALLOC_FALLBACK=1
-    export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
-    ulimit -s unlimited
-    conda activate phonopy
 append_text: ' '
+computer: daint.alps
+default_calc_job_plugin: phonopy.phonopy
+description: phonopy at daint alps
+filepath_executable: /users/cscsusername/miniconda3/envs/phonopy/bin/phonopy
+label: phonopy
+prepend_text: 'export MPICH_MALLOC_FALLBACK=1
+
+  export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+
+  ulimit -s unlimited
+
+  conda activate phonopy
+
+  '
+use_double_quotes: 'False'
