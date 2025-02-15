@@ -5,8 +5,8 @@ remotehost: "daint.alps.cscs.ch"
 proxy: "ela.cscs.ch"
 
 yml_and_config_files:
-  - "alps_setup.yml"
-  - "alps_config.yml"
+  - "host_setup.yml"
+  - "host_config.yml"
   - "cp2k.yml"
   - "phonopy.yml"
   - "python.yml"
