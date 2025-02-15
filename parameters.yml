@@ -15,6 +15,6 @@ yml_and_config_files:
   - "config_without_ela"
   - "bashrc_template"
 
-options:
+grants:
   - "s1267"
   - "s1276"
