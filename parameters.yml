@@ -1,0 +1,20 @@
+python_version: "3.9.13"
+
+new_host_label: "daint.alps"
+remotehost: "daint.alps.cscs.ch"
+proxy: "ela.cscs.ch"
+
+yml_and_config_files:
+  - "alps_setup.yml"
+  - "alps_config.yml"
+  - "cp2k.yml"
+  - "phonopy.yml"
+  - "python.yml"
+  - "critic2.yml"
+  - "config"
+  - "config_without_ela"
+  - "bashrc_template"
+
+options:
+  - "s1267"
+  - "s1276"
