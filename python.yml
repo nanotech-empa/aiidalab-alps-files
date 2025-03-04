@@ -5,6 +5,8 @@ description: python at daint alps
 filepath_executable: /users/cscsusername/miniconda3/envs/py39/bin/python
 label: python-py39
 prepend_text: 'conda activate py39
+
   export MPICH_GPU_SUPPORT_ENABLED=0
+  
   '
 use_double_quotes: 'False'
