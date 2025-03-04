@@ -14,6 +14,8 @@ prepend_text: '#SBATCH --uenv=cp2k-spm-tools/1.5.0:1658742098
 
   export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
 
+  export MPICH_GPU_SUPPORT_ENABLED=0
+
   ulimit -s unlimited
 
   '

@@ -5,8 +5,12 @@ remotehost: "daint.alps.cscs.ch"
 proxy: "ela.cscs.ch"
 
 grants:
-  - "s1267"
-  - "s1276"
+  daint.alps:
+    - "s1267"
+    - "s1276"
+    - "s1295"
+  tigu:
+    - "free"
 
 computers:
   daint.alps:

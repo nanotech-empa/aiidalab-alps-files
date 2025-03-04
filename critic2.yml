@@ -4,5 +4,7 @@ default_calc_job_plugin: critic2
 description: critic2 at daint alps
 filepath_executable: /users/cscsusername/critic2/build/src/critic2
 label: critic2
-prepend_text: ''
+prepend_text: '
+  export MPICH_GPU_SUPPORT_ENABLED=0
+  '
 use_double_quotes: 'False'
