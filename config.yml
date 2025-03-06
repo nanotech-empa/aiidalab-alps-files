@@ -127,6 +127,7 @@ codes:
       # set environment
       export MPICH_MALLOC_FALLBACK=1
       export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
     use_double_quotes: false
   
@@ -137,7 +138,9 @@ codes:
     description: "python at daint alps"
     filepath_executable: "/users/cscsusername/miniconda3/envs/py39/bin/python"
     label: python-py39
-    prepend_text: "conda activate py39"
+    prepend_text: |
+      conda activate py39
+      export MPICH_GPU_SUPPORT_ENABLED=0
     use_double_quotes: false
 
   pw:
@@ -222,6 +225,7 @@ codes:
     prepend_text: |
       export MPICH_MALLOC_FALLBACK=1
       export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
       conda activate phonopy
     use_double_quotes: false
@@ -239,6 +243,7 @@ codes:
       # set environment
       export MPICH_MALLOC_FALLBACK=1
       export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
     use_double_quotes: 'False'
 
@@ -249,7 +254,7 @@ codes:
     description: "critic2 at daint alps"
     filepath_executable: "/users/cscsusername/critic2/build/src/critic2"
     label: critic2
-    prepend_text: ""
+    prepend_text: "export MPICH_GPU_SUPPORT_ENABLED=0"
     use_double_quotes: 'False'
 
   cp2k:

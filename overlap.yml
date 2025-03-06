@@ -12,7 +12,7 @@ prepend_text: '#SBATCH --uenv=cp2k-spm-tools/1.5.0:1658742098
 
   export MPICH_MALLOC_FALLBACK=1
 
-  export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+  export OMP_NUM_THREADS=1
 
   export MPICH_GPU_SUPPORT_ENABLED=0
 
