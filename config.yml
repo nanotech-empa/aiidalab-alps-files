@@ -17,7 +17,7 @@ computers:
     setup:
       description: daint.alps at CSCS
       hostname: daint.alps.cscs.ch
-      label: daint.alps
+      label: daint.alps_cscsaccount
       mpiprocs_per_machine: 256
       mpirun_command: srun --cpu-bind=socket /users/cscsusername/bin/mps-wrapper.sh
       prepend_text: |
