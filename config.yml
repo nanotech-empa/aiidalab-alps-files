@@ -276,4 +276,40 @@ codes:
       ulimit -s unlimited
     use_double_quotes: 'False'
 
-custom_installations:
+
+custom_commands:
+  variables:
+    conda_init: "source /users/{cscs_username}/miniconda3/bin/activate"
+    config_files: "/home/jovyan/opt/aiidalab-alps-files/"
+
+  env_setup_commands:
+    setup_critic2:
+      - type: ssh
+        command: "{conda_init} && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
+      - type: ssh
+        command: "{conda_init} && conda activate py39 && conda list | awk '{{print $1}}'"
+      - type: ssh
+        command: "{conda_init} && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
+
+  special_commands:
+    setup_phonopy:
+      - type: ssh
+        command: "if [ ! -f Miniconda3-latest-Linux-aarch64.sh ]; then wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh; fi"
+      - type: ssh
+        command: "if [ ! -d /users/{cscs_username}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscs_username}/miniconda3; fi"
+      - type: scp
+        command: "scp {config_files}/bashrc_template {remotehost}:/users/{cscs_username}"
+      - type: ssh
+        command: "mv .bashrc .old_bashrc"
+      - type: ssh
+        command: "mv bashrc_template .bashrc"
+      - type: ssh
+        command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
+
+    setup_critic2:
+      - type: ssh
+        command: "if [ ! -d 'critic2' ]; then git clone https://github.com/aoterodelaroza/critic2.git; fi"
+      - type: ssh
+        command: "if [ ! -f /users/{cscs_username}/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run {qe_uenv} cmake .. && uenv run {qe_uenv} make; fi"
+      - type: ssh
+        command: "ls /users/{cscs_username}/critic2/build/src/critic2"
