@@ -1,8 +1,20 @@
-python_version: "3.9.13"
-
-new_host_label: "daint.alps"
-remotehost: "daint.alps.cscs.ch"
-proxy: "ela.cscs.ch"
+variables:
+  conda_init: "source /users/cscsusername/miniconda3/bin/activate"
+  config_files: "/home/jovyan/opt/aiidalab-alps-files/"
+  qe_uenv: "quantumespresso/v7.4:v2"
+  cp2k_uenv: "cp2k/2024.3:v2"
+  stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
+  python_version: "3.9.13"
+widgets:
+  cscsusername:
+    - ""
+    - "cpi"
+    - "psd"
+  cscsaccount:
+    - ""
+    - "s1267"
+    - "s1276"
+  
 
 grants:
   daint.alps:
@@ -122,7 +134,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/cp2k-stm-sts-wfn"
     label: stm-1.5.0
     prepend_text: |
-      #SBATCH --uenv=cp2k-spm-tools/1.5.0:1658742098
+      #SBATCH --uenv=cp2k_uenv
       #SBATCH --view=default
       # set environment
       export MPICH_MALLOC_FALLBACK=1
@@ -151,7 +163,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/pw.x"
     label: pw-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=quantumespresso/v7.4:v2
+      #SBATCH --uenv=qe_uenv
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -169,7 +181,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/pp.x"
     label: pp-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=quantumespresso/v7.4:v2
+      #SBATCH --uenv=qe_uenv
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -187,7 +199,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/projwfc.x"
     label: projwfc-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=quantumespresso/v7.4:v2
+      #SBATCH --uenv=qe_uenv
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -205,7 +217,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/dos.x"
     label: dos-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=quantumespresso/v7.4:v2
+      #SBATCH --uenv=qe_uenv
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -238,7 +250,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/cp2k-overlap-from-wfns"
     label: overlap-1.5.0
     prepend_text: |
-      #SBATCH --uenv=cp2k-spm-tools/1.5.0:1658742098
+      #SBATCH --uenv=cp2k_uenv
       #SBATCH --view=default
       # set environment
       export MPICH_MALLOC_FALLBACK=1
@@ -251,7 +263,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: critic2
-    description: "critic2 at daint alps"
+    description: "critic2 on daint.alps"
     filepath_executable: "/users/cscsusername/critic2/build/src/critic2"
     label: critic2
     prepend_text: "export MPICH_GPU_SUPPORT_ENABLED=0"
@@ -265,7 +277,7 @@ codes:
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
     label: cp2k-2024.3:v2
     prepend_text: |
-      #SBATCH --uenv=cp2k/2024.3:v2
+      #SBATCH --uenv=cp2k_uenv
       #SBATCH --view=cp2k
       # set environment
       export CP2K_DATA_DIR=/users/cscsusername/src/cp2k/data
@@ -278,38 +290,35 @@ codes:
 
 
 custom_commands:
-  variables:
-    conda_init: "source /users/{cscs_username}/miniconda3/bin/activate"
-    config_files: "/home/jovyan/opt/aiidalab-alps-files/"
 
   env_setup_commands:
     setup_critic2:
       - type: ssh
-        command: "{conda_init} && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
+        command: "conda_init && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
       - type: ssh
-        command: "{conda_init} && conda activate py39 && conda list | awk '{{print $1}}'"
+        command: "conda_init && conda activate py39 && conda list | awk '{{print $1}}'"
       - type: ssh
-        command: "{conda_init} && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
+        command: "conda_init && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
 
   special_commands:
     setup_phonopy:
       - type: ssh
         command: "if [ ! -f Miniconda3-latest-Linux-aarch64.sh ]; then wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh; fi"
       - type: ssh
-        command: "if [ ! -d /users/{cscs_username}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscs_username}/miniconda3; fi"
+        command: "if [ ! -d /users/cscsusername/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/cscsusername/miniconda3; fi"
       - type: scp
-        command: "scp {config_files}/bashrc_template {remotehost}:/users/{cscs_username}"
+        command: "scp config_files/bashrc_template {remotehost}:/users/cscsusername"
       - type: ssh
         command: "mv .bashrc .old_bashrc"
       - type: ssh
         command: "mv bashrc_template .bashrc"
       - type: ssh
-        command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
+        command: "conda_init && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
 
     setup_critic2:
       - type: ssh
         command: "if [ ! -d 'critic2' ]; then git clone https://github.com/aoterodelaroza/critic2.git; fi"
       - type: ssh
-        command: "if [ ! -f /users/{cscs_username}/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run {qe_uenv} cmake .. && uenv run {qe_uenv} make; fi"
+        command: "if [ ! -f /users/cscsusername/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run qe_uenv cmake .. && uenv run qe_uenv make; fi"
       - type: ssh
-        command: "ls /users/{cscs_username}/critic2/build/src/critic2"
+        command: "ls /users/cscsusername/critic2/build/src/critic2"
