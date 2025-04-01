@@ -140,7 +140,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: nanotech_empa.stm
-    description: "stm 1.5.0:1658742098 on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
+    description: "stm {stm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
     filepath_executable: "/user-environment/env/default/bin/cp2k-stm-sts-wfn"
     label: stm-1.5.0
     prepend_text: |
@@ -169,7 +169,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: quantumespresso.pw
-    description: "pw.x 7.4:v2"
+    description: "pw.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/pw.x"
     label: pw-7.4:v2
     prepend_text: |
@@ -187,7 +187,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: quantumespresso.pp
-    description: "pp.x 7.4:v2"
+    description: "pp.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/pp.x"
     label: pp-7.4:v2
     prepend_text: |
@@ -205,7 +205,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: quantumespresso.projwfc
-    description: "projwfc.x 7.4:v2"
+    description: "projwfc.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/projwfc.x"
     label: projwfc-7.4:v2
     prepend_text: |
@@ -223,7 +223,7 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: quantumespresso.dos
-    description: "dos.x 7.4:v2"
+    description: "dos.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/dos.x"
     label: dos-7.4:v2
     prepend_text: |
@@ -256,11 +256,11 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: nanotech_empa.overlap
-    description: "overlap 1.5.0:1658742098 on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
+    description: "overlap {stm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
     filepath_executable: "/user-environment/env/default/bin/cp2k-overlap-from-wfns"
     label: overlap-1.5.0
     prepend_text: |
-      #SBATCH --uenv={cp2k_uenv}
+      #SBATCH --uenv={stm_uenv}
       #SBATCH --view=default
       # set environment
       export MPICH_MALLOC_FALLBACK=1
@@ -283,9 +283,9 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: cp2k
-    description: "cp2k 2024.3:v2 on daint.alps"
+    description: "cp2k {cp2k_uenv} on daint.alps"
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
-    label: cp2k-2024.3:v2
+    label: cp2k-{cp2k_uenv}
     prepend_text: |
       #SBATCH --uenv={cp2k_uenv}
       #SBATCH --view=cp2k
