@@ -1,42 +1,53 @@
 variables:
-  conda_init: "source /users/cscsusername/miniconda3/bin/activate"
+  remotehost1: 'daint.alps.cscs.ch'
+  conda_init: "source /users/{cscsuser}/miniconda3/bin/activate"
   config_files: "/home/jovyan/opt/aiidalab-alps-files/"
   qe_uenv: "quantumespresso/v7.4:v2"
-  cp2k_uenv: "cp2k/2024.3:v2"
+  cp2k_uenv: "cp2k/2025.1:v1"
   stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   python_version: "3.9.13"
 widgets:
-  cscsusername:
-    - ""
+  cscsuser:
+    - "select"
+    - "ajayaraj"
+    - "akinikar"
     - "cpi"
-    - "psd"
-  cscsaccount:
+    - "ddutta"
+    - "eammerma"
+    - "fdacosta"
+    - "jhwang"
+    - "joverarr"
+    - "lbobzien"
+    - "ldominik"
+    - "lhuberic"
+    - "llieske"
+    - "lxuanche"
+    - "mdigiova"
+    - "mfinger"
+    - "nbassi"
+    - "nkrane"
+    - "ramador"
+    - "wgao"
+    - "yaa"
+  grant:
+    - "select"
+    - "lp83"
+    - "lp86"
     - ""
-    - "s1267"
-    - "s1276"
   
-
-grants:
-  daint.alps:
-    - "s1267"
-    - "s1276"
-    - "s1295"
-  tigu:
-    - "free"
-
 computers:
   daint.alps:
     setup:
       description: daint.alps at CSCS
       hostname: daint.alps.cscs.ch
-      label: daint.alps_cscsaccount
+      label: daint.alps_{grant}
       mpiprocs_per_machine: 256
-      mpirun_command: srun --cpu-bind=socket /users/cscsusername/bin/mps-wrapper.sh
+      mpirun_command: srun --cpu-bind=socket /users/{cscsuser}/bin/mps-wrapper.sh
       prepend_text: |
         #SBATCH --ntasks-per-core=1
         #SBATCH --hint=nomultithread
         #SBATCH --no-requeue
-        #SBATCH --account=cscsaccount
+        #SBATCH --account={grant}
       scheduler: core.slurm
       shebang: "#!/bin/bash -l"
       transport: core.ssh
@@ -60,20 +71,20 @@ computers:
       safe_interval: 30.0
       timeout: 60
       use_login_shell: true
-      username: cscsusername
+      username: "{cscsuser}"
 
 # SSH Configuration from 'config' File
 ssh_config: 
   daint.alps.cscs.ch:
     hostname: daint.alps.cscs.ch
-    user: cscsusername
+    user: "{cscsuser}"
     port: 22
     proxy_jump: ela.cscs.ch
     identity_file: /home/jovyan/.ssh/cscs-key
     server_alive_interval: 5
   ela.cscs.ch:
     hostname: ela.cscs.ch
-    user: cscsusername
+    user: "{cscsuser}"
     port: 22
     identity_file: /home/jovyan/.ssh/cscs-key
 
@@ -115,10 +126,10 @@ bashrc: |
   if [ 126 -eq 0 ]; then
       eval ""
   else
-      if [ -f /users/cscsusername/miniconda3/etc/profile.d/conda.sh ]; then
-          . /users/cscsusername/miniconda3/etc/profile.d/conda.sh
+      if [ -f /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh ]; then
+          . /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh
       else
-          export PATH=/users/cscsusername/miniconda3/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/jovyan/.local/bin
+          export PATH=/users/{cscsuser}/miniconda3/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/jovyan/.local/bin
       fi
   fi
   unset __conda_setup
@@ -134,7 +145,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/cp2k-stm-sts-wfn"
     label: stm-1.5.0
     prepend_text: |
-      #SBATCH --uenv=cp2k_uenv
+      #SBATCH --uenv={stm_uenv}
       #SBATCH --view=default
       # set environment
       export MPICH_MALLOC_FALLBACK=1
@@ -148,7 +159,7 @@ codes:
     computer: daint.alps
     default_calc_job_plugin: pythonjob.pythonjob
     description: "python at daint alps"
-    filepath_executable: "/users/cscsusername/miniconda3/envs/py39/bin/python"
+    filepath_executable: "/users/{cscsuser}/miniconda3/envs/py39/bin/python"
     label: python-py39
     prepend_text: |
       conda activate py39
@@ -163,7 +174,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/pw.x"
     label: pw-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=qe_uenv
+      #SBATCH --uenv={qe_uenv}
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -181,7 +192,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/pp.x"
     label: pp-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=qe_uenv
+      #SBATCH --uenv={qe_uenv}
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -199,7 +210,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/projwfc.x"
     label: projwfc-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=qe_uenv
+      #SBATCH --uenv={qe_uenv}
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -217,7 +228,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/dos.x"
     label: dos-7.4:v2
     prepend_text: |
-      #SBATCH --uenv=qe_uenv
+      #SBATCH --uenv={qe_uenv}
       # set environment
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_SMP_SINGLE_COPY_MODE=xpmem
@@ -232,7 +243,7 @@ codes:
     computer: daint.alps
     default_calc_job_plugin: phonopy.phonopy
     description: "phonopy at daint alps"
-    filepath_executable: "/users/cscsusername/miniconda3/envs/phonopy/bin/phonopy"
+    filepath_executable: "/users/{cscsuser}/miniconda3/envs/phonopy/bin/phonopy"
     label: phonopy
     prepend_text: |
       export MPICH_MALLOC_FALLBACK=1
@@ -250,7 +261,7 @@ codes:
     filepath_executable: "/user-environment/env/default/bin/cp2k-overlap-from-wfns"
     label: overlap-1.5.0
     prepend_text: |
-      #SBATCH --uenv=cp2k_uenv
+      #SBATCH --uenv={cp2k_uenv}
       #SBATCH --view=default
       # set environment
       export MPICH_MALLOC_FALLBACK=1
@@ -264,7 +275,7 @@ codes:
     computer: daint.alps
     default_calc_job_plugin: critic2
     description: "critic2 on daint.alps"
-    filepath_executable: "/users/cscsusername/critic2/build/src/critic2"
+    filepath_executable: "/users/{cscsuser}/critic2/build/src/critic2"
     label: critic2
     prepend_text: "export MPICH_GPU_SUPPORT_ENABLED=0"
     use_double_quotes: 'False'
@@ -277,10 +288,10 @@ codes:
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
     label: cp2k-2024.3:v2
     prepend_text: |
-      #SBATCH --uenv=cp2k_uenv
+      #SBATCH --uenv={cp2k_uenv}
       #SBATCH --view=cp2k
       # set environment
-      export CP2K_DATA_DIR=/users/cscsusername/src/cp2k/data
+      export CP2K_DATA_DIR=/users/{cscsuser}/src/cp2k/data
       export CUDA_CACHE_PATH="/dev/shm/$RANDOM"
       export MPICH_GPU_SUPPORT_ENABLED=1
       export MPICH_MALLOC_FALLBACK=1
@@ -290,35 +301,34 @@ codes:
 
 
 custom_commands:
+  remote_commands:
+    remotehost: "{remotehost1}"
+    setup_py39:
+      - type: ssh
+        command: "{conda_init} && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
+      - type: ssh
+        command: "{conda_init} && conda activate py39 && conda list | awk '{{print $1}}'"
+      - type: ssh
+        command: "{conda_init} && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
 
-  env_setup_commands:
-    setup_critic2:
-      - type: ssh
-        command: "conda_init && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
-      - type: ssh
-        command: "conda_init && conda activate py39 && conda list | awk '{{print $1}}'"
-      - type: ssh
-        command: "conda_init && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
-
-  special_commands:
     setup_phonopy:
       - type: ssh
         command: "if [ ! -f Miniconda3-latest-Linux-aarch64.sh ]; then wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh; fi"
       - type: ssh
-        command: "if [ ! -d /users/cscsusername/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/cscsusername/miniconda3; fi"
+        command: "if [ ! -d /users/{cscsuser}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscsuser}/miniconda3; fi"
       - type: scp
-        command: "scp config_files/bashrc_template {remotehost}:/users/cscsusername"
+        command: "scp {config_files}/bashrc_template {remotehost1}:/users/{cscsuser}"
       - type: ssh
         command: "mv .bashrc .old_bashrc"
       - type: ssh
         command: "mv bashrc_template .bashrc"
       - type: ssh
-        command: "conda_init && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
+        command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
 
     setup_critic2:
       - type: ssh
         command: "if [ ! -d 'critic2' ]; then git clone https://github.com/aoterodelaroza/critic2.git; fi"
       - type: ssh
-        command: "if [ ! -f /users/cscsusername/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run qe_uenv cmake .. && uenv run qe_uenv make; fi"
+        command: "if [ ! -f /users/{cscsuser}/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run {qe_uenv} cmake .. && uenv run {qe_uenv} make; fi"
       - type: ssh
-        command: "ls /users/cscsusername/critic2/build/src/critic2"
+        command: "ls /users/{cscsuser}/critic2/build/src/critic2"
