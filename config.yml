@@ -3,6 +3,9 @@ variables:
   conda_init: "source /users/{cscsuser}/miniconda3/bin/activate"
   config_files: "/home/jovyan/opt/aiidalab-alps-files/"
   qe_uenv: "quantumespresso/v7.4:v2"
+  qe_version: "7.4"
+  cp2k_version: "9.4"
+  spm_version: "1.5.0"
   cp2k_uenv: "cp2k/2025.1:v1"
   stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   python_version: "3.9.13"
@@ -142,7 +145,7 @@ codes:
     default_calc_job_plugin: nanotech_empa.stm
     description: "stm {stm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
     filepath_executable: "/user-environment/env/default/bin/cp2k-stm-sts-wfn"
-    label: stm-1.5.0
+    label: stm-{spm_version}
     prepend_text: |
       #SBATCH --uenv={stm_uenv}
       #SBATCH --view=default
@@ -171,7 +174,7 @@ codes:
     default_calc_job_plugin: quantumespresso.pw
     description: "pw.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/pw.x"
-    label: pw-7.4:v2
+    label: pw-{qe_version}
     prepend_text: |
       #SBATCH --uenv={qe_uenv}
       # set environment
@@ -189,7 +192,7 @@ codes:
     default_calc_job_plugin: quantumespresso.pp
     description: "pp.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/pp.x"
-    label: pp-7.4:v2
+    label: pp-{qe_version}
     prepend_text: |
       #SBATCH --uenv={qe_uenv}
       # set environment
@@ -207,7 +210,7 @@ codes:
     default_calc_job_plugin: quantumespresso.projwfc
     description: "projwfc.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/projwfc.x"
-    label: projwfc-7.4:v2
+    label: projwfc-{qe_version}
     prepend_text: |
       #SBATCH --uenv={qe_uenv}
       # set environment
@@ -225,7 +228,7 @@ codes:
     default_calc_job_plugin: quantumespresso.dos
     description: "dos.x {qe_uenv}"
     filepath_executable: "/user-environment/env/default/bin/dos.x"
-    label: dos-7.4:v2
+    label: dos-{qe_version}
     prepend_text: |
       #SBATCH --uenv={qe_uenv}
       # set environment
@@ -258,7 +261,7 @@ codes:
     default_calc_job_plugin: nanotech_empa.overlap
     description: "overlap {stm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
     filepath_executable: "/user-environment/env/default/bin/cp2k-overlap-from-wfns"
-    label: overlap-1.5.0
+    label: overlap-{spm_version}
     prepend_text: |
       #SBATCH --uenv={stm_uenv}
       #SBATCH --view=default
@@ -285,7 +288,7 @@ codes:
     default_calc_job_plugin: cp2k
     description: "cp2k {cp2k_uenv} on daint.alps"
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
-    label: cp2k-{cp2k_uenv}
+    label: cp2k-{cp2k_version}
     prepend_text: |
       #SBATCH --uenv={cp2k_uenv}
       #SBATCH --view=cp2k
