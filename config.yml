@@ -33,7 +33,6 @@ widgets:
     - "select"
     - "lp83"
     - "lp86"
-    - ""
   
 computers:
   daint.alps:
