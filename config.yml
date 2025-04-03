@@ -9,6 +9,52 @@ variables:
   cp2k_uenv: "cp2k/2025.1:v1"
   stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   python_version: "3.9.13"
+  # bashrc to enable conda
+  bashrc: |
+    # Sample .bashrc for SuSE Linux now
+    # Copyright (c) SuSE GmbH Nuernberg
+
+    # There are 3 different types of shells in bash: the login shell, normal shell
+    # and interactive shell. Login shells read ~/.profile and interactive shells
+    # read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
+    # settings made here will also take effect in a login shell.
+    #
+    # NOTE: It is recommended to make language settings in ~/.profile rather than
+    # here, since multilingual X sessions would not work properly if LANG is over-
+    # ridden in every subshell.
+
+    # Some applications read the EDITOR variable to determine your favourite text
+    # editor. So uncomment the line below and enter the editor of your choice :-)
+    #export EDITOR=/usr/bin/vim
+    #export EDITOR=/usr/bin/mcedit
+
+    # For some news readers it makes sense to specify the NEWSSERVER variable here
+    #export NEWSSERVER=your.news.server
+
+    # If you want to use a Palm device with Linux, uncomment the two lines below.
+    # For some (older) Palm Pilots, you might need to set a lower baud rate
+    # e.g. 57600 or 38400; lowest is 9600 (very slow!)
+    #
+    #export PILOTPORT=/dev/pilot
+    #export PILOTRATE=115200
+
+    test -s ~/.alias && . ~/.alias || true
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by conda init !!
+    __conda_setup=""
+    if [ 126 -eq 0 ]; then
+        eval ""
+    else
+        if [ -f /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh ]; then
+            . /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh
+        else
+            export PATH=/users/{cscsuser}/miniconda3/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/jovyan/.local/bin
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
 widgets:
   cscsuser:
     - "select"
@@ -91,51 +137,6 @@ ssh_config:
     identity_file: /home/jovyan/.ssh/cscs-key
 
       
-# bashrc to enable conda
-bashrc: |
-  # Sample .bashrc for SuSE Linux
-  # Copyright (c) SuSE GmbH Nuernberg
-
-  # There are 3 different types of shells in bash: the login shell, normal shell
-  # and interactive shell. Login shells read ~/.profile and interactive shells
-  # read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
-  # settings made here will also take effect in a login shell.
-  #
-  # NOTE: It is recommended to make language settings in ~/.profile rather than
-  # here, since multilingual X sessions would not work properly if LANG is over-
-  # ridden in every subshell.
-
-  # Some applications read the EDITOR variable to determine your favourite text
-  # editor. So uncomment the line below and enter the editor of your choice :-)
-  #export EDITOR=/usr/bin/vim
-  #export EDITOR=/usr/bin/mcedit
-
-  # For some news readers it makes sense to specify the NEWSSERVER variable here
-  #export NEWSSERVER=your.news.server
-
-  # If you want to use a Palm device with Linux, uncomment the two lines below.
-  # For some (older) Palm Pilots, you might need to set a lower baud rate
-  # e.g. 57600 or 38400; lowest is 9600 (very slow!)
-  #
-  #export PILOTPORT=/dev/pilot
-  #export PILOTRATE=115200
-
-  test -s ~/.alias && . ~/.alias || true
-
-  # >>> conda initialize >>>
-  # !! Contents within this block are managed by conda init !!
-  __conda_setup=""
-  if [ 126 -eq 0 ]; then
-      eval ""
-  else
-      if [ -f /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh ]; then
-          . /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh
-      else
-          export PATH=/users/{cscsuser}/miniconda3/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/jovyan/.local/bin
-      fi
-  fi
-  unset __conda_setup
-  # <<< conda initialize <<<
 
 # Computational Tools
 codes:
@@ -303,8 +304,27 @@ codes:
 
 
 custom_commands:
+  local_commands:
+    dump_files:
+      - type: local
+        command: ""
   remote_commands:
     remotehost: "{remotehost1}"
+    copy_files:
+      - type: ssh
+        command: "mkdir -p /users/{cscsuser}/bin && mkdir -p /users/{cscsuser}/src"
+      - type: scp
+        command: "scp {config_files}/mps-wrapper.sh {remotehost1}:/users/{cscsuser}/bin/"
+      - type: scp
+        command: "scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/"
+      - type: ssh
+        command: "mv /users/{cscsuser}/.bashrc /users/{cscsuser}/.bashrc.bak || true"
+      - type: ssh
+        command: |
+          cat > /users/{cscsuser}/.bashrc <<EOF
+          {bashrc}
+          EOF
+
     setup_py39:
       - type: ssh
         command: "{conda_init} && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
@@ -318,12 +338,6 @@ custom_commands:
         command: "if [ ! -f Miniconda3-latest-Linux-aarch64.sh ]; then wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh; fi"
       - type: ssh
         command: "if [ ! -d /users/{cscsuser}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscsuser}/miniconda3; fi"
-      - type: scp
-        command: "scp {config_files}/bashrc_template {remotehost1}:/users/{cscsuser}"
-      - type: ssh
-        command: "mv .bashrc .old_bashrc"
-      - type: ssh
-        command: "mv bashrc_template .bashrc"
       - type: ssh
         command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
 
