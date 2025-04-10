@@ -9,6 +9,7 @@ variables:
   cp2k_uenv: "cp2k/2025.1:v1"
   stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   python_version: "3.9.13"
+  ssh_public_key: "/home/jovyan/.ssh/cscs-key-cert.pub"
   # bashrc to enable conda
   bashrc: |
     # Sample .bashrc for SuSE Linux now
