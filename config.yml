@@ -6,10 +6,13 @@ variables:
   qe_version: "7.4"
   cp2k_version: "9.4"
   spm_version: "1.5.0"
+  cubehandler_version: "1.5.0"
+  cubehandler_uenv: "tbd"
   cp2k_uenv: "cp2k/2025.1:v1"
   stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   python_version: "3.9.13"
   ssh_public_key: "/home/jovyan/.ssh/cscs-key-cert.pub"
+  timestamp: "now"
   # bashrc to enable conda
   bashrc: |
     # Sample .bashrc for SuSE Linux now
@@ -157,7 +160,7 @@ codes:
       export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
     use_double_quotes: false
-  
+    
   python:
     append_text: ' '
     computer: daint.alps
@@ -319,20 +322,12 @@ custom_commands:
       - type: scp
         command: "scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/"
       - type: ssh
-        command: "mv /users/{cscsuser}/.bashrc /users/{cscsuser}/.bashrc.bak || true"
+        command: "mv /users/{cscsuser}/.bashrc /users/{cscsuser}/.bashrc.bak_{timestamp} || true"
       - type: ssh
         command: |
           cat > /users/{cscsuser}/.bashrc <<EOF
           {bashrc}
           EOF
-
-    setup_py39:
-      - type: ssh
-        command: "{conda_init} && conda env list | grep -q '^py39 ' || conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y"
-      - type: ssh
-        command: "{conda_init} && conda activate py39 && conda list | awk '{{print $1}}'"
-      - type: ssh
-        command: "{conda_init} && conda activate py39 && conda install -n py39 -c conda-forge pymatgen cloudpickle scikit-image -y"
 
     setup_phonopy:
       - type: ssh
@@ -341,6 +336,15 @@ custom_commands:
         command: "if [ ! -d /users/{cscsuser}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscsuser}/miniconda3; fi"
       - type: ssh
         command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
+
+    setup_py39:
+      - type: ssh
+        command: >
+          {conda_init} &&
+          (conda env list | grep -q '^py39 ' ||
+          conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y)
+      - type: ssh
+        command: "{conda_init} && conda activate py39 && conda list"
 
     setup_critic2:
       - type: ssh
