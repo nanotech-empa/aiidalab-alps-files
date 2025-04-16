@@ -4,13 +4,18 @@ variables:
   config_files: "/home/jovyan/opt/aiidalab-alps-files/"
   qe_uenv: "quantumespresso/v7.4:v2"
   qe_version: "7.4"
-  cp2k_version: "9.4"
-  spm_version: "1.5.0"
-  cubehandler_version: "1.5.0"
-  cubehandler_uenv: "tbd"
   cp2k_uenv: "cp2k/2025.1:v1"
-  stm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
+  cp2k_version: "2025.1"
+  spm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
+  spm_version: "1.5.0"
+  cubehandler_uenv: "cubehandler/0.1.0:1771514270"
+  cubehandler_version: "0.1.0"
+  python_uenv: "critic2/1.2:1771513358"
   python_version: "3.9.13"
+  phonopy_uenv: "critic2/1.2:1771513358"
+  phonopy_version: "1.10.0"
+  critic2_uenv: "critic2/1.2:1771513358"
+  critic2_version: "1.2.2"
   ssh_public_key: "/home/jovyan/.ssh/cscs-key-cert.pub"
   timestamp: "now"
   # bashrc to enable conda
@@ -43,21 +48,6 @@ variables:
     #export PILOTRATE=115200
 
     test -s ~/.alias && . ~/.alias || true
-
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by conda init !!
-    __conda_setup=""
-    if [ 126 -eq 0 ]; then
-        eval ""
-    else
-        if [ -f /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh ]; then
-            . /users/{cscsuser}/miniconda3/etc/profile.d/conda.sh
-        else
-            export PATH=/users/{cscsuser}/miniconda3/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/jovyan/.local/bin
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
 
 widgets:
   cscsuser:
@@ -166,13 +156,56 @@ codes:
     append_text: ' '
     computer: daint.alps
     default_calc_job_plugin: pythonjob.pythonjob
-    description: "python at daint alps"
-    filepath_executable: "/users/{cscsuser}/miniconda3/envs/py39/bin/python"
-    label: python-py39
+    description: "python {python_uenv} at daint alps"
+    filepath_executable: "/user-environment/env/default/bin/python"
+    label: python-{python_version}
     prepend_text: |
-      conda activate py39
+      #SBATCH --uenv={python_uenv}
+      #SBATCH --view=default
       export MPICH_GPU_SUPPORT_ENABLED=0
     use_double_quotes: false
+
+  cubehandler:
+    append_text: ' '
+    computer: daint.alps
+    default_calc_job_plugin: core.shell
+    description: "cubehandler {cubehandler_uenv} at daint alps"
+    filepath_executable: "/user-environment/env/default/bin/cubehandler"
+    label: cubehandler-{cubehandler_version}
+    prepend_text: |
+      #SBATCH --uenv={cubehandler_uenv}
+      #SBATCH --view=default
+      export MPICH_GPU_SUPPORT_ENABLED=0
+    use_double_quotes: false
+
+  phonopy:
+    append_text: ' '
+    computer: daint.alps
+    default_calc_job_plugin: phonopy.phonopy
+    description: "phonopy {phonopy_uenv} at daint alps"
+    filepath_executable: "/user-environment/env/default/bin/phonopy"
+    label: phonopy-{phonopy_version}
+    prepend_text: |
+      #SBATCH --uenv={phonopy_uenv}
+      #SBATCH --view=default
+      export MPICH_MALLOC_FALLBACK=1
+      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export MPICH_GPU_SUPPORT_ENABLED=0
+      ulimit -s unlimited
+    use_double_quotes: false
+
+  critic2:
+    append_text: ' '
+    computer: daint.alps
+    default_calc_job_plugin: critic2
+    description: "critic2 {critic2_uenv} on daint.alps"
+    filepath_executable: "/user-environment/env/default/bin/critic2"
+    label: critic2-{critic2_version}
+    prepend_text: |
+      #SBATCH --uenv={critic2_uenv}
+      #SBATCH --view=default
+      export MPICH_GPU_SUPPORT_ENABLED=0
+    use_double_quotes: 'False'
 
   pw:
     append_text: ' '
@@ -246,21 +279,6 @@ codes:
       ulimit -s unlimited
     use_double_quotes: false
 
-  phonopy:
-    append_text: ' '
-    computer: daint.alps
-    default_calc_job_plugin: phonopy.phonopy
-    description: "phonopy at daint alps"
-    filepath_executable: "/users/{cscsuser}/miniconda3/envs/phonopy/bin/phonopy"
-    label: phonopy
-    prepend_text: |
-      export MPICH_MALLOC_FALLBACK=1
-      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
-      export MPICH_GPU_SUPPORT_ENABLED=0
-      ulimit -s unlimited
-      conda activate phonopy
-    use_double_quotes: false
-
   overlap:
     append_text: ' '
     computer: daint.alps
@@ -276,16 +294,6 @@ codes:
       export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
       export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
-    use_double_quotes: 'False'
-
-  critic2:
-    append_text: ' '
-    computer: daint.alps
-    default_calc_job_plugin: critic2
-    description: "critic2 on daint.alps"
-    filepath_executable: "/users/{cscsuser}/critic2/build/src/critic2"
-    label: critic2
-    prepend_text: "export MPICH_GPU_SUPPORT_ENABLED=0"
     use_double_quotes: 'False'
 
   cp2k:
@@ -329,28 +337,3 @@ custom_commands:
           cat > /users/{cscsuser}/.bashrc <<EOF
           {bashrc}
           EOF
-
-    setup_phonopy:
-      - type: ssh
-        command: "if [ ! -f Miniconda3-latest-Linux-aarch64.sh ]; then wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh; fi"
-      - type: ssh
-        command: "if [ ! -d /users/{cscsuser}/miniconda3 ]; then bash Miniconda3-latest-Linux-aarch64.sh -b -p /users/{cscsuser}/miniconda3; fi"
-      - type: ssh
-        command: "{conda_init} && conda env list | grep -q \"^phonopy \" && echo \"Environment exists\" || conda create -n phonopy -c conda-forge phonopy seekpath"
-
-    setup_py39:
-      - type: ssh
-        command: >
-          {conda_init} &&
-          (conda env list | grep -q '^py39 ' ||
-          conda create -n py39 -c conda-forge python={python_version} pymatgen cloudpickle scikit-image -y)
-      - type: ssh
-        command: "{conda_init} && conda activate py39 && conda list"
-
-    setup_critic2:
-      - type: ssh
-        command: "if [ ! -d 'critic2' ]; then git clone https://github.com/aoterodelaroza/critic2.git; fi"
-      - type: ssh
-        command: "if [ ! -f /users/{cscsuser}/critic2/build/src/critic2 ]; then cd critic2 && mkdir -p build && cd build && uenv run {qe_uenv} cmake .. && uenv run {qe_uenv} make; fi"
-      - type: ssh
-        command: "ls /users/{cscsuser}/critic2/build/src/critic2"
