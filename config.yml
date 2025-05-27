@@ -8,6 +8,8 @@ variables:
   cp2k_version: "2024.3"
   spm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   spm_version: "1.5.0"
+  afm_uenv: "ppafm/0.4.0:1829383183"
+  afm_version: "0.4.0"
   cubehandler_uenv: "cubehandler/0.1.0:1771514270"
   cubehandler_version: "0.1.0"
   python_uenv: "critic2/1.2:1802621155"
@@ -159,7 +161,20 @@ codes:
       export MPICH_GPU_SUPPORT_ENABLED=0
       ulimit -s unlimited
     use_double_quotes: false
-    
+  ppafm:
+    append_text: ' '
+    computer: daint.alps
+    default_calc_job_plugin: nanotech_empa.afm
+    description: "afm {afm_uenv} on daint.alps from https://github.com/Probe-Particle/ppafm.git"
+    filepath_executable: "/users/{cscsuser}/bin/run_ppafm.sh"
+    label: ppafm-{afm_version}  
+    prepend_text: |
+      #SBATCH --uenv={afm_uenv}
+      #SBATCH --view=default
+      export MPICH_GPU_SUPPORT_ENABLED=0
+      ulimit -s unlimited
+    use_double_quotes: false
+
   python:
     append_text: ' '
     computer: daint.alps
@@ -337,6 +352,8 @@ custom_commands:
         command: "scp {config_files}/mps-wrapper.sh {remotehost1}:/users/{cscsuser}/bin/"
       - type: scp
         command: "scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/"
+      - type: scp
+        command: "scp -r {config_files}/run_ppafm.sh {remotehost1}:/users/{cscsuser}/bin/"  
       - type: ssh
         command: "mv /users/{cscsuser}/.bashrc /users/{cscsuser}/.bashrc.bak_{timestamp} || true"
       - type: ssh
