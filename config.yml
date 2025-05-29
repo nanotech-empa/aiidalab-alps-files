@@ -85,11 +85,52 @@ widgets:
     - "yaa"
   grant:
     - "select"
+    - "free"
     - "lp83"
     - "lp86"
   
 computers:
+  tigu:
+    grants:
+      - "free"
+    setup:
+      append_text: ''
+      default_memory_per_machine: 125829120
+      description: Tigu computer at Empa.
+      hostname: 10.128.1.11
+      label: tigu_{grant}
+      mpiprocs_per_machine: 12
+      mpirun_command: srun
+      prepend_text: |
+          export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
+          ulimit -s unlimited
+      scheduler: core.slurm
+      shebang: '#!/bin/bash -l'
+      transport: core.ssh
+      use_double_quotes: false
+      work_dir: /scratch/{username}/aiida/    
+    config:
+      allow_agent: true
+      compress: true
+      gss_auth: false
+      gss_deleg_creds: false
+      gss_host: 10.128.1.11
+      gss_kex: false
+      key_filename: /home/jovyan/.ssh/cscs-key
+      key_policy: RejectPolicy
+      load_system_host_keys: true
+      look_for_keys: true
+      port: 22
+      proxy_command: ssh -W 10.128.1.11:22 -oProxyCommand="ssh -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 && nc jump1.empa.ch 22'" cpi@jump1.empa.ch
+      proxy_jump: ''
+      safe_interval: 30.0
+      timeout: 60
+      use_login_shell: true
+      username: "{cscsuser}"
   daint.alps:
+    grants:
+      - "lp83"
+      - "lp86"
     setup:
       description: daint.alps at CSCS
       hostname: daint.alps.cscs.ch
@@ -140,7 +181,13 @@ ssh_config:
     user: "{cscsuser}"
     port: 22
     identity_file: /home/jovyan/.ssh/cscs-key
-
+  10.128.1.11:
+    hostname: 10.128.1.11
+    user: "{cscsuser}"
+    port: 22
+    proxy_command: ssh -W 10.128.1.11:22 -oProxyCommand="ssh -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 && nc jump1.empa.ch 22'" {cscsuser}@jump1.empa.ch  
+    identity_file: /home/jovyan/.ssh/cscs-key
+    server_alive_interval: 5
       
 
 # Computational Tools
