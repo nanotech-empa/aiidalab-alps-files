@@ -181,7 +181,7 @@ ssh_config:
     user: "{cscsuser}"
     port: 22
     identity_file: /home/jovyan/.ssh/cscs-key
-  10.128.1.11:
+  tigu:
     hostname: 10.128.1.11
     user: "{cscsuser}"
     port: 22
@@ -192,6 +192,15 @@ ssh_config:
 
 # Computational Tools
 codes:
+  gaussian:
+    append_text: ' '
+    computer: tigu
+    default_calc_job_plugin: gaussian
+    description: "Gaussian 16"
+    filepath_executable: "/opt/g16_avx2/g16"
+    label: gaussian-16
+    prepend_text: " "
+    use_double_quotes: false
   stm:
     append_text: ' '
     computer: daint.alps
