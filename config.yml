@@ -54,6 +54,7 @@ variables:
 widgets:
   cscsuser:
     - "select"
+    - "adroux"
     - "ajayaraj"
     - "akinikar"
     - "aortega"
