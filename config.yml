@@ -361,6 +361,24 @@ codes:
       ulimit -s unlimited
     use_double_quotes: false
 
+  hp:
+    append_text: ' '
+    computer: daint.alps
+    default_calc_job_plugin: quantumespresso.hp
+    description: "hp.x {qe_uenv}"
+    filepath_executable: "/user-environment/env/default/bin/hp.x"
+    label: hp-{qe_version}
+    prepend_text: |
+      #SBATCH --uenv={qe_uenv}
+      # set environment
+      export MPICH_GPU_SUPPORT_ENABLED=1
+      export MPICH_SMP_SINGLE_COPY_MODE=xpmem
+      export MPICH_MALLOC_FALLBACK=1
+      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export OMP_PLACES=threads
+      ulimit -s unlimited
+    use_double_quotes: false
+
   overlap:
     append_text: ' '
     computer: daint.alps
