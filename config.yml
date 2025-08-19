@@ -176,7 +176,7 @@ computers:
     grants:
       - "mr34"
     setup:
-      description: eiger.alps_ at CSCS
+      description: eiger.alps at CSCS
       hostname: eiger.alps.cscs.ch
       label: eiger.alps_{grant}
       mpiprocs_per_machine: 64
@@ -469,7 +469,7 @@ codes:
     default_calc_job_plugin: cp2k
     description: "cp2k {cp2keiger_uenv} on eiger.alps"
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
-    label: cp2k-{cp2keiger_version}
+    label: cp2keiger-{cp2keiger_version}
     prepend_text: |
       #SBATCH --uenv={cp2keiger_uenv}
       #SBATCH --view=cp2k
