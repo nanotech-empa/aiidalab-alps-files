@@ -93,6 +93,7 @@ widgets:
     - "free"
     - "lp83"
     - "lp86"
+    - "mr34"
   
 computers:
   tigu:
