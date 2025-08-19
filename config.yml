@@ -8,6 +8,8 @@ variables:
   cp2keiger_version: "2025.1"
   cp2k_uenv: "cp2k/2024.3:v2"
   cp2k_version: "2024.3"
+  spmeiger_uenv: "cp2k-spm-tools/1.5:1991541844"
+  spmeiger_version: "1.5.0"
   spm_uenv: "cp2k-spm-tools/1.5.0:1658742098"
   spm_version: "1.5.0"
   afm_uenv: "ppafm/0.4.0:1829383183"
@@ -444,6 +446,21 @@ codes:
       ulimit -s unlimited
     use_double_quotes: false
 
+  overlapeiger:
+    append_text: ' '
+    computer: eiger.alps
+    default_calc_job_plugin: nanotech_empa.overlap
+    description: "overlap {spmeiger_uenv} on eiger.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git"
+    filepath_executable: "/user-environment/env/default/bin/cp2k-overlap-from-wfns"
+    label: overlapeiger-{spmeiger_version}
+    prepend_text: |
+      #SBATCH --uenv={spmeiger_uenv}
+      #SBATCH --view=default
+      # set environment
+      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK))
+      ulimit -s unlimited
+    use_double_quotes: false
+
   cp2k:
     append_text: ' '
     computer: daint.alps
@@ -475,7 +492,7 @@ codes:
       #SBATCH --view=cp2k
       # set environment
       export CP2K_DATA_DIR=/users/{cscsuser}/src/cp2k/data
-      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+      export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK))
       ulimit -s unlimited
     use_double_quotes: false
 
