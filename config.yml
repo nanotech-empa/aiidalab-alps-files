@@ -172,7 +172,7 @@ computers:
       timeout: 60
       use_login_shell: true
       username: "{cscsuser}"
-  eiger:
+  eiger.alps:
     grants:
       - "mr34"
     setup:
