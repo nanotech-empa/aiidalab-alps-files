@@ -467,11 +467,11 @@ codes:
     append_text: ' '
     computer: eiger.alps
     default_calc_job_plugin: cp2k
-    description: "cp2k {cp2k_uenv} on eiger.alps"
+    description: "cp2k {cp2keiger_uenv} on eiger.alps"
     filepath_executable: "/user-environment/env/cp2k/bin/cp2k.psmp"
-    label: cp2k-{cp2k_version}
+    label: cp2k-{cp2keiger_version}
     prepend_text: |
-      #SBATCH --uenv={cp2k_uenv}
+      #SBATCH --uenv={cp2keiger_uenv}
       #SBATCH --view=cp2k
       # set environment
       export CP2K_DATA_DIR=/users/{cscsuser}/src/cp2k/data
