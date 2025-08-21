@@ -1,6 +1,6 @@
 # CAM-B3LYP functional:
 # T Yanai, DP Tew, NC Handy,
-# A new hybrid exchange–correlation functional using the 
+# A new hybrid exchange–correlation functional using the
 # Coulomb-attenuating method, Chemical Physics Letters 393 (2004)
 #
 # CUTOFF_RADIUS should be smaller ~box length/2.
@@ -8,10 +8,10 @@
     &XC
       &XC_FUNCTIONAL
          &HYB_GGA_XC_CAM_B3LYP
-           _AC 0.81      
-           _ALPHA 0.65   
-           _BETA -0.46   
-           _OMEGA 0.33   
+           _AC 0.81
+           _ALPHA 0.65
+           _BETA -0.46
+           _OMEGA 0.33
          &END HYB_GGA_XC_CAM_B3LYP
       &END XC_FUNCTIONAL
       &HF
@@ -41,4 +41,3 @@
           &END PAIR_POTENTIAL
       &END vdW_POTENTIAL
     &END XC
-

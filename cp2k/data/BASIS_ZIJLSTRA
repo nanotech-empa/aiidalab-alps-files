@@ -3,8 +3,8 @@
 # https://doi.org/10.1088/0965-0393/17/1/015009
 #
 # 2SP, 3SP, 4SP basis sets for GTH pseudos (with 3SP being the author's recommendation).
-# 
-# These basis sets are targeted at very fast calculations (trading some accuracy for speed). 
+#
+# These basis sets are targeted at very fast calculations (trading some accuracy for speed).
 #
 H 2SP-GTH
    2

@@ -1,6 +1,6 @@
 # vdW-DF1: M. Dion, H. Rydberg, E. Schroeder, D.C. Langreth, and B.I.
 # Lundqvist, Physical Review Letters 92 (2004) 246401. Note: This should
-# really be cited together with erratum: PRL 95, 109902 (2005) 
+# really be cited together with erratum: PRL 95, 109902 (2005)
 #
 # CUTOFF should be optimised for accuracy and efficiency
 #

@@ -1,7 +1,7 @@
 #                   Element-specific parameters in tight-binding Hamiltonians
-#                   Table S31: Element-specific parameters employed in GFN-xTB: 
+#                   Table S31: Element-specific parameters employed in GFN-xTB:
 #                   Atomic Hubbard parameter (eta), its charge derivative (gamma), the exponential scaling parameter alpha
-#                   and Zeff (both entering the repulsion potential), the polynomial scaling parameters kpoly, 
+#                   and Zeff (both entering the repulsion potential), the polynomial scaling parameters kpoly,
 #                   the shell-specific scaling parameters of the Hubbard parameter kappa, the atomic level energies (H) and the
 #                   corresponding Slater exponents zeta.
 #

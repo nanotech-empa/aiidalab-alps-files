@@ -1,32 +1,32 @@
 ################################################################
-# 
+#
 #    Auxiliary Basis Sets Optimised from Molecular Calculations
-#                   
+#
 #                             by
-#      
+#
 #                 Sanliang Ling  &  Ben Slater
-#       
+#
 #                   University College London
-#      
+#
 #                   E-mail: S.Ling@ucl.ac.uk
-#      
+#
 #                     Updated 27 Feb 2015
-# 
-# The basis sets in this library were optimised following the 
-# strategy of fitting primary MOLOPT basis sets as described by 
-# VandeVondele and Hutter in J. Chem. Phys. 127, 114105 (2007), 
-# and the molecules used in the basis set optimisations were taken 
-# from Phys. Chem. Chem. Phys. 7, 3297 (2005). The basis sets 
-# included in this library have not been exhaustively tested. If 
-# you encounter problems when using these basis sets, please get 
+#
+# The basis sets in this library were optimised following the
+# strategy of fitting primary MOLOPT basis sets as described by
+# VandeVondele and Hutter in J. Chem. Phys. 127, 114105 (2007),
+# and the molecules used in the basis set optimisations were taken
+# from Phys. Chem. Chem. Phys. 7, 3297 (2005). The basis sets
+# included in this library have not been exhaustively tested. If
+# you encounter problems when using these basis sets, please get
 # in touch with the authors.
-# 
+#
 # Nomenclature:
-# 
-# (c)FIT?: "c" indicates it is a basis set contracted from the 
+#
+# (c)FIT?: "c" indicates it is a basis set contracted from the
 # uncontracted ADMM basis set FIT?, and the number ? indicates the
 # number of Gaussian exponents.
-# 
+#
 ################################################################
 
 Li cFIT4
@@ -117,7 +117,7 @@ Li FIT5-SR
  1 1 1 1 1
         0.10000793     1.00000000
 
-O FIT9 
+O FIT9
  9
  1 0 0 1 1
    0.10973395   1.0
