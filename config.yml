@@ -5,6 +5,8 @@ variables:
     config_files: /home/jovyan/opt/aiidalab-alps-files/
     qe_uenv: quantumespresso/v7.4:v2
     qe_version: '7.4'
+    wannier90_version: 3.7.1
+    wannier90_uenv: quantumespresso/v7.4:v2
     cp2keiger_uenv: cp2k/2025.1:v3
     cp2keiger_version: '2025.1'
     cp2k_uenv: cp2k/2024.3:v2
@@ -407,6 +409,36 @@ codes:
             #SBATCH --uenv={qe_uenv}
             # set environment
             export MPICH_GPU_SUPPORT_ENABLED=1
+            export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+            ulimit -s unlimited
+        use_double_quotes: false
+
+    pw2wannier90:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: quantumespresso.pw2wannier90
+        description: pw2wannier90.x {qe_uenv}
+        filepath_executable: /user-environment/env/default/bin/pw2wannier90.x
+        label: pw2wannier90-{qe_version}
+        prepend_text: |
+            #SBATCH --uenv={qe_uenv}
+            # set environment
+            export MPICH_GPU_SUPPORT_ENABLED=1
+            export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+            ulimit -s unlimited
+        use_double_quotes: false
+
+    wannier90:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: wannier90.wannier90
+        description: wannier90.x {wannier90_uenv}
+        filepath_executable: /user-environment/env/default/bin/wannier90.x
+        label: wannier90-{wannier90_version}
+        prepend_text: |
+            #SBATCH --uenv={wannier90_uenv}
+            # set environment
+            export MPICH_GPU_SUPPORT_ENABLED=0
             export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
             ulimit -s unlimited
         use_double_quotes: false
