@@ -103,6 +103,7 @@ widgets:
         - lp83
         - lp86
         - mr34
+        - mr33
 
 computers:
     tigu:
