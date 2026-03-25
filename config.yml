@@ -183,6 +183,7 @@ computers:
     eiger.alps:
         grants:
             - mr34
+            - mr33
         setup:
             description: eiger.alps at CSCS
             hostname: eiger.alps.cscs.ch
@@ -341,6 +342,49 @@ codes:
             #SBATCH --view=default
             export MPICH_GPU_SUPPORT_ENABLED=0
         use_double_quotes: false
+
+    pweiger:
+        append_text: ' '
+        computer: eiger.alps
+        default_calc_job_plugin: quantumespresso.pw
+        description: pw.x {qe_uenv}
+        filepath_executable: /user-environment/env/default/bin/pw.x
+        label: pw-{qe_version}
+        prepend_text: |
+            #SBATCH --uenv={qe_uenv}
+            # set environment
+            export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+            ulimit -s unlimited
+        use_double_quotes: false
+
+    ppeiger:
+        append_text: ' '
+        computer: eiger.alps
+        default_calc_job_plugin: quantumespresso.pp
+        description: pp.x {qe_uenv}
+        filepath_executable: /user-environment/env/default/bin/pp.x
+        label: pp-{qe_version}
+        prepend_text: |
+            #SBATCH --uenv={qe_uenv}
+            # set environment
+            export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+            ulimit -s unlimited
+        use_double_quotes: false
+
+    projwfceiger:
+        append_text: ' '
+        computer: eiger.alps
+        default_calc_job_plugin: quantumespresso.projwfc
+        description: projwfc.x {qe_uenv}
+        filepath_executable: /user-environment/env/default/bin/projwfc.x
+        label: projwfc-{qe_version}
+        prepend_text: |
+            #SBATCH --uenv={qe_uenv}
+            # set environment
+            export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
+            ulimit -s unlimited
+        use_double_quotes: false
+
 
     pw:
         append_text: ' '
