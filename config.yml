@@ -5,6 +5,8 @@ variables:
     config_files: /home/jovyan/opt/aiidalab-alps-files/
     qe_uenv: quantumespresso/v7.4:v2
     qe_version: '7.4'
+    qeeiger_uenv: quantumespresso/v7.4.1:v2
+    qeeiger_version: '7.4'
     wannier90_version: 3.7.1
     wannier90_uenv: quantumespresso/v7.4:v2
     cp2keiger_uenv: cp2k/2025.1:v3
@@ -348,11 +350,11 @@ codes:
         append_text: ' '
         computer: eiger.alps
         default_calc_job_plugin: quantumespresso.pw
-        description: pw.x {qe_uenv}
+        description: pw.x {qeeiger_uenv}
         filepath_executable: /user-environment/env/default/bin/pw.x
-        label: pw-{qe_version}
+        label: pw-{qeeiger_version}
         prepend_text: |
-            #SBATCH --uenv={qe_uenv}
+            #SBATCH --uenv={qeeiger_uenv}
             # set environment
             export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
             ulimit -s unlimited
@@ -362,11 +364,11 @@ codes:
         append_text: ' '
         computer: eiger.alps
         default_calc_job_plugin: quantumespresso.pp
-        description: pp.x {qe_uenv}
+        description: pp.x {qeeiger  _uenv}
         filepath_executable: /user-environment/env/default/bin/pp.x
-        label: pp-{qe_version}
+        label: pp-{qeeiger_version}
         prepend_text: |
-            #SBATCH --uenv={qe_uenv}
+            #SBATCH --uenv={qeeiger_uenv}
             # set environment
             export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
             ulimit -s unlimited
@@ -376,11 +378,11 @@ codes:
         append_text: ' '
         computer: eiger.alps
         default_calc_job_plugin: quantumespresso.projwfc
-        description: projwfc.x {qe_uenv}
+        description: projwfc.x {qeeiger _uenv}
         filepath_executable: /user-environment/env/default/bin/projwfc.x
-        label: projwfc-{qe_version}
+        label: projwfc-{qeeiger_version}
         prepend_text: |
-            #SBATCH --uenv={qe_uenv}
+            #SBATCH --uenv={qeeiger_uenv}
             # set environment
             export OMP_NUM_THREADS=$((SLURM_CPUS_PER_TASK - 1))
             ulimit -s unlimited
