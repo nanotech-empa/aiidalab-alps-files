@@ -1,4 +1,6 @@
 ---
+schema_version: 1
+
 variables:
     remotehost1: daint.alps.cscs.ch
     conda_init: source /users/{cscsuser}/miniconda3/bin/activate
