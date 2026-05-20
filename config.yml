@@ -105,6 +105,7 @@ widgets:
     grant:
         - select
         - free
+        - lp168
         - lp83
         - lp86
         - mr34
