@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PYTHONPATH="${HOME}/src/useful-notebooks:${PYTHONPATH:-}"
+exec /user-environment/env/default/bin/python -m useful_notebooks_cp2k_unfolding.unfold_cli "$@"

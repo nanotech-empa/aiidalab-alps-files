@@ -3,6 +3,7 @@ variables:
     remotehost1: daint.alps.cscs.ch
     conda_init: source /users/{cscsuser}/miniconda3/bin/activate
     config_files: /home/jovyan/opt/aiidalab-alps-files/
+    useful_notebooks_files: /home/jovyan/useful-notebooks
     qe_uenv: quantumespresso/v7.4:v2
     qe_version: '7.4'
     qeeiger_uenv: quantumespresso/v7.4.1:v2
@@ -528,6 +529,22 @@ codes:
             ulimit -s unlimited
         use_double_quotes: false
 
+    cp2k_unfolding:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: nanotech_empa.cp2k_unfolding
+        description: cp2k unfolding {spm_uenv} on daint.alps using useful-notebooks
+        filepath_executable: /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse
+        label: cp2k-unfolding-{spm_version}
+        prepend_text: |
+            #SBATCH --uenv={spm_uenv}
+            #SBATCH --view=default
+            # set environment
+            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
+            export MPICH_GPU_SUPPORT_ENABLED=0
+            ulimit -s unlimited
+        use_double_quotes: false
+
     cp2k:
         append_text: ' '
         computer: daint.alps
@@ -578,6 +595,14 @@ custom_commands:
               command: scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/
             - type: scp
               command: scp -r {config_files}/run_ppafm.sh {remotehost1}:/users/{cscsuser}/bin/
+            - type: scp
+              command: scp {config_files}/cp2k-unfold-wfn-sparse {remotehost1}:/users/{cscsuser}/bin/
+            - type: ssh
+              command: chmod +x /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse
+            - type: ssh
+              command: mkdir -p /users/{cscsuser}/src/useful-notebooks
+            - type: scp
+              command: scp -r {useful_notebooks_files}/useful_notebooks_cp2k_unfolding {remotehost1}:/users/{cscsuser}/src/useful-notebooks/
             - type: ssh
               command: mv /users/{cscsuser}/.bashrc /users/{cscsuser}/.bashrc.bak_{timestamp} || true
             - type: ssh
