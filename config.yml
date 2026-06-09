@@ -513,6 +513,22 @@ codes:
             ulimit -s unlimited
         use_double_quotes: false
 
+    cp2kunfolding_dev:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: nanotech_empa.cp2k_unfolding
+        description: cp2k unfolding MPI dev {spm_uenv} on daint.alps using useful-notebooks
+        filepath_executable: /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi-dev
+        label: cp2k-unfolding-{spm_version}-dev
+        prepend_text: |
+            #SBATCH --uenv={spm_uenv}
+            #SBATCH --view=default
+            # set environment
+            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
+            export MPICH_GPU_SUPPORT_ENABLED=0
+            ulimit -s unlimited
+        use_double_quotes: false
+
     overlapeiger:
         append_text: ' '
         computer: eiger.alps
