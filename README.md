@@ -8,7 +8,8 @@ and registers the corresponding AiiDA codes:
 
 - `bader-{bader_version}` for the `nanotech_empa.bader` plugin. The Bader source
   is vendored in `bader_src/` and compiled on the remote machine by
-  `scripts/install_bader.sh` using `gfortran` or `ftn`.
+  `scripts/install_bader.sh` using `gfortran` or `ftn`. The source code
+  comes from https://theory.cm.utexas.edu/henkelman/code/bader/.
 - `stm-{spm_version}` and `overlap-{spm_version}` for the `nanotech_empa.stm`
   and `nanotech_empa.overlap` plugins. Their executables are wrappers around
   `/users/<cscsuser>/src/cp2k-spm-tools`, using the existing `cp2k-spm-tools`
