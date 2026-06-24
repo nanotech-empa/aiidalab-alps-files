@@ -17,6 +17,7 @@ variables:
     spmeiger_version: 1.5.0
     spm_uenv: cp2k-spm-tools/1.5.0:1658742098
     spm_version: 1.5.0
+    cp2k_spm_tools_branch: main
     unfolding_version: 0.1.0
     useful_notebooks_branch: main
     bader_version: '1.05'
@@ -274,7 +275,7 @@ codes:
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.stm
         description: stm {spm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git
-        filepath_executable: /user-environment/env/default/bin/cp2k-stm-sts-wfn
+        filepath_executable: /users/{cscsuser}/bin/cp2k-stm-sts-wfn
         label: stm-{spm_version}
         prepend_text: |
             #SBATCH --uenv={spm_uenv}
@@ -505,7 +506,7 @@ codes:
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.overlap
         description: overlap {spm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git
-        filepath_executable: /user-environment/env/default/bin/cp2k-overlap-from-wfns
+        filepath_executable: /users/{cscsuser}/bin/cp2k-overlap-from-wfns
         label: overlap-{spm_version}
         prepend_text: |
             #SBATCH --uenv={spm_uenv}
@@ -601,6 +602,10 @@ custom_commands:
             - type: local
               command: |
                   bash -lc 'if [ -d /home/jovyan/useful-notebooks ]; then python -m pip install -e /home/jovyan/useful-notebooks; elif [ -d /home/jovyan/opt/useful-notebooks ]; then python -m pip install -e /home/jovyan/opt/useful-notebooks; else echo "Skipping useful-notebooks local install: repository not found."; fi'
+        install_local_spm_tools:
+            - type: local
+              command: |
+                  bash -lc 'if [ -d /home/jovyan/opt/cp2k-spm-tools ]; then python -m pip install -e /home/jovyan/opt/cp2k-spm-tools; else echo "Skipping cp2k-spm-tools local install: repository not found."; fi'
     remote_commands:
         remotehost: '{remotehost1}'
         copy_files:
@@ -611,13 +616,17 @@ custom_commands:
             - type: scp
               command: scp {config_files}/scripts/cp2k-overlap-to-sparse-npz {remotehost1}:/users/{cscsuser}/bin/
             - type: scp
+              command: scp {config_files}/scripts/cp2k-overlap-from-wfns {remotehost1}:/users/{cscsuser}/bin/
+            - type: scp
+              command: scp {config_files}/scripts/cp2k-stm-sts-wfn {remotehost1}:/users/{cscsuser}/bin/
+            - type: scp
               command: scp {config_files}/scripts/cp2k-unfold-wfn-sparse {remotehost1}:/users/{cscsuser}/bin/
             - type: scp
               command: scp {config_files}/scripts/cp2k-unfold-wfn-sparse-mpi {remotehost1}:/users/{cscsuser}/bin/
             - type: scp
               command: scp {config_files}/scripts/install_bader.sh {remotehost1}:/users/{cscsuser}/bin/
             - type: ssh
-              command: chmod +x /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi /users/{cscsuser}/bin/install_bader.sh
+              command: chmod +x /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz /users/{cscsuser}/bin/cp2k-overlap-from-wfns /users/{cscsuser}/bin/cp2k-stm-sts-wfn /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi /users/{cscsuser}/bin/install_bader.sh
             - type: scp
               command: scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/
             - type: scp
@@ -626,6 +635,8 @@ custom_commands:
               command: /users/{cscsuser}/bin/install_bader.sh /users/{cscsuser}/src/bader_src /users/{cscsuser}/bin
             - type: ssh
               command: if [ -d /users/{cscsuser}/src/useful-notebooks/.git ]; then git -C /users/{cscsuser}/src/useful-notebooks fetch origin && git -C /users/{cscsuser}/src/useful-notebooks checkout {useful_notebooks_branch} && git -C /users/{cscsuser}/src/useful-notebooks pull --ff-only origin {useful_notebooks_branch}; else git clone --branch {useful_notebooks_branch} https://github.com/nanotech-empa/useful-notebooks.git /users/{cscsuser}/src/useful-notebooks; fi
+            - type: ssh
+              command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools fetch origin && git -C /users/{cscsuser}/src/cp2k-spm-tools checkout {cp2k_spm_tools_branch} && git -C /users/{cscsuser}/src/cp2k-spm-tools pull --ff-only origin {cp2k_spm_tools_branch}; else git clone --branch {cp2k_spm_tools_branch} https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools; fi
             - type: scp
               command: scp -r {config_files}/run_ppafm.sh {remotehost1}:/users/{cscsuser}/bin/
             - type: ssh
