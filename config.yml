@@ -19,6 +19,7 @@ variables:
     spm_version: 1.5.0
     unfolding_source_ref: d4203fd
     unfolding_version: pr24-d4203fd
+    bader_version: '1.05'
     afm_uenv: ppafm/0.4.0:1829383183
     afm_version: 0.4.0
     cubehandler_uenv: cubehandler/0.1.0:1771514270
@@ -531,6 +532,20 @@ codes:
             ulimit -s unlimited
         use_double_quotes: false
 
+    bader:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: nanotech_empa.bader
+        description: Bader charge analysis {bader_version} on daint.alps
+        filepath_executable: /users/{cscsuser}/bin/bader
+        label: bader-{bader_version}
+        prepend_text: |
+            # set environment
+            export OMP_NUM_THREADS=1
+            export MPICH_GPU_SUPPORT_ENABLED=0
+            ulimit -s unlimited
+        use_double_quotes: false
+
     overlapeiger:
         append_text: ' '
         computer: eiger.alps
@@ -600,6 +615,14 @@ custom_commands:
               command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools fetch origin; else git clone https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools; fi
             - type: ssh
               command: git -C /users/{cscsuser}/src/cp2k-spm-tools checkout --detach {unfolding_source_ref}
+            - type: scp
+              command: scp {config_files}/scripts/install_bader.sh {remotehost1}:/users/{cscsuser}/bin/
+            - type: ssh
+              command: chmod +x /users/{cscsuser}/bin/install_bader.sh
+            - type: scp
+              command: scp -r {config_files}/bader_src {remotehost1}:/users/{cscsuser}/src/
+            - type: ssh
+              command: /users/{cscsuser}/bin/install_bader.sh /users/{cscsuser}/src/bader_src /users/{cscsuser}/bin
             - type: scp
               command: scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/
             - type: scp
