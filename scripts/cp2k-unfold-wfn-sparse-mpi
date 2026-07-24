@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+remote_user="${USER:-$(id -un)}"
+export PYTHONPATH="/users/${remote_user}/src/cp2k-spm-tools:${PYTHONPATH:-}"
+python_bin="${PYTHON:-/user-environment/env/default/bin/python}"
+
+exec "${python_bin}" -m cp2k_spm_tools.cli.unfold_wfn_sparse_mpi "$@"
