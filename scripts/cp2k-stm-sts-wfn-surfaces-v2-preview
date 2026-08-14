@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+remote_user="${USER:-$(id -un)}"
+export PYTHONPATH="/users/${remote_user}/src/cp2k-spm-tools-surfaces-v2.0.0a0:${PYTHONPATH:-}"
+python_bin="${PYTHON:-/user-environment/env/default/bin/python}"
+
+exec "${python_bin}" -m cp2k_spm_tools.cli.stm_sts_from_wfn "$@"

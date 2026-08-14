@@ -13,6 +13,14 @@ is merged and released, setup therefore checks out the exact tested #24 commit
 under `/users/<cscsuser>/src/cp2k-spm-tools`, and the wrapper prepends that
 source tree to `PYTHONPATH`. Replace this temporary source override with the
 first released version containing the CLI before making the code production.
+
+## Surfaces v2 prerelease codes
+
+The `integration/surfaces-v2.0.0a0` branch also creates opt-in STM, overlap,
+and unfolding codes whose labels contain `surfaces-v2.0.0a0`. Their wrappers
+load the exact `cp2k-spm-tools` commit recorded by `spm_preview_source_ref`
+from a separate remote source directory. Existing `1.5.0` code labels and the
+source checkout used by the earlier unfolding preview are not modified.
 ## Bader analysis on Daint
 
 The setup installs `bader-{bader_version}` for the `nanotech_empa.bader`
