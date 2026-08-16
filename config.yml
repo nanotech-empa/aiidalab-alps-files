@@ -330,7 +330,7 @@ codes:
     cubehandler:
         append_text: ' '
         computer: daint.alps
-        default_calc_job_plugin: core.shell
+        default_calc_job_plugin: nanotech_empa.cubehandler
         description: cubehandler {cubehandler_uenv} at daint alps
         filepath_executable: /user-environment/env/default/bin/cubehandler
         label: cubehandler-{cubehandler_version}
@@ -547,6 +547,21 @@ codes:
             ulimit -s unlimited
         use_double_quotes: false
 
+    sparse_overlap_surfaces_v2_preview:
+        append_text: ' '
+        computer: daint.alps
+        default_calc_job_plugin: nanotech_empa.sparse_overlap
+        description: serial sparse-overlap conversion from cp2k-spm-tools {spm_preview_source_ref} on daint.alps using {spm_uenv}
+        filepath_executable: /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz-surfaces-v2-preview
+        label: sparse-overlap-{spm_preview_version}
+        prepend_text: |
+            #SBATCH --uenv={spm_uenv}
+            #SBATCH --view=default
+            export OMP_NUM_THREADS=1
+            export MPICH_GPU_SUPPORT_ENABLED=0
+            ulimit -s unlimited
+        use_double_quotes: false
+
     cp2kunfolding:
         append_text: ' '
         computer: daint.alps
@@ -662,9 +677,9 @@ custom_commands:
             - type: ssh
               command: git -C /users/{cscsuser}/src/cp2k-spm-tools checkout --detach {unfolding_source_ref}
             - type: scp
-              command: scp {config_files}/scripts/cp2k-stm-sts-wfn-surfaces-v2-preview {config_files}/scripts/cp2k-overlap-from-wfns-surfaces-v2-preview {config_files}/scripts/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-preview {remotehost1}:/users/{cscsuser}/bin/
+              command: scp {config_files}/scripts/cp2k-stm-sts-wfn-surfaces-v2-preview {config_files}/scripts/cp2k-overlap-from-wfns-surfaces-v2-preview {config_files}/scripts/cp2k-overlap-to-sparse-npz-surfaces-v2-preview {config_files}/scripts/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-preview {remotehost1}:/users/{cscsuser}/bin/
             - type: ssh
-              command: chmod +x /users/{cscsuser}/bin/cp2k-stm-sts-wfn-surfaces-v2-preview /users/{cscsuser}/bin/cp2k-overlap-from-wfns-surfaces-v2-preview /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-preview
+              command: chmod +x /users/{cscsuser}/bin/cp2k-stm-sts-wfn-surfaces-v2-preview /users/{cscsuser}/bin/cp2k-overlap-from-wfns-surfaces-v2-preview /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz-surfaces-v2-preview /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-preview
             - type: ssh
               command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools-surfaces-v2.0.0a0/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools-surfaces-v2.0.0a0 fetch origin; else git clone https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools-surfaces-v2.0.0a0; fi
             - type: ssh
