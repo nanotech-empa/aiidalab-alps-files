@@ -17,10 +17,12 @@ first released version containing the CLI before making the code production.
 ## Surfaces v2 prerelease codes
 
 The `integration/surfaces-v2.0.0a0` branch also creates opt-in STM, overlap,
-and unfolding codes whose labels contain `surfaces-v2.0.0a0`. Their wrappers
-load the exact `cp2k-spm-tools` commit recorded by `spm_preview_source_ref`
-from a separate remote source directory. Existing `1.5.0` code labels and the
-source checkout used by the earlier unfolding preview are not modified.
+sparse-overlap, and unfolding codes whose labels contain
+`surfaces-v2.0.0a0`. Their wrappers load the exact `cp2k-spm-tools` commit
+recorded by `spm_preview_source_ref` from a separate remote source directory.
+Existing `1.5.0` code labels and the source checkout used by the earlier
+unfolding preview are not modified. Sparse overlap is deliberately serial;
+the workflow sets `withmpi=False` for that CalcJob.
 ## Bader analysis on Daint
 
 The setup installs `bader-{bader_version}` for the `nanotech_empa.bader`
