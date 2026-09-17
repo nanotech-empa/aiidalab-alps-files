@@ -1,6 +1,18 @@
 # aiidalab-alps-files
 Files needed to set up codes for AiiDAlab on ALPS
 
+## Daint and Eiger scratch directories
+
+Daint and Eiger computer definitions use
+`/ritom/scratch/cscs/{username}/aiida/`. Computer and code labels are unchanged.
+The production and development setup apps read these shared definitions; after
+updating this repository, inspect and apply the computer updates in the setup app
+when no affected workflows are active.
+
+This configuration change does not move existing calculation folders, checkpoints
+or uenv images, and does not rewrite existing AiiDA `RemoteData` paths. Relocated
+calculations need a separately verified continuation from their new location.
+
 ## CP2K band unfolding on Daint
 
 The `cp2kunfolding` code runs the `nanotech_empa.cp2k_unfolding` CalcJob with

@@ -169,7 +169,7 @@ computers:
             shebang: '#!/bin/bash -l'
             transport: core.ssh
             use_double_quotes: false
-            work_dir: /capstor/scratch/cscs/{username}/aiida/
+            work_dir: /ritom/scratch/cscs/{username}/aiida/
             default_memory_per_machine: 268435456
         config:
             allow_agent: true
@@ -207,7 +207,7 @@ computers:
             shebang: '#!/bin/bash -l'
             transport: core.ssh
             use_double_quotes: false
-            work_dir: /capstor/scratch/cscs/{username}/aiida/
+            work_dir: /ritom/scratch/cscs/{username}/aiida/
             default_memory_per_machine: 268435456
         config:
             allow_agent: true
@@ -612,7 +612,8 @@ custom_commands:
             - type: ssh
               command: chmod +x /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi
             - type: ssh
-              command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools fetch origin; else git clone https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools; fi
+              command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools fetch origin; else git clone
+                  https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools; fi
             - type: ssh
               command: git -C /users/{cscsuser}/src/cp2k-spm-tools checkout --detach {unfolding_source_ref}
             - type: scp
