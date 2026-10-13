@@ -25,6 +25,24 @@ is merged and released, setup therefore checks out the exact tested #24 commit
 under `/users/<cscsuser>/src/cp2k-spm-tools`, and the wrapper prepends that
 source tree to `PYTHONPATH`. Replace this temporary source override with the
 first released version containing the CLI before making the code production.
+
+## Surfaces v2 preview codes
+
+Four optional STM, overlap, sparse-overlap and unfolding codes use
+`cp2k-spm-tools` commit `cd97fc02f49c172b21811e5da5389368d6ce5415` from
+[nanotech-empa/cp2k-spm-tools#34](https://github.com/nanotech-empa/cp2k-spm-tools/pull/34),
+matching the Surfaces preview's local source. Code labels and wrapper names
+contain `surfaces-v2-cd97fc0`. The remote source directory includes the complete
+commit hash, and setup refuses to retarget or reuse a modified checkout. Earlier
+preview executables and production `1.5.0` definitions retain their own paths.
+Sparse-overlap conversion remains serial (`withmpi=False`).
+
+The wrappers reuse the existing `cp2k-spm-tools/1.5.0:1658742098` uenv and
+`default` view. Its Python is 3.11.9, as verified on Daint on 2026-10-13; this
+is separate from the application's Python >=3.12 target. The source override is
+experimental and requires runtime validation and review before deployment.
+Replace it with a released uenv containing the reviewed CLI before production.
+
 ## Bader analysis on Daint
 
 The setup installs `bader-{bader_version}` for the `nanotech_empa.bader`
