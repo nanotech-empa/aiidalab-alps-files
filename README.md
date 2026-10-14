@@ -38,10 +38,10 @@ the workflow sets `withmpi=False` for that CalcJob.
 ## Surfaces v2 preview codes
 
 Four optional STM, overlap, sparse-overlap and unfolding codes use
-`cp2k-spm-tools` commit `7ca25c980cf25dc4237b22fd7703023fcb11e87a` from
-[nanotech-empa/cp2k-spm-tools#34](https://github.com/nanotech-empa/cp2k-spm-tools/pull/34),
+`cp2k-spm-tools` commit `09139b5c674275fd240e3c4541f275575e784891` from
+[nanotech-empa/cp2k-spm-tools#36](https://github.com/nanotech-empa/cp2k-spm-tools/pull/36),
 matching the Surfaces preview's local source. Code labels and wrapper names
-contain `surfaces-v2-7ca25c9`. The remote source directory includes the complete
+contain `surfaces-v2-09139b5`. The remote source directory includes the complete
 commit hash, and setup refuses to retarget or reuse a modified checkout. Earlier
 preview executables and production `1.5.0` definitions retain their own paths.
 Sparse-overlap conversion remains serial (`withmpi=False`).
