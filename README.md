@@ -35,3 +35,26 @@ The vendored source is grid-based Bader analysis version 1.05 (2023-08-19),
 copyright Wenjie Tang, Andri Arnaldsson, Wenrui Chai, Samuel T. Chill, and
 Graeme Henkelman, under GPL-3.0-or-later. It originates from
 https://theory.cm.utexas.edu/henkelman/code/bader/.
+
+## Software attribution and scientific acknowledgements
+
+Please credit [aiidalab-alps-files](https://github.com/nanotech-empa/aiidalab-alps-files) and its
+[contributors](https://github.com/nanotech-empa/aiidalab-alps-files/graphs/contributors),
+and identify the release or immutable commit used. Existing author,
+contributor and funding acknowledgements remain authoritative.
+
+Preserve the copyright and permission notices in [LICENSE](LICENSE)
+when copying or distributing copies or substantial portions of MIT-licensed
+code. Separately licensed components retain their own notices. A name or
+repository link does not replace the applicable licence notices.
+
+For research carried out using this environment or the resulting workflows,
+acknowledge [AiiDA](https://github.com/nanotech-empa/.github/blob/main/CITATION_GUIDANCE.md#aiida) and [AiiDAlab](https://github.com/nanotech-empa/.github/blob/main/CITATION_GUIDANCE.md#aiidalab)
+when each platform was actually used, following their respective citation
+guidance. Cite the scientific software and methods actually used as well.
+
+Credit the setup configuration and wrapper scripts separately from installed scientific programs. The MIT notice for repository-authored code does not replace the separate notices for the vendored Bader source and its third-party numerical routines; see [bader_src/README.md](bader_src/README.md). Cite the scientific codes and methods actually used in the resulting calculations.
+
+The [shared credit guide](https://github.com/nanotech-empa/.github/blob/main/CITATION_GUIDANCE.md) keeps software attribution, licence
+compliance and scientific citation requests separate. Scientific citation
+requests are not additional MIT licence conditions.
