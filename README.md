@@ -29,10 +29,10 @@ first released version containing the CLI before making the code production.
 ## Surfaces v2 preview codes
 
 Four optional STM, overlap, sparse-overlap and unfolding codes use
-`cp2k-spm-tools` commit `09139b5c674275fd240e3c4541f275575e784891` from
-[nanotech-empa/cp2k-spm-tools#36](https://github.com/nanotech-empa/cp2k-spm-tools/pull/36),
+`cp2k-spm-tools` commit `a0e486a12ad0102c6af5f9a9572c2449ec26e81e` from
+[nanotech-empa/cp2k-spm-tools#42](https://github.com/nanotech-empa/cp2k-spm-tools/pull/42),
 matching the Surfaces preview's local source. Code labels and wrapper names
-contain `surfaces-v2-09139b5`. The remote source directory includes the complete
+contain `surfaces-v2-a0e486a`. The remote source directory includes the complete
 commit hash, and setup refuses to retarget or reuse a modified checkout. Earlier
 preview executables and production `1.5.0` definitions retain their own paths.
 Sparse-overlap conversion remains serial (`withmpi=False`).
