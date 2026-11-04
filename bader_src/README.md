@@ -12,3 +12,14 @@ The code header identifies it as:
 
 Only source files and makefiles are stored here. Object files, module files, and
 compiled binaries are intentionally excluded.
+
+## Third-party numerical routine
+
+`dsyevj3_mod.f` separately credits Joachim Kopp (copyright 2006) and carries
+GNU Lesser General Public License version 2.1 or later notices. Preserve those
+notices alongside the Bader source's GPL-3.0-or-later notices. The parent
+repository's MIT licence does not replace either component's terms.
+
+The source headers in `main.f90` also identify the original Bader authors,
+contributors and scientific algorithm references; preserve those credits and
+cite the methods actually used.
