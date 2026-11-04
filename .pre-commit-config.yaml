@@ -41,6 +41,8 @@ repos:
                 - flake8-comprehensions
                 - flake8-debugger
                 - flake8-logging-format
+                # This plugin imports pkg_resources, removed in setuptools 82.
+                - setuptools<82
                 - pep8-naming
                 - pyflakes
                 - tryceratops

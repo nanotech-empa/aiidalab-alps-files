@@ -53,3 +53,21 @@ The vendored source is grid-based Bader analysis version 1.05 (2023-08-19),
 copyright Wenjie Tang, Andri Arnaldsson, Wenrui Chai, Samuel T. Chill, and
 Graeme Henkelman, under GPL-3.0-or-later. It originates from
 https://theory.cm.utexas.edu/henkelman/code/bader/.
+
+
+## Selective setup and personal Docker catalog
+
+The schema-2 configuration requires the companion setup-app branch
+`feature/selective-safe-setup`. Its configuration branch is
+`feature/setup-readiness-checks`; keep both PRs unmerged until the new-instance
+acceptance test. `runtime-catalog.yml` adds optional personal Linux-container
+codes and Tigu ORCA/BandUPpy definitions. The hosted profile keeps scientific
+execution remote; PythTB is an app dependency rather than an AiiDA Code.
+
+Installation tasks are scoped to the selected computer/code subset. The setup
+no longer replaces a user's remote `.bashrc`, and selected Eiger CP2K setup
+installs its own data files. Quantum-worker updates are deferred.
+
+Read [runtime installation and the deployment matrix](docs/runtime-installation.md)
+for what the app installs, native/licensed prerequisites, and the SSH/Ritom
+failure handling. A catalog entry does not establish a qualified deployment.
