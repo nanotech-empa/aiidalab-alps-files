@@ -182,10 +182,25 @@ configuration and a working SSH agent. Its own `~/.ssh/id_rsa` may be a differen
 identity; copying that file is not equivalent to reusing the ELA key. Keep the
 existing SCI-IT registration when reusing the same registered key/account.
 
-For new Empa access or a new jump-host key, send only the public part (`.pub`) of
-the separate Empa key to SCI-IT for registration and wait for confirmation. Use
-the account/route they provide. Never send the private key. The setup app neither
-sends keys to SCI-IT nor changes the user's SSH agent automatically.
+For new access, check **Empa/Tigu username** (defaults to the CSCS username) and
+click **Prepare new Tigu key on ELA**. This opt-in action creates/reuses a dedicated
+unencrypted Ed25519 key at `~/.ssh/aiidalab-tigu/id_ed25519` on ELA, preserves default
+keys, and selects that ELA path in the form. The private key stays on ELA, mode 600.
+The form displays a copyable public-key request to `aliaksandr.yakutovich@empa.ch`
+asking for jump-host activation and confirmation of authorization on Tigu. The
+app sends no email. Both servers need authorization; registration on the jump
+host alone is insufficient evidence of Tigu access. Adding the public key on Tigu
+requires an existing working login or its administrator. Wait for confirmation,
+then inspect/apply and test the route. Never send the private key.
+
+The ELA key setting is blank by default, retaining the existing default-key route.
+When explicitly selected, the dedicated path is inserted into both the OpenSSH and
+AiiDA proxy commands. Both use the editable Empa username for the jump host and
+Tigu; the ELA login still uses the CSCS username. Account/key values are validated
+before entering proxy shell commands. The normal proxy temporarily loads the key
+into the forwarded agent; preparation itself disables forwarding.
+An existing AiiDA Computer keeps its saved definition unless the user explicitly
+enables computer updates and reviews the replacement plan.
 
 Configuration and help edits reach the form when the user clicks **Inspect
 updates**, which synchronizes the selected branch before inspecting. Startup
@@ -197,7 +212,9 @@ making a backup. It bootstraps Daint's proxy and target host keys before checkin
 the connection, uses batch mode/connection timeouts, and refuses a changed trusted
 key. It does not send empty passwords. Renew CSCS MFA certificates normally;
 unlock passphrase-protected keys through the user's normal agent. Tigu's custom
-multi-hop proxy may require normal interactive first-login setup.
+multi-hop proxy requires trusted host-key entries for the jump host and Tigu on
+first use. Obtain them from SCI-IT and install them according to its instructions;
+strict batch SSH fails on missing or changed trusted keys.
 
 Daint/Eiger's new workdir is Ritom. Changing it does not migrate historical
 RemoteData, checkpoints or the uenv repository. The app prints the actual uenv

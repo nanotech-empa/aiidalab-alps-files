@@ -113,12 +113,13 @@ computers:
             load_system_host_keys: true
             look_for_keys: true
             port: 22
-            proxy_command: ssh -W 10.128.1.11:22 -oProxyCommand="ssh -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 && nc jump1.empa.ch 22'" cpi@jump1.empa.ch
+            proxy_command: ssh -oBatchMode=yes -oStrictHostKeyChecking=yes -oConnectTimeout=20 -W 10.128.1.11:22 -oProxyCommand="ssh -oBatchMode=yes -oStrictHostKeyChecking=yes
+                -oConnectTimeout=20 -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 {tigu_ela_key} && nc jump1.empa.ch 22'" {tigu_empa_username}@jump1.empa.ch
             proxy_jump: ''
             safe_interval: 30.0
             timeout: 60
             use_login_shell: true
-            username: '{cscsuser}'
+            username: '{tigu_empa_username}'
     daint.alps:
         ssh_help: alps
         grants:
@@ -222,9 +223,10 @@ ssh_config:
         identity_file: /home/jovyan/.ssh/cscs-key
     tigu:
         hostname: 10.128.1.11
-        user: '{cscsuser}'
+        user: '{tigu_empa_username}'
         port: 22
-        proxy_command: ssh -W 10.128.1.11:22 -oProxyCommand="ssh -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 && nc jump1.empa.ch 22'" {cscsuser}@jump1.empa.ch
+        proxy_command: ssh -oBatchMode=yes -oStrictHostKeyChecking=yes -oConnectTimeout=20 -W 10.128.1.11:22 -oProxyCommand="ssh -oBatchMode=yes -oStrictHostKeyChecking=yes
+            -oConnectTimeout=20 -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 {tigu_ela_key} && nc jump1.empa.ch 22'" {tigu_empa_username}@jump1.empa.ch
         identity_file: /home/jovyan/.ssh/cscs-key
         server_alive_interval: 5
 

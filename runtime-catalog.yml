@@ -1,6 +1,8 @@
 ---
 # Optional runtime definitions; no quantum-worker installations or updates.
 variables:
+    tigu_empa_username: '{cscsuser}'
+    tigu_ela_key: ''
     local_orca_root: /home/jovyan/opt/orca_6_1_1_linux_arm64_shared_openmpi418
     local_orca_mpi: /home/jovyan/opt/openmpi-4.1.8-orca-fortran
     local_python: /opt/conda/bin/python
@@ -8,15 +10,23 @@ variables:
     local_banduppy_python: /home/jovyan/opt/banduppy-1.0.0/bin/python
     tigu_orca_root: /store/amsp/ORCA_6_1_1
     tigu_orca_mpi: /opt/openmpi-4.1.1
-    tigu_banduppy_python: /store/{cscsuser}/opt/banduppy-1.0.0/bin/python
+    tigu_banduppy_python: /store/{tigu_empa_username}/opt/banduppy-1.0.0/bin/python
     daint_banduppy_python: /users/{cscsuser}/opt/banduppy-1.0.0/bin/python
     local_cp2k_executable: /home/jovyan/opt/cp2k-2023.1-debian-arm64/usr/bin/cp2k.psmp
     local_cp2k_prefix: /home/jovyan/opt/cp2k-2023.1-debian-arm64/usr
     local_support_prefix: /home/jovyan/opt/local-codes
     local_qe_prefix: /home/jovyan/.conda/envs/quantum-espresso-7.4
-    tigu_python: /store/{cscsuser}/opt/cpython-3.12.15-20261013/python/bin/python3.12
-    tigu_orca_helpers: /store/{cscsuser}/opt/orca-dyson-20261021
+    tigu_python: /store/{tigu_empa_username}/opt/cpython-3.12.15-20261013/python/bin/python3.12
+    tigu_orca_helpers: /store/{tigu_empa_username}/opt/orca-dyson-20261021
 runtime_settings:
+    tigu_empa_username:
+        description: Empa/Tigu username
+        format: ssh_username
+        computers: [tigu]
+    tigu_ela_key:
+        description: Tigu key on ELA (blank = defaults)
+        format: ssh_key_path
+        computers: [tigu]
     local_orca_root:
         description: local orca root
         deployments:
@@ -634,11 +644,11 @@ setup_tasks:
             - tigu_banduppy
         commands:
             - type: ssh
-              command: mkdir -p /store/{cscsuser}/opt/empa-setup
+              command: mkdir -p /store/{tigu_empa_username}/opt/empa-setup
             - type: scp
-              command: scp {config_files}/scripts/install-banduppy-runtime.py tigu:/store/{cscsuser}/opt/empa-setup/install-banduppy-runtime.py
+              command: scp {config_files}/scripts/install-banduppy-runtime.py tigu:/store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py
             - type: ssh
-              command: '{tigu_python} /store/{cscsuser}/opt/empa-setup/install-banduppy-runtime.py --executable {tigu_banduppy_python}'
+              command: '{tigu_python} /store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py --executable {tigu_banduppy_python}'
     eiger_cp2k_data:
         computer: eiger.alps
         codes:

@@ -14,6 +14,11 @@ connection_guides:
               url: https://github.com/aiidalab/aiidalab-mfa-cscs
     tigu:
         title: Tigu SSH access (CSCS and Empa jump host)
+        onboarding:
+            type: tigu_ela_key
+            host: ela.cscs.ch
+            contact: aliaksandr.yakutovich@empa.ch
+            key_setting: tigu_ela_key
         steps:
             - Tigu also needs a valid CSCS SSH key and certificate for the CSCS part of the connection. Install or open MFA CSCS and refresh or renew those
               credentials when needed.
@@ -23,8 +28,14 @@ connection_guides:
               private-key file can stay on ELA; it does not need to be copied into a new container.
             - When reusing that existing route, keep the proxy configuration, refresh the CSCS credentials and ensure the new container has a running SSH
               agent. No new SCI-IT registration is needed if the same key and account remain registered. A container's own id_rsa can be a different key.
-            - For new Empa access or a new jump-host identity, obtain a separate SSH key pair and send only its public part (the .pub file) to SCI-IT for
-              jump-host registration. Keep the private key private and wait for confirmation before using the new identity.
+            - For new access, check your Empa/Tigu username in the form. The optional Prepare new Tigu key on ELA button creates or reuses a dedicated unencrypted
+              key at ~/.ssh/aiidalab-tigu/id_ed25519 on ELA. It preserves existing keys and displays only the public part in a request you can copy.
+            - Send that request yourself to aliaksandr.yakutovich@empa.ch, asking to activate the public key on the jump host for Tigu and confirm whether
+              the same key is authorized on Tigu. Jump-host registration alone must not be assumed to authorize Tigu. Never send the private key.
+            - Wait for activation confirmation, then inspect and apply the selected route. If the key also needs adding on Tigu, that requires an existing
+              working Tigu login or its administrator. The app cannot grant first access itself. A working Docker SSH agent is required for the proxy.
+            - On first use, obtain trusted host-key entries for jump1.empa.ch and Tigu from SCI-IT and install them in the container's known_hosts using
+              their instructions. Strict batch SSH stops on missing or changed host keys; do not bypass a changed-key warning.
             - If Tigu still fails with a valid CSCS certificate, check ELA-key availability, the forwarded agent and the jump-host registration with SCI-IT.
               Use the account and connection details SCI-IT provides, and share only non-secret SSH error messages when requesting support.
         links:
