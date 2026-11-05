@@ -171,11 +171,21 @@ an expandable section for each selected remote computer, and a failed SSH
 attempt prints that computer's instructions in the log.
 
 For ALPS, install MFA CSCS if it is absent, open it and refresh/renew a valid
-CSCS SSH key/certificate before retrying. For Tigu, keep those CSCS credentials
-valid **and** provide a separate SSH key for the Empa jump host. Send only the
-public part (`.pub`) to SCI-IT for registration, wait for their confirmation and
-use the account/route they provide. Never send the private key. The setup app
-neither sends keys to SCI-IT nor changes the user's SSH agent automatically.
+CSCS SSH key/certificate before retrying. Tigu also needs an Empa jump-host
+identity distinct from those CSCS credentials. With the existing ELA-based route,
+Docker connects through ELA and `jump1.empa.ch` to Tigu. The proxy forwards the
+Docker agent to ELA and runs `ssh-add -t 5` there, temporarily adding ELA's key
+to that forwarded agent. The Empa private-key file can remain on ELA.
+
+A new container can reuse that route with fresh CSCS credentials, the same proxy
+configuration and a working SSH agent. Its own `~/.ssh/id_rsa` may be a different
+identity; copying that file is not equivalent to reusing the ELA key. Keep the
+existing SCI-IT registration when reusing the same registered key/account.
+
+For new Empa access or a new jump-host key, send only the public part (`.pub`) of
+the separate Empa key to SCI-IT for registration and wait for confirmation. Use
+the account/route they provide. Never send the private key. The setup app neither
+sends keys to SCI-IT nor changes the user's SSH agent automatically.
 
 Configuration and help edits reach the form when the user clicks **Inspect
 updates**, which synchronizes the selected branch before inspecting. Startup

@@ -17,13 +17,16 @@ connection_guides:
         steps:
             - Tigu also needs a valid CSCS SSH key and certificate for the CSCS part of the connection. Install or open MFA CSCS and refresh or renew those
               credentials when needed.
-            - You additionally need a separate SSH key pair for access through the Empa jump host. A valid CSCS key alone is not sufficient.
-            - Send only the public part of that separate key (the .pub file) to SCI-IT and ask them to register it on the jump host. Keep the private key
-              private; never send it to anyone.
-            - Wait for SCI-IT to confirm registration, then use the account and jump-host connection details they provide. Make the separate key available
-              through your normal SSH agent.
-            - If Tigu still fails with a valid CSCS certificate, check the separate jump-host key and its registration with SCI-IT. Share only non-secret
-              SSH error messages when requesting support.
+            - The CSCS credentials and the Empa jump-host identity are separate. For existing ELA-based access, the route is Docker to ELA to jump1.empa.ch
+              to Tigu.
+            - In that route, agent forwarding lets ssh-add -t 5 on ELA temporarily load the ELA key into the Docker SSH agent for five seconds. The Empa
+              private-key file can stay on ELA; it does not need to be copied into a new container.
+            - When reusing that existing route, keep the proxy configuration, refresh the CSCS credentials and ensure the new container has a running SSH
+              agent. No new SCI-IT registration is needed if the same key and account remain registered. A container's own id_rsa can be a different key.
+            - For new Empa access or a new jump-host identity, obtain a separate SSH key pair and send only its public part (the .pub file) to SCI-IT for
+              jump-host registration. Keep the private key private and wait for confirmation before using the new identity.
+            - If Tigu still fails with a valid CSCS certificate, check ELA-key availability, the forwarded agent and the jump-host registration with SCI-IT.
+              Use the account and connection details SCI-IT provides, and share only non-secret SSH error messages when requesting support.
         links:
             - label: MFA CSCS app and instructions
               url: https://github.com/aiidalab/aiidalab-mfa-cscs
