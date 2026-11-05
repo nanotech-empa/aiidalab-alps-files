@@ -30,8 +30,8 @@ connection_guides:
               agent. No new SCI-IT registration is needed if the same key and account remain registered. A container's own id_rsa can be a different key.
             - For new access, check your Empa/Tigu username in the form. The optional Prepare new Tigu key on ELA button creates or reuses a dedicated unencrypted
               key at ~/.ssh/aiidalab-tigu/id_ed25519 on ELA. It preserves existing keys and displays only the public part in a request you can copy.
-            - Send that request yourself to aliaksandr.yakutovich@empa.ch, asking to activate the public key on the jump host for Tigu and confirm whether
-              the same key is authorized on Tigu. Jump-host registration alone must not be assumed to authorize Tigu. Never send the private key.
+            - Send that request yourself to aliaksandr.yakutovich@empa.ch, explicitly asking to add the public key on both the jump host and Tigu and confirm
+              when both are ready. Jump-host registration alone must not be assumed to authorize Tigu. Never send the private key.
             - Wait for activation confirmation, then inspect and apply the selected route. If the key also needs adding on Tigu, that requires an existing
               working Tigu login or its administrator. The app cannot grant first access itself. A working Docker SSH agent is required for the proxy.
             - On first use, obtain trusted host-key entries for jump1.empa.ch and Tigu from SCI-IT and install them in the container's known_hosts using

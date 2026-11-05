@@ -187,8 +187,9 @@ click **Prepare new Tigu key on ELA**. This opt-in action creates/reuses a dedic
 unencrypted Ed25519 key at `~/.ssh/aiidalab-tigu/id_ed25519` on ELA, preserves default
 keys, and selects that ELA path in the form. The private key stays on ELA, mode 600.
 The form displays a copyable public-key request to `aliaksandr.yakutovich@empa.ch`
-asking for jump-host activation and confirmation of authorization on Tigu. The
-app sends no email. Both servers need authorization; registration on the jump
+explicitly asking to add the key on both the jump host and Tigu and confirm when
+both are ready. The app sends no email. Both servers need authorization;
+registration on the jump
 host alone is insufficient evidence of Tigu access. Adding the public key on Tigu
 requires an existing working login or its administrator. Wait for confirmation,
 then inspect/apply and test the route. Never send the private key.
