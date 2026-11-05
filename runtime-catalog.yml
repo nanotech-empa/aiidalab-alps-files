@@ -1,0 +1,660 @@
+---
+# Optional runtime definitions; no quantum-worker installations or updates.
+variables:
+    tigu_empa_username: '{cscsuser}'
+    tigu_ela_key: ''
+    local_orca_root: /home/jovyan/opt/orca_6_1_1_linux_arm64_shared_openmpi418
+    local_orca_mpi: /home/jovyan/opt/openmpi-4.1.8-orca-fortran
+    local_python: /opt/conda/bin/python
+    local_spm_bin: /home/jovyan/.local/bin
+    local_banduppy_python: /home/jovyan/opt/banduppy-1.0.0/bin/python
+    tigu_orca_root: /store/amsp/ORCA_6_1_1
+    tigu_orca_mpi: /opt/openmpi-4.1.1
+    tigu_banduppy_python: /store/{tigu_empa_username}/opt/banduppy-1.0.0/bin/python
+    daint_banduppy_python: /users/{cscsuser}/opt/banduppy-1.0.0/bin/python
+    local_cp2k_executable: /home/jovyan/opt/cp2k-2023.1-debian-arm64/usr/bin/cp2k.psmp
+    local_cp2k_prefix: /home/jovyan/opt/cp2k-2023.1-debian-arm64/usr
+    local_support_prefix: /home/jovyan/opt/local-codes
+    local_qe_prefix: /home/jovyan/.conda/envs/quantum-espresso-7.4
+    tigu_python: /store/{tigu_empa_username}/opt/cpython-3.12.15-20261013/python/bin/python3.12
+    tigu_orca_helpers: /store/{tigu_empa_username}/opt/orca-dyson-20261021
+runtime_settings:
+    tigu_empa_username:
+        description: Empa/Tigu username
+        format: ssh_username
+        computers: [tigu]
+    tigu_ela_key:
+        description: Tigu key on ELA (blank = defaults)
+        format: ssh_key_path
+        computers: [tigu]
+    local_orca_root:
+        description: local orca root
+        deployments:
+            - personal
+    local_orca_mpi:
+        description: local orca mpi
+        deployments:
+            - personal
+    local_python:
+        description: local python
+        deployments:
+            - personal
+    local_spm_bin:
+        description: local spm bin
+        deployments:
+            - personal
+    local_banduppy_python:
+        description: local banduppy python
+        deployments:
+            - personal
+    tigu_orca_root:
+        description: tigu orca root
+        deployments:
+            - hosted
+            - personal
+    tigu_orca_mpi:
+        description: tigu orca mpi
+        deployments:
+            - hosted
+            - personal
+    tigu_banduppy_python:
+        description: tigu banduppy python
+        deployments:
+            - hosted
+            - personal
+    daint_banduppy_python:
+        description: daint banduppy python
+        deployments:
+            - hosted
+            - personal
+    local_cp2k_executable:
+        description: local cp2k executable
+        deployments:
+            - personal
+    local_cp2k_prefix:
+        description: local cp2k prefix
+        deployments:
+            - personal
+    local_support_prefix:
+        description: local support prefix
+        deployments:
+            - personal
+    local_qe_prefix:
+        description: local qe prefix
+        deployments:
+            - personal
+    tigu_python:
+        description: Tigu native Python >=3.11
+        deployments:
+            - hosted
+            - personal
+    tigu_orca_helpers:
+        description: Tigu ORCA helper prefix
+        deployments:
+            - hosted
+            - personal
+computers:
+    mac-localhost:
+        deployments:
+            - personal
+        setup:
+            label: localhost
+            hostname: localhost
+            description: Personal Docker container (Linux, on the personal computer)
+            transport: core.local
+            scheduler: core.direct
+            shebang: '#!/bin/bash'
+            work_dir: /home/jovyan/aiida_run
+            mpirun_command: mpirun -np {tot_num_mpiprocs}
+            mpiprocs_per_machine: 1
+            default_memory_per_machine: 1048576
+            prepend_text: ''
+            use_double_quotes: false
+        config: {}
+codes:
+    tigu_orca:
+        computer: tigu
+        label: orca-6.1.1
+        description: orca-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca'
+        default_calc_job_plugin: orca.orca
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - ldd
+                  - '{tigu_orca_root}/orca'
+              not_contains: not found
+    tigu_orca_plot:
+        computer: tigu
+        label: orca-plot-6.1.1
+        description: orca-plot-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca_plot'
+        default_calc_job_plugin: empa_orca.orbital_cubes
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+    tigu_orca_2json:
+        computer: tigu
+        label: orca-2json-6.1.1
+        description: orca-2json-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca_2json'
+        default_calc_job_plugin: empa_orca.orbital_catalog
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+    local_orca:
+        computer: mac-localhost
+        label: orca-6.1.1
+        description: orca-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca'
+        default_calc_job_plugin: orca.orca
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        deployments: &id001
+            - personal
+        architectures: &id002
+            - aarch64
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - ldd
+                  - '{local_orca_root}/orca'
+              not_contains: not found
+    local_orca_plot:
+        computer: mac-localhost
+        label: orca-plot-6.1.1
+        description: orca-plot-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca_plot'
+        default_calc_job_plugin: empa_orca.orbital_cubes
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        deployments: *id001
+        architectures: *id002
+        with_mpi: false
+    local_orca_2json:
+        computer: mac-localhost
+        label: orca-2json-6.1.1
+        description: orca-2json-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca_2json'
+        default_calc_job_plugin: empa_orca.orbital_catalog
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        deployments: *id001
+        architectures: *id002
+        with_mpi: false
+    tigu_banduppy:
+        computer: tigu
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on tigu
+        filepath_executable: '{tigu_banduppy_python}'
+        default_calc_job_plugin: pythonjob.pythonjob
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{tigu_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    daint_banduppy:
+        computer: daint.alps
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on daint.alps
+        filepath_executable: '{daint_banduppy_python}'
+        default_calc_job_plugin: pythonjob.pythonjob
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{daint_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    local_banduppy:
+        computer: mac-localhost
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on mac-localhost
+        filepath_executable: '{local_banduppy_python}'
+        default_calc_job_plugin: pythonjob.pythonjob
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    local_stm:
+        computer: mac-localhost
+        label: stm-source-a0e486a
+        description: stm-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-stm-sts-wfn'
+        default_calc_job_plugin: nanotech_empa.stm
+        prepend_text: "export OPAL_PREFIX=\"{local_cp2k_prefix}\"\nexport PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib/aarch64-linux-gnu:/opt/conda/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json, pathlib, subprocess; import mpi4py, cp2k_spm_tools; from importlib.metadata import distribution; url=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json')
+                    or '{}'); ref=url.get('vcs_info',{}).get('commit_id'); root=pathlib.Path(cp2k_spm_tools.__file__).resolve().parent.parent; ref=ref or
+                    subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(); assert ref=='a0e486a12ad0102c6af5f9a9572c2449ec26e81e',ref;
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: Install the pinned SPM source and native MPI from docs/runtime-installation.md, then run the wrapper smoke tests.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_overlap:
+        computer: mac-localhost
+        label: overlap-source-a0e486a
+        description: overlap-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-overlap-from-wfns'
+        default_calc_job_plugin: nanotech_empa.overlap
+        prepend_text: "export OPAL_PREFIX=\"{local_cp2k_prefix}\"\nexport PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib/aarch64-linux-gnu:/opt/conda/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json, pathlib, subprocess; import mpi4py, cp2k_spm_tools; from importlib.metadata import distribution; url=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json')
+                    or '{}'); ref=url.get('vcs_info',{}).get('commit_id'); root=pathlib.Path(cp2k_spm_tools.__file__).resolve().parent.parent; ref=ref or
+                    subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(); assert ref=='a0e486a12ad0102c6af5f9a9572c2449ec26e81e',ref;
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: Install the pinned SPM source and native MPI from docs/runtime-installation.md, then run the wrapper smoke tests.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_sparse_overlap:
+        computer: mac-localhost
+        label: sparse_overlap-source-a0e486a
+        description: sparse_overlap-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-overlap-to-sparse-npz'
+        default_calc_job_plugin: nanotech_empa.sparse_overlap
+        prepend_text: "export OPAL_PREFIX=\"{local_cp2k_prefix}\"\nexport PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib/aarch64-linux-gnu:/opt/conda/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json, pathlib, subprocess; import mpi4py, cp2k_spm_tools; from importlib.metadata import distribution; url=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json')
+                    or '{}'); ref=url.get('vcs_info',{}).get('commit_id'); root=pathlib.Path(cp2k_spm_tools.__file__).resolve().parent.parent; ref=ref or
+                    subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(); assert ref=='a0e486a12ad0102c6af5f9a9572c2449ec26e81e',ref;
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: Install the pinned SPM source and native MPI from docs/runtime-installation.md, then run the wrapper smoke tests.
+        with_mpi: false
+        architectures:
+            - aarch64
+    local_cp2k_unfolding:
+        computer: mac-localhost
+        label: cp2k_unfolding-source-a0e486a
+        description: cp2k_unfolding-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-unfold-wfn-sparse-mpi'
+        default_calc_job_plugin: nanotech_empa.cp2k_unfolding
+        prepend_text: "export OPAL_PREFIX=\"{local_cp2k_prefix}\"\nexport PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib/aarch64-linux-gnu:/opt/conda/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json, pathlib, subprocess; import mpi4py, cp2k_spm_tools; from importlib.metadata import distribution; url=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json')
+                    or '{}'); ref=url.get('vcs_info',{}).get('commit_id'); root=pathlib.Path(cp2k_spm_tools.__file__).resolve().parent.parent; ref=ref or
+                    subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(); assert ref=='a0e486a12ad0102c6af5f9a9572c2449ec26e81e',ref;
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: Install the pinned SPM source and native MPI from docs/runtime-installation.md, then run the wrapper smoke tests.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_pythonjob:
+        computer: mac-localhost
+        label: python-3.12
+        description: python-3.12 on mac-localhost
+        filepath_executable: '{local_python}'
+        default_calc_job_plugin: pythonjob.pythonjob
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import sys; assert sys.version_info >= (3,12); print("python-ready")
+              contains: python-ready
+        deployments:
+            - personal
+        with_mpi: false
+    local_cp2k:
+        computer: mac-localhost
+        label: cp2k-2023.1-native
+        description: cp2k-2023.1-native in personal Linux container
+        filepath_executable: '{local_cp2k_executable}'
+        default_calc_job_plugin: cp2k
+        prepend_text: "export OPAL_PREFIX=\"{local_cp2k_prefix}\"\nexport PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib/aarch64-linux-gnu:/opt/conda/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+        architectures:
+            - aarch64
+        runtime_checks:
+            - arguments:
+                  - /bin/sh
+                  - -c
+                  - test -r "$CP2K_DATA_DIR/dftd3.dat"
+    local_bader:
+        computer: mac-localhost
+        label: bader-local
+        description: bader-local in personal Linux container
+        filepath_executable: '{local_spm_bin}/bader'
+        default_calc_job_plugin: nanotech_empa.bader
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_cubehandler:
+        computer: mac-localhost
+        label: cubehandler-local
+        description: cubehandler-local in personal Linux container
+        filepath_executable: '{local_spm_bin}/cubehandler'
+        default_calc_job_plugin: nanotech_empa.cubehandler
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_phonopy:
+        computer: mac-localhost
+        label: phonopy-local
+        description: phonopy-local in personal Linux container
+        filepath_executable: '{local_spm_bin}/phonopy'
+        default_calc_job_plugin: phonopy.phonopy
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_critic2:
+        computer: mac-localhost
+        label: critic2-1.2.2
+        description: critic2-1.2.2 in personal Linux container
+        filepath_executable: '{local_support_prefix}/bin/critic2'
+        default_calc_job_plugin: critic2
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+        runtime_checks:
+            - arguments:
+                  - '{local_support_prefix}/bin/critic2'
+                  - --version
+              contains: 1.2.2
+    local_wannier90:
+        computer: mac-localhost
+        label: wannier90-local
+        description: wannier90-local in personal Linux container
+        filepath_executable: '{local_support_prefix}/bin/wannier90.x'
+        default_calc_job_plugin: wannier90.wannier90
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_qe_pw:
+        computer: mac-localhost
+        label: pw-7.4
+        description: pw-7.4 in personal Linux container
+        filepath_executable: '{local_qe_prefix}/bin/pw.x'
+        default_calc_job_plugin: quantumespresso.pw
+        prepend_text: "export PATH=\"{local_qe_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_qe_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_qe_pp:
+        computer: mac-localhost
+        label: pp-7.4
+        description: pp-7.4 in personal Linux container
+        filepath_executable: '{local_qe_prefix}/bin/pp.x'
+        default_calc_job_plugin: quantumespresso.pp
+        prepend_text: "export PATH=\"{local_qe_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_qe_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_qe_projwfc:
+        computer: mac-localhost
+        label: projwfc-7.4
+        description: projwfc-7.4 in personal Linux container
+        filepath_executable: '{local_qe_prefix}/bin/projwfc.x'
+        default_calc_job_plugin: quantumespresso.projwfc
+        prepend_text: "export PATH=\"{local_qe_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_qe_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_qe_dos:
+        computer: mac-localhost
+        label: dos-7.4
+        description: dos-7.4 in personal Linux container
+        filepath_executable: '{local_qe_prefix}/bin/dos.x'
+        default_calc_job_plugin: quantumespresso.dos
+        prepend_text: "export PATH=\"{local_qe_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_qe_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_qe_pw2wannier90:
+        computer: mac-localhost
+        label: pw2wannier90-7.4
+        description: pw2wannier90-7.4 in personal Linux container
+        filepath_executable: '{local_qe_prefix}/bin/pw2wannier90.x'
+        default_calc_job_plugin: quantumespresso.pw2wannier90
+        prepend_text: "export PATH=\"{local_qe_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_qe_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    tigu_orca_tools:
+        computer: tigu
+        label: orca-tools
+        description: ORCA tools helper on tigu
+        filepath_executable: '{tigu_orca_helpers}/orca-tools'
+        default_calc_job_plugin: empa_orca.electronic_storage
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - hosted
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    tigu_orca_dyson:
+        computer: tigu
+        label: orca-dyson
+        description: ORCA dyson helper on tigu
+        filepath_executable: '{tigu_orca_helpers}/orca-dyson'
+        default_calc_job_plugin: empa_orca.dyson
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - hosted
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_orca_tools:
+        computer: mac-localhost
+        label: orca-tools
+        description: ORCA tools helper on mac-localhost
+        filepath_executable: '{local_spm_bin}/orca-tools'
+        default_calc_job_plugin: empa_orca.electronic_storage
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_orca_dyson:
+        computer: mac-localhost
+        label: orca-dyson
+        description: ORCA dyson helper on mac-localhost
+        filepath_executable: '{local_spm_bin}/orca-dyson'
+        default_calc_job_plugin: empa_orca.dyson
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_skeaf:
+        computer: mac-localhost
+        label: skeaf-local
+        description: skeaf in personal Linux container
+        filepath_executable: '{local_support_prefix}/bin/skeaf'
+        default_calc_job_plugin: skeaf.skeaf
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the native SKEAF program and the matching aiida-skeaf plugin/wan2skeaf entry point from the local-runtime guide.
+    local_wan2skeaf:
+        computer: mac-localhost
+        label: wan2skeaf-local
+        description: wan2skeaf in personal Linux container
+        filepath_executable: '{local_spm_bin}/wan2skeaf'
+        default_calc_job_plugin: skeaf.wan2skeaf
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the native SKEAF program and the matching aiida-skeaf plugin/wan2skeaf entry point from the local-runtime guide.
+setup_tasks:
+    local_banduppy_runtime:
+        computer: mac-localhost
+        codes:
+            - local_banduppy
+        commands:
+            - type: local
+              command: '{local_python} {config_files}/scripts/install-banduppy-runtime.py --executable {local_banduppy_python}'
+    daint_banduppy_runtime:
+        computer: daint.alps
+        codes:
+            - daint_banduppy
+        commands:
+            - type: scp
+              command: scp {config_files}/scripts/install-banduppy-runtime.py daint.alps.cscs.ch:/users/{cscsuser}/bin/empa-install-banduppy.py
+            - type: ssh
+              command: uenv run --view=default {spm_uenv} -- python /users/{cscsuser}/bin/empa-install-banduppy.py --executable {daint_banduppy_python}
+    tigu_banduppy_runtime:
+        computer: tigu
+        codes:
+            - tigu_banduppy
+        commands:
+            - type: ssh
+              command: mkdir -p /store/{tigu_empa_username}/opt/empa-setup
+            - type: scp
+              command: scp {config_files}/scripts/install-banduppy-runtime.py tigu:/store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py
+            - type: ssh
+              command: '{tigu_python} /store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py --executable {tigu_banduppy_python}'
+    eiger_cp2k_data:
+        computer: eiger.alps
+        codes:
+            - cp2keiger
+        commands:
+            - type: ssh
+              command: mkdir -p /users/{cscsuser}/src
+            - type: scp
+              command: scp -r {config_files}/cp2k eiger.alps.cscs.ch:/users/{cscsuser}/src/
