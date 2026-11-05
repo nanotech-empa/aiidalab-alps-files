@@ -165,6 +165,23 @@ Other personal architectures need their own qualified native definitions.
 
 ## SSH and scratch/uenv failures
 
+`connection-help.yml` supplies a guide for every foreseen remote computer:
+Daint/Eiger use the ALPS guide and Tigu has its own guide. The setup form shows
+an expandable section for each selected remote computer, and a failed SSH
+attempt prints that computer's instructions in the log.
+
+For ALPS, install MFA CSCS if it is absent, open it and refresh/renew a valid
+CSCS SSH key/certificate before retrying. For Tigu, keep those CSCS credentials
+valid **and** provide a separate SSH key for the Empa jump host. Send only the
+public part (`.pub`) to SCI-IT for registration, wait for their confirmation and
+use the account/route they provide. Never send the private key. The setup app
+neither sends keys to SCI-IT nor changes the user's SSH agent automatically.
+
+Configuration and help edits reach the form when the user clicks **Inspect
+updates**, which synchronizes the selected branch before inspecting. Startup
+reads the cached catalog; there is no background configuration-update polling.
+Apply uses the inspected revision and performs no additional configuration fetch.
+
 The app writes selected app-managed SSH blocks while retaining other entries and
 making a backup. It bootstraps Daint's proxy and target host keys before checking
 the connection, uses batch mode/connection timeouts, and refuses a changed trusted

@@ -1,0 +1,29 @@
+---
+connection_guides:
+    alps:
+        title: ALPS SSH access (Daint and Eiger)
+        steps:
+            - You need a valid CSCS SSH key and certificate to connect to ALPS.
+            - If you have not installed MFA CSCS, install it from the AiiDAlab app store (aiidalab-mfa-cscs).
+            - Open MFA CSCS and refresh or renew your CSCS SSH certificate before retrying. If needed, complete the CSCS login again; an expired certificate
+              must be renewed.
+            - If your SSH key has a passphrase, unlock it through your normal SSH agent. The setup app does not enter passwords or passphrases for you.
+            - If authentication used to work and now fails, check or renew the CSCS credentials first, then click Inspect updates and retry.
+        links:
+            - label: MFA CSCS app and instructions
+              url: https://github.com/aiidalab/aiidalab-mfa-cscs
+    tigu:
+        title: Tigu SSH access (CSCS and Empa jump host)
+        steps:
+            - Tigu also needs a valid CSCS SSH key and certificate for the CSCS part of the connection. Install or open MFA CSCS and refresh or renew those
+              credentials when needed.
+            - You additionally need a separate SSH key pair for access through the Empa jump host. A valid CSCS key alone is not sufficient.
+            - Send only the public part of that separate key (the .pub file) to SCI-IT and ask them to register it on the jump host. Keep the private key
+              private; never send it to anyone.
+            - Wait for SCI-IT to confirm registration, then use the account and jump-host connection details they provide. Make the separate key available
+              through your normal SSH agent.
+            - If Tigu still fails with a valid CSCS certificate, check the separate jump-host key and its registration with SCI-IT. Share only non-secret
+              SSH error messages when requesting support.
+        links:
+            - label: MFA CSCS app and instructions
+              url: https://github.com/aiidalab/aiidalab-mfa-cscs
