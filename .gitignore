@@ -5,3 +5,10 @@
 bader_src/*.o
 bader_src/*.mod
 bader_src/bader
+
+# Python installer caches
+__pycache__/
+*.py[cod]
+
+# Private, credential-free source delivery capsules are never public catalog files.
+/private-sources/
