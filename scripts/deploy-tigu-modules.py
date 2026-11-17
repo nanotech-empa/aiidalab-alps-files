@@ -35,6 +35,10 @@ FAMILIES = {
     "cp2k": ("cp2k-2026.2-a0e486a", "empa/cp2k/2026.2-a0e486a"),
     "qe": ("qe-7.5", "empa/qe/7.5"),
     "banduppy": ("banduppy-1.0.0", "empa/banduppy/1.0.0"),
+    "python": ("qe-pp-python-20261116", "empa/python/20261116"),
+    "pythtb": ("pythtb-2.0.2", "empa/pythtb/2.0.2"),
+    "quantum": ("quantum-energy-4d92f718", "empa/quantum/4d92f718"),
+    "conversion": ("wan2skeaf-0.2.1", "empa/wan2skeaf/0.2.1"),
     "block2": ("block2-0.5.4", "empa/block2/0.5.4"),
     "render": ("cubehandler-245db38", "empa/cubehandler/245db38"),
     "support": ("support-20261116", "empa/support/20261116"),
@@ -47,7 +51,17 @@ FAMILIES = {
 LICENSED = {"orca", "gaussian"}
 # Reproducible immutable build IDs distinguish corrected package/probe closures
 # from retained failed prototypes without overwriting or relabelling them.
-for _family in ("cp2k", "qe", "block2", "render", "support"):
+for _family in (
+    "cp2k",
+    "qe",
+    "block2",
+    "render",
+    "support",
+    "python",
+    "pythtb",
+    "quantum",
+    "conversion",
+):
     _build = hashlib.sha256((RECIPES / (_family + ".json")).read_bytes()).hexdigest()[
         :10
     ]
@@ -423,6 +437,20 @@ def install_family(root, modules, family, module_init, site=None):
             "source/remote/itensor-spin-gs-local",
             "source/remote/itensor-spin-segment-local",
         ]
+    elif family == "pythtb":
+        spec = importlib.util.spec_from_file_location(
+            "pythtb_installer", HERE / "prepare-pythtb-runtime.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        record = module.prepare(
+            prefix,
+            RECIPES / "pythtb.json",
+            site.get("pythtb_wheel"),
+            site.get("pythtb_wheel_sha256"),
+            execute=True,
+        )
+        executable_paths = ["bin/empa-tb-worker"]
     else:
         # The installer receives command-scoped environment only.
         subprocess.run(
@@ -502,6 +530,8 @@ def main():
     parser.add_argument("--probe-family", choices=FAMILIES)
     parser.add_argument("--model-source", type=Path)
     parser.add_argument("--model-source-sha256")
+    parser.add_argument("--pythtb-wheel", type=Path)
+    parser.add_argument("--pythtb-wheel-sha256")
     parser.add_argument(
         "--shared-group",
         help="Existing authorized site group; no groups/accounts are created.",
@@ -517,6 +547,11 @@ def main():
         record = json.loads(supplied.read_text())
         args.model_source = supplied.parent / record["filename"]
         args.model_source_sha256 = record["sha256"]
+    supplied_worker = HERE.parent / "private-sources/pythtb-worker.json"
+    if args.pythtb_wheel is None and supplied_worker.is_file():
+        record = json.loads(supplied_worker.read_text())
+        args.pythtb_wheel = supplied_worker.parent / record["filename"]
+        args.pythtb_wheel_sha256 = record["sha256"]
     root = checked_path(args.root)
     modules = checked_path(args.module_root or root / "modulefiles")
     if args.check_family or args.probe_family:
@@ -611,6 +646,8 @@ def main():
                     "gaussian": args.gaussian_root,
                     "model_source": args.model_source,
                     "model_source_sha256": args.model_source_sha256,
+                    "pythtb_wheel": args.pythtb_wheel,
+                    "pythtb_wheel_sha256": args.pythtb_wheel_sha256,
                 },
             )
             print(

@@ -258,6 +258,19 @@ def artifact(spec, directory):
     return path
 
 
+def runtime_library_path(prefix, recipe):
+    """Include only the explicit native image libraries required by a recipe."""
+    paths = [str(prefix / "lib"), *recipe.get("library_paths", [])]
+    if any(
+        not Path(p).is_absolute()
+        or ".." in Path(p).parts
+        or any(ord(c) < 32 for c in p)
+        for p in paths
+    ):
+        fail("Native library paths must be explicit absolute paths.")
+    return os.pathsep.join(paths)
+
+
 def verify(prefix, recipe, env, log):
     for name in recipe.get("executables", []):
         path = prefix / name
@@ -268,7 +281,7 @@ def verify(prefix, recipe, env, log):
             fail(f"Required runtime data is unavailable: {name}")
     local_env = dict(env)
     local_env["PATH"] = str(prefix / "bin") + os.pathsep + env.get("PATH", "")
-    local_env["LD_LIBRARY_PATH"] = str(prefix / "lib")
+    local_env["LD_LIBRARY_PATH"] = runtime_library_path(prefix, recipe)
     if recipe["kind"] == "pip-prefix":
         python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
         site = prefix / f"lib/python{python_version}/site-packages"
@@ -347,6 +360,14 @@ def install(recipe_path, prefix, execute=False):
     record = prefix.parent / f".{prefix.name}-installation.json"
     log = prefix.parent / f".{prefix.name}-installation.log"
     env = isolated_environment(prefix)
+    if recipe.get("library_paths"):
+        env["LD_LIBRARY_PATH"] = runtime_library_path(prefix, recipe)
+    for key, value in recipe.get("build_environment", {}).items():
+        if key not in {"CC", "CXX", "FC", "F77", "MPICC", "MPI4PY_BUILD_MPICC"}:
+            fail("Unsupported explicit native compiler setting.")
+        if not Path(value).is_absolute() or ".." in Path(value).parts:
+            fail("Use an absolute native compiler executable.")
+        env[key] = value
     if prefix.exists():
         if not marker.is_file() or marker.is_symlink():
             fail(
@@ -477,7 +498,7 @@ def install(recipe_path, prefix, execute=False):
             wheels = [
                 p.as_uri() + "#sha256=" + spec["sha256"]
                 for p, spec in zip(downloads, recipe["artifacts"], strict=True)
-                if spec.get("type") != "source-files"
+                if spec.get("type") not in {"source-files", "python-source"}
             ]
             venv.EnvBuilder(with_pip=True, symlinks=False).create(prefix)
             run(
@@ -493,6 +514,33 @@ def install(recipe_path, prefix, execute=False):
                 env,
                 log,
             )
+            sources = [
+                p.as_uri()
+                + "#sha256="
+                + spec["sha256"]
+                + (
+                    "&subdirectory=" + spec["subdirectory"]
+                    if spec.get("subdirectory")
+                    else ""
+                )
+                for p, spec in zip(downloads, recipe["artifacts"], strict=True)
+                if spec.get("type") == "python-source"
+            ]
+            if sources:
+                run(
+                    [
+                        prefix / "bin/python",
+                        "-m",
+                        "pip",
+                        "install",
+                        "--no-index",
+                        "--no-deps",
+                        "--no-build-isolation",
+                        *sources,
+                    ],
+                    env,
+                    log,
+                )
         else:
             with tarfile.open(downloads[0]) as archive:
                 members = archive.getmembers()

@@ -1,0 +1,29 @@
+#!/bin/bash
+set -euo pipefail
+export PYTHONNOUSERSITE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+mkdir -p /user-environment/native
+PYTHON=/user-environment/env/default/bin/python
+"$PYTHON" -c "import sys,platform; assert sys.version_info[:2] == (3,12); assert platform.machine() == 'aarch64'"
+"$PYTHON" - <<'BOOTSTRAP'
+import hashlib,json,pathlib,urllib.request
+spec=json.loads(pathlib.Path("/user-environment/meta/recipe/assets/micromamba.json").read_text())
+path=pathlib.Path("/user-environment/native/tools/micromamba")
+path.parent.mkdir(parents=True,exist_ok=True)
+with urllib.request.urlopen(spec["url"], timeout=90) as stream: data=stream.read()
+assert hashlib.sha256(data).hexdigest()==spec["sha256"]
+if path.is_symlink(): raise ValueError("Preserve unexpected micromamba symlink")
+if path.exists():
+ assert hashlib.sha256(path.read_bytes()).hexdigest()==spec["sha256"]
+else:
+ with path.open("xb") as stream: stream.write(data)
+path.chmod(0o755)
+BOOTSTRAP
+export PATH=/user-environment/native/tools:$PATH
+"$PYTHON" /user-environment/meta/recipe/assets/install-local-runtime.py --recipe /user-environment/meta/recipe/assets/daint-support.json --prefix /user-environment/native/support --execute
+"$PYTHON" - <<'MANIFEST'
+import json,pathlib,platform,sys
+base=pathlib.Path("/user-environment/native")
+prefixes=['support']
+data={"kind":"empa-support","version":"2026.11","architecture":platform.machine(),"python":sys.version,"scientific_qualification":"pending","private_engine_included":False,"prefixes":prefixes}
+pathlib.Path("/user-environment/empa-runtime-manifest.json").write_text(json.dumps(data,indent=2)+"\n")
+MANIFEST

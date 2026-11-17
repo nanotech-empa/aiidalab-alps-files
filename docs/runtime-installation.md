@@ -16,7 +16,9 @@ MPI tasks/machine and memory to the actual container allocation.
 
 Install the corresponding applications/plugins with AiiDAlab's normal app manager
 first. The setup app diagnoses missing plugins rather than creating fake Codes.
-PythTB is an app dependency and has no executable Code.
+PythTB's localhost solver uses its app dependency. The separately maintained
+Tigu worker/CalcJob supplies remote execution; see the
+[deployment matrix](deployment-matrix.md).
 
 Keep **Install selected localhost runtimes** enabled for a new installation.
 Uncheck it to use existing programs; runtime checks still apply. Opening the app
@@ -26,13 +28,16 @@ and records the chosen revision. Changed choices/revision require inspection aga
 | Family | Selected maintained recipe / installation |
 | --- | --- |
 | CP2K/SPM | cp2k-2026.2-linux-aarch64: complete official conda-forge closure, Python/MPI, basis/potential/D3 data, exact selected SPM source. |
-| QE | qe-7.5-linux-aarch64: complete artifact closure from the qualified QE7.5 line, including matching MPI and post-processing executables. |
+| QE7.5 | Supplied and registered by the official QE app. EMPA setup preserves/reuses those Codes and does not run a second QE installer. |
+| QE-PP Python | Dedicated hashed Python3.12 wheel closure with cloudpickle, NumPy/SciPy, pymatgen and scikit-image; required PythonJob Code. |
 | BandUPpy | banduppy-1.0.0-cp312-aarch64: isolated venv and full hashed official wheel closure, separate from AiiDA. |
 | Block2 | block2-0.5.4-cp312-aarch64: standard pip prefix, official native wheel and numerical dependencies, native import checks and nested Code metadata. |
 | Rendering | cube-render-linux-aarch64: official current PyVista/VTK/Mesa and selected CubeHandler source. CPU EGL/llvmpipe, one thread; no X server or copied old OSMesa path. |
 | Julia/Model | Official Julia1.12.6 artifact, then exact backend4f7f2f963bacb5e870fc118842004e31609c7c55 source and committed Project/Manifest in a private depot. |
 | ORCA | Your licensed ARM64 archive; source-built matching OpenMPI4.1.8 with native C/C++/Fortran and numeric-type probe. |
 | Support | Official Bader1.0.5, Wannier904.0.3, SKEAF1.3.0; official Critic2 tag1.6 and PPAFM0.4.1 source builds with native compilers. |
+| Quantum energy | Source-locked modern quantum-energy/v1 SDK worker, native numerical/SDK imports and manifest identity. No hardware-provider calls or credentials. |
+| wan2skeaf | Official aiidaplugins/aiida-skeaf v0.2.1 converter source and licence with NumPy/SciPy; reuse the app-provided console command when already available. |
 
 Versioned JSON recipes under `runtime-recipes/` contain complete artifact URLs,
 versions/builds and SHA-256. `scripts/install-local-runtime.py` prints a plan by
@@ -45,8 +50,8 @@ Example plan (no installation):
 
 ```console
 python scripts/install-local-runtime.py \
-  --recipe runtime-recipes/qe-7.5-linux-aarch64.json \
-  --prefix /home/jovyan/opt/native-runtimes/qe-7.5-aarch64
+  --recipe runtime-recipes/python-worker-cp312-aarch64.json \
+  --prefix /home/jovyan/opt/native-runtimes/qe-pp-python-cp312-aarch64
 ```
 
 Use an architecture-native Python3.12 for cp312 wheel recipes. Other architectures
@@ -136,3 +141,5 @@ Quantum-worker updates/new deployments remain separately deferred; old research
 workers are not a restore list. Modern DMRG/model capabilities remain included.
 Runtime checks, Code registration and actual tiny application execution are
 separate verdicts; use the setup app's clean-instance acceptance checklist.
+
+For the complete machine-by-machine ownership and actual remaining coverage, see [the deployment matrix](deployment-matrix.md).

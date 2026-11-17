@@ -300,6 +300,8 @@ def main():
     parser.add_argument("--prefix", type=Path, required=True)
     parser.add_argument("--julia", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--source-archive", type=Path)
+    parser.add_argument("--source-sha256")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument(
         "--compute-only",
@@ -314,6 +316,8 @@ def main():
             args.source_commit,
             args.execute,
             not args.compute_only,
+            source_archive=args.source_archive,
+            source_sha256=args.source_sha256,
         )
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         parser.exit(1, f"Model runtime installation: {error}\n")

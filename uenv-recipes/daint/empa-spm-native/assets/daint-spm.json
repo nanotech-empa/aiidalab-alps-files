@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "id": "daint-spm-a0e486a-native-cray-mpi4py-4.1.2",
+  "kind": "venv",
+  "architecture": "aarch64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "native image/import/MPI/application qualification pending",
+  "build_environment": {
+    "CC": "/user-environment/env/default/bin/gcc",
+    "CXX": "/user-environment/env/default/bin/g++",
+    "MPICC": "/user-environment/env/default/bin/mpicc",
+    "MPI4PY_BUILD_MPICC": "/user-environment/env/default/bin/mpicc"
+  },
+  "library_paths": [
+    "/user-environment/env/default/lib"
+  ],
+  "artifacts": [
+    {
+      "name": "numpy",
+      "version": "2.5.5",
+      "url": "https://files.pythonhosted.org/packages/c2/22/82184e9a5b50a4a298e9f8fe0bd8cfc483672dbfea8a3b57c78e2376b139/numpy-2.5.5-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "a0750f2156d53446caca85663d0b65d67214e1664b9050454a731ea1418d176a"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "url": "https://files.pythonhosted.org/packages/75/9a/2e71719f31eaefe0e3a1706c4a1ded94e664bfd95ffca2b219a671faee01/scipy-1.18.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "3c085faa2cfa879c5141df483f836f4d691045a078224a670fa570fa01612d89"
+    },
+    {
+      "name": "ase",
+      "version": "3.29.0",
+      "url": "https://files.pythonhosted.org/packages/66/a6/a3d29378618d3d9ba0962473f8bbf09a5ad15eb8b210c5153fb88d0b8aad/ase-3.29.0-py3-none-any.whl",
+      "sha256": "7b9dd103f007810339c24acfee2f6b677c0c48443b21d3c98e52959246cf4ebf"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.11.2",
+      "url": "https://files.pythonhosted.org/packages/f4/84/32549e7a462dc311aed2ab62e5d2538028840b5c53a8be0195c789937c3d/matplotlib-3.11.2-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "1b9a7ad579856284135e401ecc918c5f8a017ee30539298862a109f51b971710"
+    },
+    {
+      "name": "Cython",
+      "version": "3.3.1",
+      "url": "https://files.pythonhosted.org/packages/4f/9d/016dfaefc1a10e182fd770e6c331ebf79df88a527883b4ecbdd74abb9969/cython-3.3.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "5f08b3eaa639005bea6ab119ebbd6e30656e448981e7a124d80b409760d06c15"
+    },
+    {
+      "name": "setuptools",
+      "version": "84.2.1",
+      "url": "https://files.pythonhosted.org/packages/ef/55/6dc6d6bb953bdfc52519a0059592c52b6e3b8ad51cf8256dffceb55b0610/setuptools-84.2.1-py3-none-any.whl",
+      "sha256": "ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2"
+    },
+    {
+      "name": "wheel",
+      "version": "0.48.0",
+      "url": "https://files.pythonhosted.org/packages/2e/29/69cfbb602cd91690c55d38ba9fe53e6a7e76a6fa647bf38f19c138d25449/wheel-0.48.0-py3-none-any.whl",
+      "sha256": "3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab"
+    },
+    {
+      "name": "contourpy",
+      "version": "1.4.0",
+      "url": "https://files.pythonhosted.org/packages/0f/cc/cb989599eec12fda312e127eb8e04a8b21a7a6c94bf7ff1bc68273334a42/contourpy-1.4.0-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "43c3ccbb32c6294b183dcc8e8c46dacf5ecef809497e3d48a5be298eef185ad0"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1",
+      "url": "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl",
+      "sha256": "85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.68.0",
+      "url": "https://files.pythonhosted.org/packages/21/94/b125c7a6d154d17f4f699150ef3abebd9d8ad0f7eddce9dad649a9e5c1d8/fonttools-4.68.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "b41e71b2657c9843b2327b4e3c116db1757dc8cd05d978cd47cb5061272d4997"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1",
+      "url": "https://files.pythonhosted.org/packages/6f/35/09c58daac34e6f6ea5c6dee0094b422118e5a7c265586008a95fd135ac5f/kiwisolver-1.5.1-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "d27c2123977cb9269c30a49ba45f03a4323017ef693e19db4ec9dbe1299a3002"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "name": "pillow",
+      "version": "13.0.0",
+      "url": "https://files.pythonhosted.org/packages/3b/bb/9e30e8ed18c20800ee327a12107d5249ad8dc444867b3adfcc21654e3c71/pillow-13.0.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "8bf295fe459343bc6093c8e5e0df60bfa189e0fcb775a22e2c2488fdeccc6c0d"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3",
+      "url": "https://files.pythonhosted.org/packages/38/bb/d215ee7c73b61497b28a5503f9f53523f294fcc936762b7caf90e0c1c2b5/pyparsing-3.3.3-py3-none-any.whl",
+      "sha256": "ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "4.0.0",
+      "url": "https://files.pythonhosted.org/packages/2f/a9/52b89563d154433d79b51ed1eb4842bf7334cb2696891a7fe135618853d7/python_dateutil-4.0.0-py3-none-any.whl",
+      "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6",
+      "url": "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+    },
+    {
+      "name": "mpi4py",
+      "version": "4.1.2",
+      "type": "python-source",
+      "url": "https://files.pythonhosted.org/packages/75/83/231445bbcf7ef10864746c244ff2d82000011449b79275642c5d4ed8c8f4/mpi4py-4.1.2.tar.gz",
+      "sha256": "56860286dc45f20e8821e93cb06669e30462348bf866f685553fa4b712d58d02"
+    },
+    {
+      "name": "cp2k-spm-tools",
+      "version": "a0e486a12ad0102c6af5f9a9572c2449ec26e81e",
+      "type": "python-source",
+      "url": "https://codeload.github.com/nanotech-empa/cp2k-spm-tools/tar.gz/a0e486a12ad0102c6af5f9a9572c2449ec26e81e",
+      "sha256": "0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b",
+      "filename": "cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e.tar.gz"
+    }
+  ],
+  "executables": [
+    "bin/python",
+    "bin/cp2k-stm-sts-wfn",
+    "bin/cp2k-overlap-from-wfns",
+    "bin/cp2k-overlap-to-sparse-npz",
+    "bin/cp2k-unfold-wfn-sparse-mpi"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/python",
+      "-c",
+      "import mpi4py; mpi4py.rc.initialize=False; from mpi4py import MPI; import numpy,scipy,ase,matplotlib,cp2k_spm_tools; from importlib.metadata import version; assert version('cp2k-spm-tools')=='1.6.0'; assert version('mpi4py')=='4.1.2'; print(MPI.Get_library_version()); print('spm-native-cray-import-ready')"
+    ],
+    [
+      "@PREFIX/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ]
+  ]
+}

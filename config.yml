@@ -5,38 +5,39 @@ variables:
     remotehost1: daint.alps.cscs.ch
     conda_init: source /users/{cscsuser}/miniconda3/bin/activate
     config_files: /home/jovyan/opt/aiidalab-alps-files/
-    qe_uenv: quantumespresso/v7.4:v2
-    qe_version: '7.4'
+    qe_uenv: quantumespresso/v7.5:v3
+    qe_version: '7.5'
     qeeiger_uenv: quantumespresso/v7.4.1:v2
     qeeiger_version: '7.4'
-    wannier90_version: 3.7.1
-    wannier90_uenv: quantumespresso/v7.4:v2
+    wannier90_version: 3.1.0
+    wannier90_uenv: quantumespresso/v7.5:v3
     cp2keiger_uenv: cp2k/2025.1:v3
     cp2keiger_version: '2025.1'
-    cp2k_uenv: cp2k/2024.3:v2
-    cp2k_version: '2024.3'
+    cp2k_uenv: cp2k/2026.2:v1
+    cp2k_version: '2026.2'
     spmeiger_uenv: cp2k-spm-tools/1.5:1991541844
     spmeiger_version: 1.5.0
-    spm_uenv: cp2k-spm-tools/1.5.0:1658742098
-    spm_version: 1.5.0
-    unfolding_source_ref: d4203fd
-    unfolding_version: pr24-d4203fd
+    spm_uenv: empa-spm-native/1.6.0-a0e486a:3077571942
+    spm_version: 1.6.0-a0e486a
+    unfolding_source_ref: a0e486a12ad0102c6af5f9a9572c2449ec26e81e
+    unfolding_version: 1.6.0-a0e486a
     spm_current_preview_source_ref: a0e486a12ad0102c6af5f9a9572c2449ec26e81e
     spm_current_preview_version: surfaces-v2-a0e486a
     bader_version: '1.05'
-    afm_uenv: ppafm/0.4.0:1829383183
-    afm_version: 0.4.0
-    cubehandler_uenv: cubehandler/0.1.0:1771514270
-    cubehandler_version: 0.1.0
-    python_uenv: critic2/1.2:1952527021
-    python_version: 3.9.13
+    afm_uenv: '{support_uenv}'
+    afm_version: 0.4.1
+    cubehandler_uenv: empa-render/0.2.1-245db38:3075642343
+    cubehandler_version: 0.2.1-245db38
+    python_uenv: empa-postprocess/2026.11:3075642218
+    python_version: '3.12'
     phonopy_uenv: critic2/1.2:1952527021
     phonopy_version: 2.25.0
-    critic2_uenv: critic2/1.2:1952527021
-    critic2_version: 1.2.2
+    critic2_uenv: '{support_uenv}'
+    critic2_version: '1.6'
     ssh_public_key: /home/jovyan/.ssh/cscs-key-cert.pub
     timestamp: now
 
+    support_uenv: empa-support/2026.11-native:3077565151
 widgets:
     cscsuser:
         - select
@@ -246,57 +247,50 @@ codes:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.stm
-        description: stm {spm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git
-        filepath_executable: /user-environment/env/default/bin/cp2k-stm-sts-wfn
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-stm-sts-wfn
         label: stm-{spm_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            # set environment
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\n# set environment\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK\
+            \ - 1 : 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
     ppafm:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.afm
         description: afm {afm_uenv} on daint.alps from https://github.com/Probe-Particle/ppafm.git
-        filepath_executable: /users/{cscsuser}/bin/run_ppafm.sh
+        filepath_executable: /user-environment/native/support/bin/run_ppafm.sh
         label: ppafm-{afm_version}
-        prepend_text: |
-            #SBATCH --uenv={afm_uenv}
-            #SBATCH --view=default
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={support_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n\
+            export MPICH_GPU_SUPPORT_ENABLED=0\n"
         use_double_quotes: false
-
+        with_mpi: false
     python:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: pythonjob.pythonjob
-        description: python {python_uenv} at daint alps
-        filepath_executable: /user-environment/env/default/bin/python
-        label: python-{python_version}
-        prepend_text: |
-            #SBATCH --uenv={python_uenv}
-            #SBATCH --view=default
-            export MPICH_GPU_SUPPORT_ENABLED=0
+        description: Python3.12 QE-PP worker in shared EMPA postprocessing uenv
+        filepath_executable: /user-environment/native/python-worker/bin/python
+        label: python
+        prepend_text: "#SBATCH --uenv={python_uenv}\n#SBATCH --view=default\nexport MPICH_GPU_SUPPORT_ENABLED=0\n"
         use_double_quotes: false
-
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - /user-environment/native/python-worker/bin/python
+                  - -c
+                  - import cloudpickle,numpy,scipy; from pymatgen.io.common import VolumetricData; from skimage.transform import resize; from skimage.metrics
+                    import structural_similarity; print('qe-pp-python-ready')
+              contains: qe-pp-python-ready
     cubehandler:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.cubehandler
         description: cubehandler {cubehandler_uenv} at daint alps
-        filepath_executable: /user-environment/env/default/bin/cubehandler
+        filepath_executable: /user-environment/native/render/bin/cubehandler-render
         label: cubehandler-{cubehandler_version}
-        prepend_text: |
-            #SBATCH --uenv={cubehandler_uenv}
-            #SBATCH --view=default
-            export MPICH_GPU_SUPPORT_ENABLED=0
+        prepend_text: "#SBATCH --uenv={cubehandler_uenv}\n#SBATCH --view=default\nexport MPICH_GPU_SUPPORT_ENABLED=0\n"
         use_double_quotes: false
-
     phonopy:
         append_text: ' '
         computer: daint.alps
@@ -317,14 +311,12 @@ codes:
         computer: daint.alps
         default_calc_job_plugin: critic2
         description: critic2 {critic2_uenv} on daint.alps
-        filepath_executable: /user-environment/env/default/bin/critic2
+        filepath_executable: /user-environment/native/support/bin/critic2
         label: critic2-{critic2_version}
-        prepend_text: |
-            #SBATCH --uenv={critic2_uenv}
-            #SBATCH --view=default
-            export MPICH_GPU_SUPPORT_ENABLED=0
+        prepend_text: "#SBATCH --uenv={support_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n\
+            export MPICH_GPU_SUPPORT_ENABLED=0\n"
         use_double_quotes: false
-
+        with_mpi: false
     pweiger:
         append_text: ' '
         computer: eiger.alps
@@ -477,48 +469,35 @@ codes:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.overlap
-        description: overlap {spm_uenv} on daint.alps from https://github.com/nanotech-empa/cp2k-spm-tools.git
-        filepath_executable: /user-environment/env/default/bin/cp2k-overlap-from-wfns
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-overlap-from-wfns
         label: overlap-{spm_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            # set environment
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\n# set environment\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK\
+            \ - 1 : 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
     cp2kunfolding:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.cp2k_unfolding
-        description: CP2K band unfolding from cp2k-spm-tools {unfolding_source_ref} on daint.alps using {spm_uenv}
-        filepath_executable: /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-unfold-wfn-sparse-mpi
         label: cp2k-unfolding-{unfolding_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            # set environment
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\n# set environment\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK\
+            \ - 1 : 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
     bader:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.bader
-        description: Bader charge analysis {bader_version} on daint.alps
-        filepath_executable: /users/{cscsuser}/bin/bader
+        description: Bader in the native shared Daint support image
+        filepath_executable: /user-environment/native/support/bin/bader
         label: bader-{bader_version}
-        prepend_text: |
-            # set environment
-            export OMP_NUM_THREADS=1
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={support_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n\
+            export MPICH_GPU_SUPPORT_ENABLED=0\n"
         use_double_quotes: false
-
+        with_mpi: false
     overlapeiger:
         append_text: ' '
         computer: eiger.alps
@@ -578,62 +557,45 @@ codes:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.stm
-        description: stm from cp2k-spm-tools {spm_current_preview_source_ref} on daint.alps using {spm_uenv}
-        filepath_executable: /users/{cscsuser}/bin/cp2k-stm-sts-wfn-surfaces-v2-a0e486a
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-stm-sts-wfn
         label: stm-{spm_current_preview_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 :\
+            \ 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
     overlap_surfaces_v2_a0e486a:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.overlap
-        description: overlap from cp2k-spm-tools {spm_current_preview_source_ref} on daint.alps using {spm_uenv}
-        filepath_executable: /users/{cscsuser}/bin/cp2k-overlap-from-wfns-surfaces-v2-a0e486a
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-overlap-from-wfns
         label: overlap-{spm_current_preview_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 :\
+            \ 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
     sparse_overlap_surfaces_v2_a0e486a:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.sparse_overlap
-        description: serial sparse-overlap conversion from cp2k-spm-tools {spm_current_preview_source_ref} on daint.alps using {spm_uenv}
-        filepath_executable: /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz-surfaces-v2-a0e486a
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-overlap-to-sparse-npz
         label: sparse-overlap-{spm_current_preview_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            export OMP_NUM_THREADS=1
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\n\
+            export LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\nexport PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
     cp2kunfolding_surfaces_v2_a0e486a:
         append_text: ' '
         computer: daint.alps
         default_calc_job_plugin: nanotech_empa.cp2k_unfolding
-        description: CP2K band unfolding from cp2k-spm-tools {spm_current_preview_source_ref} on daint.alps using {spm_uenv}
-        filepath_executable: /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-a0e486a
+        description: Modern SPM source a0e486a in the selected shared Daint uenv
+        filepath_executable: /user-environment/native/spm/bin/cp2k-unfold-wfn-sparse-mpi
         label: cp2k-unfolding-{spm_current_preview_version}
-        prepend_text: |
-            #SBATCH --uenv={spm_uenv}
-            #SBATCH --view=default
-            export OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 : 1 ))
-            export MPICH_GPU_SUPPORT_ENABLED=0
-            ulimit -s unlimited
+        prepend_text: "#SBATCH --uenv={spm_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=$(( SLURM_CPUS_PER_TASK > 1 ? SLURM_CPUS_PER_TASK - 1 :\
+            \ 1 ))\nexport MPICH_GPU_SUPPORT_ENABLED=0\nulimit -s unlimited\nexport LD_LIBRARY_PATH=/user-environment/env/default/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\n\
+            export PYTHONNOUSERSITE=1\n"
         use_double_quotes: false
-
 # Supporting files are installed only for selected computers/codes.
 setup_tasks:
     daint_directories:
@@ -646,54 +608,6 @@ setup_tasks:
         commands:
             - type: scp
               command: scp {config_files}/mps-wrapper.sh {remotehost1}:/users/{cscsuser}/bin/
-    unfolding_source:
-        computer: daint.alps
-        codes:
-            - cp2kunfolding
-        commands:
-            - type: scp
-              command: scp {config_files}/scripts/cp2k-unfold-wfn-sparse-mpi {remotehost1}:/users/{cscsuser}/bin/
-            - type: ssh
-              command: chmod +x /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi
-            - type: ssh
-              command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools/.git ]; then git -C /users/{cscsuser}/src/cp2k-spm-tools fetch origin; else git clone
-                  https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools; fi
-            - type: ssh
-              command: git -C /users/{cscsuser}/src/cp2k-spm-tools checkout --detach {unfolding_source_ref}
-    surfaces_preview:
-        computer: daint.alps
-        codes:
-            - stm_surfaces_v2_a0e486a
-            - overlap_surfaces_v2_a0e486a
-            - sparse_overlap_surfaces_v2_a0e486a
-            - cp2kunfolding_surfaces_v2_a0e486a
-        commands:
-            - type: scp
-              command: scp {config_files}/scripts/cp2k-stm-sts-wfn-surfaces-v2-a0e486a {config_files}/scripts/cp2k-overlap-from-wfns-surfaces-v2-a0e486a
-                  {config_files}/scripts/cp2k-overlap-to-sparse-npz-surfaces-v2-a0e486a {config_files}/scripts/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-a0e486a
-                  {remotehost1}:/users/{cscsuser}/bin/
-            - type: ssh
-              command: chmod +x /users/{cscsuser}/bin/cp2k-stm-sts-wfn-surfaces-v2-a0e486a /users/{cscsuser}/bin/cp2k-overlap-from-wfns-surfaces-v2-a0e486a
-                  /users/{cscsuser}/bin/cp2k-overlap-to-sparse-npz-surfaces-v2-a0e486a /users/{cscsuser}/bin/cp2k-unfold-wfn-sparse-mpi-surfaces-v2-a0e486a
-            - type: ssh
-              command: if [ -d /users/{cscsuser}/src/cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e/.git ]; then test "$(git -C /users/{cscsuser}/src/cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e
-                  rev-parse HEAD)" = "{spm_current_preview_source_ref}" && test -z "$(git -C /users/{cscsuser}/src/cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e
-                  status --porcelain)"; else git clone https://github.com/nanotech-empa/cp2k-spm-tools.git /users/{cscsuser}/src/cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e
-                  && git -C /users/{cscsuser}/src/cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e checkout --detach {spm_current_preview_source_ref};
-                  fi
-    bader:
-        computer: daint.alps
-        codes:
-            - bader
-        commands:
-            - type: scp
-              command: scp {config_files}/scripts/install_bader.sh {remotehost1}:/users/{cscsuser}/bin/
-            - type: ssh
-              command: chmod +x /users/{cscsuser}/bin/install_bader.sh
-            - type: scp
-              command: scp -r {config_files}/bader_src {remotehost1}:/users/{cscsuser}/src/
-            - type: ssh
-              command: /users/{cscsuser}/bin/install_bader.sh /users/{cscsuser}/src/bader_src /users/{cscsuser}/bin
     cp2k_data:
         computer: daint.alps
         codes:
@@ -701,10 +615,3 @@ setup_tasks:
         commands:
             - type: scp
               command: scp -r {config_files}/cp2k {remotehost1}:/users/{cscsuser}/src/
-    ppafm_wrapper:
-        computer: daint.alps
-        codes:
-            - ppafm
-        commands:
-            - type: scp
-              command: scp -r {config_files}/run_ppafm.sh {remotehost1}:/users/{cscsuser}/bin/

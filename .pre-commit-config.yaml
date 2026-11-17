@@ -2,6 +2,10 @@
 ci:
     autoupdate_schedule: quarterly
 
+# Immutable inputs of already-built uenvs; retain exact source/hash provenance.
+# Mutable installer controllers and tests below remain subject to every hook.
+exclude: ^uenv-recipes/
+
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v4.6.0

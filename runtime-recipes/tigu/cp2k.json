@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "id": "cp2k-2026.2-linux-x86_64",
+  "id": "tigu-cp2k-2026.2-native-gcc9-cpu-a0e486a",
   "kind": "conda",
   "architecture": "x86_64",
-  "qualification": "CP2K2026.2 unchanged official binary; compatible LibintSONAME2 (official CP2K dependency line2.13); native qualification pending",
+  "qualification": "same-version native dependency repair on Tigu glibc2.31; install/MPI/application checks pending",
   "artifacts": [
     {
       "name": "ca-certificates",
@@ -1062,6 +1062,58 @@
       "url": "https://codeload.github.com/nanotech-empa/cp2k-spm-tools/tar.gz/a0e486a12ad0102c6af5f9a9572c2449ec26e81e",
       "sha256": "0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b",
       "filename": "cp2k-spm-tools-a0e486a12ad0102c6af5f9a9572c2449ec26e81e.tar.gz"
+    },
+    {
+      "name": "rhash",
+      "version": "1.4.6",
+      "url": "https://conda.anaconda.org/conda-forge/linux-64/rhash-1.4.6-hb03c661_2.conda",
+      "sha256": "186a5b225077ad5f4656966da947d43307101950751ef4a239b455588756b4e1"
+    },
+    {
+      "name": "cmake",
+      "version": "4.5.0",
+      "url": "https://conda.anaconda.org/conda-forge/linux-64/cmake-4.5.0-hff7ac6b_0.conda",
+      "sha256": "515262118596cd67037b345048d2c7d5a400ef218894f749973960b39e5c2a76"
+    },
+    {
+      "name": "trexio-native-source",
+      "version": "2.6.1",
+      "type": "native-source",
+      "url": "https://github.com/TREX-CoE/trexio/releases/download/v2.6.1/trexio-2.6.1.tar.gz",
+      "sha256": "c3694ec1528632a386a2af89199c75d70ecd45bfcc2ca1d4ccccbfa1308ad5fa",
+      "filename": "trexio-2.6.1.tar.gz"
+    },
+    {
+      "name": "libxs-native-source",
+      "version": "1.0.0",
+      "type": "native-source",
+      "url": "https://github.com/hfp/libxs/releases/download/1.0.0/libxs-1.0.0.tar.gz",
+      "sha256": "de26f50cb986a2f0e4f92c0eb489d40a44f7e4c5acd22751a6cfa2829dabd04d",
+      "filename": "libxs-1.0.0.tar.gz"
+    },
+    {
+      "name": "libxsmm-native-source",
+      "version": "2.0.0",
+      "type": "native-source",
+      "url": "https://codeload.github.com/libxsmm/libxsmm/tar.gz/refs/tags/2.0.0",
+      "sha256": "7e532dc5520f864ce6d7f44f3fd50365e3edb23da97dbdc54fd53845d86a290b",
+      "filename": "libxsmm-2.0.0.tar.gz"
+    },
+    {
+      "name": "spfft-native-source",
+      "version": "1.1.1",
+      "type": "native-source",
+      "url": "https://codeload.github.com/eth-cscs/SpFFT/tar.gz/refs/tags/v1.1.1",
+      "sha256": "675a048124a96b8c7f89d59d3ac0355833e28b38622e76c4d478ee91b25d766c",
+      "filename": "spfft-1.1.1.tar.gz"
+    },
+    {
+      "name": "spla-native-source",
+      "version": "1.6.1",
+      "type": "native-source",
+      "url": "https://codeload.github.com/eth-cscs/spla/tar.gz/refs/tags/v1.6.1",
+      "sha256": "62b51e6ce05c41cfc1c6f6600410f9549a209c50f0331e1db41047f94493e02f",
+      "filename": "spla-1.6.1.tar.gz"
     }
   ],
   "executables": [
@@ -1093,5 +1145,255 @@
     "share/cp2k/data/BASIS_MOLOPT",
     "share/cp2k/data/POTENTIAL",
     "share/cp2k/data/dftd3.dat"
-  ]
+  ],
+  "native_builds": [
+    {
+      "artifact": "trexio-native-source",
+      "archive_root": "trexio-2.6.1",
+      "environment": {
+        "CC": "/usr/bin/gcc",
+        "CXX": "/usr/bin/g++",
+        "FC": "/usr/bin/gfortran",
+        "F77": "/usr/bin/gfortran",
+        "OMPI_CC": "/usr/bin/gcc",
+        "OMPI_CXX": "/usr/bin/g++",
+        "OMPI_FC": "/usr/bin/gfortran"
+      },
+      "commands": [
+        [
+          "@PREFIX@/bin/cmake",
+          "-S",
+          "@SOURCE@",
+          "-B",
+          "@SOURCE@/build",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_INSTALL_PREFIX=@PREFIX@",
+          "-DCMAKE_INSTALL_LIBDIR=lib",
+          "-DCMAKE_PREFIX_PATH=@PREFIX@",
+          "-DCMAKE_INSTALL_RPATH=@PREFIX@/lib",
+          "-DCMAKE_BUILD_RPATH=@PREFIX@/lib",
+          "-DCMAKE_C_COMPILER=/usr/bin/gcc",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/g++",
+          "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+          "-DENABLE_HDF5=ON",
+          "-DTREXIO_TESTS=OFF",
+          "-DTREXIO_DEVEL=OFF"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--build",
+          "@SOURCE@/build",
+          "--parallel",
+          "2"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--install",
+          "@SOURCE@/build"
+        ]
+      ]
+    },
+    {
+      "artifact": "libxs-native-source",
+      "archive_root": "libxs-1.0.0",
+      "environment": {
+        "CC": "/usr/bin/gcc",
+        "CXX": "/usr/bin/g++",
+        "FC": "/usr/bin/gfortran",
+        "F77": "/usr/bin/gfortran",
+        "OMPI_CC": "/usr/bin/gcc",
+        "OMPI_CXX": "/usr/bin/g++",
+        "OMPI_FC": "/usr/bin/gfortran"
+      },
+      "commands": [
+        [
+          "@PREFIX@/bin/cmake",
+          "-S",
+          "@SOURCE@",
+          "-B",
+          "@SOURCE@/build",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_INSTALL_PREFIX=@PREFIX@",
+          "-DCMAKE_INSTALL_LIBDIR=lib",
+          "-DCMAKE_PREFIX_PATH=@PREFIX@",
+          "-DCMAKE_INSTALL_RPATH=@PREFIX@/lib",
+          "-DCMAKE_BUILD_RPATH=@PREFIX@/lib",
+          "-DCMAKE_C_COMPILER=/usr/bin/gcc",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/g++",
+          "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+          "-DBUILD_TESTING=OFF",
+          "-DLIBXS_FORTRAN=ON"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--build",
+          "@SOURCE@/build",
+          "--parallel",
+          "2"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--install",
+          "@SOURCE@/build"
+        ]
+      ]
+    },
+    {
+      "artifact": "libxsmm-native-source",
+      "archive_root": "libxsmm-2.0.0",
+      "environment": {
+        "CC": "/usr/bin/gcc",
+        "CXX": "/usr/bin/g++",
+        "FC": "/usr/bin/gfortran",
+        "F77": "/usr/bin/gfortran",
+        "OMPI_CC": "/usr/bin/gcc",
+        "OMPI_CXX": "/usr/bin/g++",
+        "OMPI_FC": "/usr/bin/gfortran"
+      },
+      "commands": [
+        [
+          "@PREFIX@/bin/cmake",
+          "-S",
+          "@SOURCE@",
+          "-B",
+          "@SOURCE@/build",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_INSTALL_PREFIX=@PREFIX@",
+          "-DCMAKE_INSTALL_LIBDIR=lib",
+          "-DCMAKE_PREFIX_PATH=@PREFIX@",
+          "-DCMAKE_INSTALL_RPATH=@PREFIX@/lib",
+          "-DCMAKE_BUILD_RPATH=@PREFIX@/lib",
+          "-DCMAKE_C_COMPILER=/usr/bin/gcc",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/g++",
+          "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+          "-DBUILD_TESTING=OFF",
+          "-DLIBXSMM_FORTRAN=ON"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--build",
+          "@SOURCE@/build",
+          "--parallel",
+          "2"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--install",
+          "@SOURCE@/build"
+        ]
+      ]
+    },
+    {
+      "artifact": "spfft-native-source",
+      "archive_root": "SpFFT-1.1.1",
+      "environment": {
+        "CC": "/usr/bin/gcc",
+        "CXX": "/usr/bin/g++",
+        "FC": "/usr/bin/gfortran",
+        "F77": "/usr/bin/gfortran",
+        "OMPI_CC": "/usr/bin/gcc",
+        "OMPI_CXX": "/usr/bin/g++",
+        "OMPI_FC": "/usr/bin/gfortran"
+      },
+      "commands": [
+        [
+          "@PREFIX@/bin/cmake",
+          "-S",
+          "@SOURCE@",
+          "-B",
+          "@SOURCE@/build",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_INSTALL_PREFIX=@PREFIX@",
+          "-DCMAKE_INSTALL_LIBDIR=lib",
+          "-DCMAKE_PREFIX_PATH=@PREFIX@",
+          "-DCMAKE_INSTALL_RPATH=@PREFIX@/lib",
+          "-DCMAKE_BUILD_RPATH=@PREFIX@/lib",
+          "-DCMAKE_C_COMPILER=/usr/bin/gcc",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/g++",
+          "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+          "-DSPFFT_BUILD_TESTS=OFF",
+          "-DSPFFT_BUNDLED_LIBS=OFF",
+          "-DSPFFT_FORTRAN=ON",
+          "-DSPFFT_GPU_BACKEND=OFF",
+          "-DSPFFT_GPU_DIRECT=OFF",
+          "-DSPFFT_MPI=ON",
+          "-DSPFFT_OMP=ON",
+          "-DSPFFT_SINGLE_PRECISION=ON",
+          "-DSPFFT_STATIC=OFF"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--build",
+          "@SOURCE@/build",
+          "--parallel",
+          "2"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--install",
+          "@SOURCE@/build"
+        ]
+      ]
+    },
+    {
+      "artifact": "spla-native-source",
+      "archive_root": "spla-1.6.1",
+      "environment": {
+        "CC": "/usr/bin/gcc",
+        "CXX": "/usr/bin/g++",
+        "FC": "/usr/bin/gfortran",
+        "F77": "/usr/bin/gfortran",
+        "OMPI_CC": "/usr/bin/gcc",
+        "OMPI_CXX": "/usr/bin/g++",
+        "OMPI_FC": "/usr/bin/gfortran"
+      },
+      "commands": [
+        [
+          "@PREFIX@/bin/cmake",
+          "-S",
+          "@SOURCE@",
+          "-B",
+          "@SOURCE@/build",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_INSTALL_PREFIX=@PREFIX@",
+          "-DCMAKE_INSTALL_LIBDIR=lib",
+          "-DCMAKE_PREFIX_PATH=@PREFIX@",
+          "-DCMAKE_INSTALL_RPATH=@PREFIX@/lib",
+          "-DCMAKE_BUILD_RPATH=@PREFIX@/lib",
+          "-DCMAKE_C_COMPILER=/usr/bin/gcc",
+          "-DCMAKE_CXX_COMPILER=/usr/bin/g++",
+          "-DCMAKE_Fortran_COMPILER=/usr/bin/gfortran",
+          "-DBUILD_SHARED_LIBS=ON",
+          "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
+          "-DSPLA_BUILD_TESTS=OFF",
+          "-DSPLA_BUNDLED_TEST_LIBS=OFF",
+          "-DSPLA_FORTRAN=ON",
+          "-DSPLA_GPU_BACKEND=OFF",
+          "-DSPLA_OMP=OFF",
+          "-DSPLA_STATIC=OFF"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--build",
+          "@SOURCE@/build",
+          "--parallel",
+          "2"
+        ],
+        [
+          "@PREFIX@/bin/cmake",
+          "--install",
+          "@SOURCE@/build"
+        ]
+      ]
+    }
+  ],
+  "native_rebuild_reason": "Preserve official CP2K2026.2 CPU binary, data and library versions; rebuild only five glibc-incompatible libraries against actual host ABI. No host glibc update."
 }

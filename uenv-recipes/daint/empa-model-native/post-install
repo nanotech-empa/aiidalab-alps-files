@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+export PYTHONNOUSERSITE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+mkdir -p /user-environment/native
+PYTHON=/user-environment/env/default/bin/python
+"$PYTHON" -c "import sys,platform; assert sys.version_info[:2] == (3,12); assert platform.machine() == 'aarch64'"
+"$PYTHON" /user-environment/meta/recipe/assets/install-local-runtime.py --recipe /user-environment/meta/recipe/assets/block2-0.5.4-cp312-aarch64.json --prefix /user-environment/native/block2 --execute
+"$PYTHON" /user-environment/meta/recipe/assets/install-local-runtime.py --recipe /user-environment/meta/recipe/assets/julia-1.12.6-linux-aarch64.json --prefix /user-environment/native/julia --execute
+"$PYTHON" - <<'MANIFEST'
+import json,pathlib,platform,sys
+base=pathlib.Path("/user-environment/native")
+prefixes=['block2', 'julia']
+data={"kind":"empa-model-native","version":"2026.11","architecture":platform.machine(),"python":sys.version,"scientific_qualification":"pending","private_engine_included":False,"prefixes":prefixes}
+pathlib.Path("/user-environment/empa-runtime-manifest.json").write_text(json.dumps(data,indent=2)+"\n")
+MANIFEST

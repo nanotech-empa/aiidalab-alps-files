@@ -90,10 +90,12 @@ exact module name; no dependency installation runs inside scientific jobs.
 | Rendering | Selected CubeHandler source/release, compatible VTK/PyVista and a working headless CPU graphics backend; full-grid geometry/camera/slice/render comparison. |
 | Other support | Bader, Wannier90, SKEAF, Critic2 with its installed data, PPAFM native libraries and wrappers, and Phonopy where used. Record the actual supplying package for every executable. |
 
-PythTB is an application Python dependency, not an HPC executable Code. Install
-AiiDA calculation/parser/workflow plugins in AiiDAlab separately from native
-compute programs. GUI-local execution still needs its local runtime; a Tigu
-module alone does not install that runtime inside an AiiDAlab container.
+PythTB's local solver uses the application dependency. Its source-matching
+Tigu worker is paired with the maintained app CalcJob/parser in
+[nanotech-empa/aiidalab-tb#8](https://github.com/nanotech-empa/aiidalab-tb/pull/8).
+Install that client plugin in AiiDAlab separately from the native compute
+program. GUI-local execution still needs its local runtime; a Tigu module alone
+does not install that runtime inside an AiiDAlab container.
 
 For each row provide repository/release/full source SHA, official artifact URLs
 and checksums, compiler and Python versions, native architecture, dependency/MPI
@@ -145,6 +147,31 @@ it in the Code/deployment receipt, rather than switching silently inside a job.
   their executable prefixes; changes create a new reviewed identity.
 
 The first localhost Docker test and the Tigu installation/module test are
-separate evidence. The current native ARM64 recipe set does not itself qualify
-Tigu. Site module names, target architecture and actual Tigu installation logs
-must be collected before filling the final shared-module manifest.
+separate evidence. Native x86_64 installation and module checks have now run on
+Tigu for all15 selected families; actual app scientific jobs and GUI acceptance
+are still distinct. An ARM64 installation result does not qualify Tigu.
+
+## Complete private delivery
+
+`make-tigu-handoff.py` takes both `--checkout` (the frozen private Model backend)
+and `--pythtb-checkout` (the clean source-matching app). It includes the private
+Model capsule and compute-only PythTB wheel, so the administrator does not need
+GitHub credentials on compute nodes. Keep the archive private. Both workers are
+detected automatically by the same module installer.
+
+The selected family list now includes a separate QE-PP Python worker, native
+PythTB and modern quantum energy worker. The Python Code is required by the
+official QE-PP property plugin; native BandUPpy and PythTB do not use PythonJob.
+The CP2K2026.2 prebuilt dependency closure initially exposed a Tigu ABI mismatch.
+The maintained CPU recipe now rebuilds exactly the same TREXIO2.6.1, libxs1.0.0,
+libxsmm2.0.0, SpFFT1.1.1 and SPLA1.6.1 with the native GCC9.4.0/glibc2.31.
+Source archives, checksums, licences and build logs are retained. CP2K itself,
+its data and scientific settings are unchanged; no GPU support, system glibc
+upgrade or older CP2K is substituted. The repaired installation, native version,
+SPM/MPI imports and module checks passed on an allocated Tigu compute node.
+
+The complete selection is15 families: CP2K/SPM, QE, BandUPpy, Block2, rendering,
+support tools, ORCA helpers, Julia, frozen Model, licensed ORCA, licensed
+Gaussian, QE-PP Python, PythTB, quantum SDK and wan2skeaf conversion. Keep the
+per-family installation/module receipts with this delivery. Previously failed
+prefixes remain intact and are not selected by the new catalog.

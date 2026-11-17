@@ -31,7 +31,7 @@ def load(name):
     return result
 
 
-def package(checkout, output):
+def package(checkout, output, pythtb_checkout):
     output = Path(output).expanduser().resolve()
     if output.is_relative_to(ROOT) or output.exists():
         fail("Use an absent private output outside the public catalog checkout.")
@@ -65,6 +65,19 @@ def package(checkout, output):
             json.dumps(metadata, indent=2) + "\n"
         )
         (private / "model-source.json").chmod(0o600)
+        worker_recipe = json.loads(
+            (ROOT / "runtime-recipes/tigu/pythtb.json").read_text()
+        )
+        worker = load("make-pythtb-worker.py").create(
+            pythtb_checkout,
+            private / "pythtb",
+            worker_recipe["worker"]["engine_sha256"],
+        )
+        worker_metadata = dict(worker, filename="pythtb/" + worker["filename"])
+        (private / "pythtb-worker.json").write_text(
+            json.dumps(worker_metadata, indent=2) + "\n"
+        )
+        (private / "pythtb-worker.json").chmod(0o600)
         text = (
             "Private EMPA Tigu installer\n\n"
             "Run scripts/install-tigu-modules.sh --root /AUTHORIZED/PREFIX first "
@@ -75,7 +88,8 @@ def package(checkout, output):
             "Existing licensed ORCA/Gaussian locations are verified and exposed, "
             "not copied. Override --orca-root/--orca-mpi/--gaussian-root only "
             "for another explicitly verified site installation.\n\n"
-            "The private Model source capsule is detected automatically. Keep "
+            "The private Model source capsule and source-matching PythTB worker "
+            "wheel are detected automatically. Keep "
             "this delivery restricted to authorized recipients. No GitHub token "
             "is required on a compute node.\n\n"
             "Installation/module checks and scientific qualification are distinct. "
@@ -90,7 +104,12 @@ def package(checkout, output):
         )
         (root / "source-identity.json").write_text(
             json.dumps(
-                {"catalog_commit": commit, "source_id": source_id, "model": metadata},
+                {
+                    "catalog_commit": commit,
+                    "source_id": source_id,
+                    "model": metadata,
+                    "pythtb": worker_metadata,
+                },
                 indent=2,
             )
             + "\n"
@@ -107,6 +126,7 @@ def package(checkout, output):
         "archive": str(output),
         "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "private_model_source": metadata,
+        "private_pythtb_worker": worker_metadata,
         "contains_credentials_or_scientific_data": False,
     }
     output.with_suffix(output.suffix + ".json").write_text(
@@ -125,8 +145,16 @@ def main():
         help="Clean selected private Model backend checkout",
     )
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument(
+        "--pythtb-checkout",
+        required=True,
+        type=Path,
+        help="Clean source-matching PythTB app checkout",
+    )
     args = parser.parse_args()
-    print(json.dumps(package(args.checkout, args.output), indent=2))
+    print(
+        json.dumps(package(args.checkout, args.output, args.pythtb_checkout), indent=2)
+    )
 
 
 if __name__ == "__main__":

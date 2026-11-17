@@ -24,6 +24,8 @@ ASSETS = [
     "scripts/deploy-tigu-modules.py",
     "scripts/install-local-runtime.py",
     "scripts/prepare-itensor-runtime.py",
+    "scripts/prepare-pythtb-runtime.py",
+    "scripts/make-pythtb-worker.py",
     "scripts/check_orca_mpi.c",
 ]
 
@@ -34,6 +36,13 @@ import hashlib, io, json, os, pathlib, sys, tarfile, uuid
 
 root = pathlib.Path(sys.argv[1])
 expected = sys.argv[2]
+kind = sys.argv[3] if len(sys.argv) > 3 else "empa-tigu-module-stack"
+architecture = sys.argv[4] if len(sys.argv) > 4 else "x86_64"
+if (kind, architecture) not in (
+    ("empa-tigu-module-stack", "x86_64"),
+    ("empa-daint-native-stack", "aarch64"),
+):
+    raise ValueError("Unexpected native source deployment owner/platform")
 if (
     not root.is_absolute()
     or root == pathlib.Path("/")
@@ -65,11 +74,12 @@ if root.exists() and not marker.is_file():
 if not root.exists():
     root.mkdir(parents=True)
     marker.write_text(
-        json.dumps({"kind": "empa-tigu-module-stack", "architecture": "x86_64"}) + "\n"
+        json.dumps({"kind": kind, "architecture": architecture}) + "\n"
     )
 if (
     marker.is_symlink()
-    or json.loads(marker.read_text()).get("kind") != "empa-tigu-module-stack"
+    or json.loads(marker.read_text()).get("kind") != kind
+    or json.loads(marker.read_text()).get("architecture") != architecture
 ):
     raise ValueError("Stack prefix has another owner/identity")
 sources = root / "sources"
@@ -107,10 +117,11 @@ def fail(message: str) -> NoReturn:
     raise ValueError(message)
 
 
-def source_bundle(root=None):
+def source_bundle(root=None, assets=None, include_recipes=True):
     root = Path(root or HERE.parent)
-    paths = [root / name for name in ASSETS]
-    paths += sorted((root / "runtime-recipes/tigu").glob("*.json"))
+    paths = [root / name for name in (ASSETS if assets is None else assets)]
+    if include_recipes:
+        paths += sorted((root / "runtime-recipes/tigu").glob("*.json"))
     hashes = {
         p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in paths
@@ -181,7 +192,53 @@ def stage_model_capsule(host, root):
     return result.stdout.decode().strip(), metadata["sha256"]
 
 
-def apply(host, root, module_root, family, expected):
+def stage_pythtb_worker(host, root, checkout=None):
+    """Use the clean selected app; an explicit checkout avoids live activation."""
+    if checkout is None:
+        installed = importlib.util.find_spec("aiidalab_tb")
+        if installed is None or not installed.origin:
+            fail("Install the selected PythTB app before its Tigu worker.")
+        checkout = subprocess.check_output(
+            [
+                "git",
+                "-C",
+                str(Path(installed.origin).parent),
+                "rev-parse",
+                "--show-toplevel",
+            ],
+            text=True,
+        ).strip()
+    source = importlib.util.spec_from_file_location(
+        "pythtb_wheel", HERE / "make-pythtb-worker.py"
+    )
+    maker = importlib.util.module_from_spec(source)
+    source.loader.exec_module(maker)
+    recipe = json.loads((HERE.parent / "runtime-recipes/tigu/pythtb.json").read_text())
+    with tempfile.TemporaryDirectory(prefix="private-pythtb-transfer-") as directory:
+        output = Path(directory) / "wheel"
+        metadata = maker.create(checkout, output, recipe["worker"]["engine_sha256"])
+        blob = (output / metadata["filename"]).read_bytes()
+    remote = (
+        "import hashlib,pathlib,sys; r=pathlib.Path(sys.argv[1]); h=sys.argv[2]; "
+        "n=sys.argv[3]; assert pathlib.Path(n).name==n and n.endswith('.whl'); "
+        "d=r/'private-sources'; assert not d.is_symlink(); "
+        "d.mkdir(mode=0o700,exist_ok=True); "
+        "d=d/h; assert not d.is_symlink(); d.mkdir(mode=0o700,exist_ok=True); "
+        "p=d/n; b=sys.stdin.buffer.read(); "
+        "assert hashlib.sha256(b).hexdigest()==h; assert not p.is_symlink(); "
+        "assert not p.exists() or hashlib.sha256(p.read_bytes()).hexdigest()==h; "
+        "f=None if p.exists() else p.open('xb'); "
+        "f is None or f.write(b); f is None or f.close(); p.chmod(0o600); print(str(p))"
+    )
+    result = ssh(
+        host,
+        ["python3", "-c", remote, str(root), metadata["sha256"], metadata["filename"]],
+        blob,
+    )
+    return result.stdout.decode().strip(), metadata["sha256"]
+
+
+def apply(host, root, module_root, family, expected, pythtb_checkout=None):
     identity, bundle = source_bundle()
     if identity != expected:
         fail(
@@ -209,6 +266,9 @@ def apply(host, root, module_root, family, expected):
     if family == "model":
         capsule, identity = stage_model_capsule(host, root)
         private_args = ["--model-source", capsule, "--model-source-sha256", identity]
+    elif family == "pythtb":
+        wheel, identity = stage_pythtb_worker(host, root, pythtb_checkout)
+        private_args = ["--pythtb-wheel", wheel, "--pythtb-wheel-sha256", identity]
     command = [
         "ssh",
         "-oBatchMode=yes",
@@ -245,6 +305,11 @@ def main():
     parser.add_argument("--module-root", type=Path)
     parser.add_argument("--family")
     parser.add_argument("--expected-source")
+    parser.add_argument(
+        "--pythtb-checkout",
+        type=Path,
+        help="Clean source-matching app checkout; defaults to the installed app",
+    )
     args = parser.parse_args()
     if args.source_id:
         print(source_bundle()[0])
@@ -257,7 +322,12 @@ def main():
         )
     try:
         result = apply(
-            args.host, args.root, args.module_root, args.family, args.expected_source
+            args.host,
+            args.root,
+            args.module_root,
+            args.family,
+            args.expected_source,
+            args.pythtb_checkout,
         )
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         stderr = getattr(error, "stderr", None)

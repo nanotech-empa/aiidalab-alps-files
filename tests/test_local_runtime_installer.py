@@ -142,6 +142,89 @@ def test_standard_prefix_and_scoped_environment(recipe, tmp_path, monkeypatch):
         installer.install(path, prefix, True)
 
 
+def test_venv_source_subdirectory_is_installed_offline_without_app_state(
+    recipe, tmp_path, monkeypatch
+):
+    prefix = tmp_path / "runtime"
+    wheel, source = tmp_path / "build.whl", tmp_path / "worker.tar.gz"
+    wheel.write_bytes(b"fixture wheel")
+    source.write_bytes(b"fixture source")
+    commands = []
+
+    def create(builder, target):
+        (target / "bin").mkdir(parents=True)
+        (target / "bin/worker").write_text("#!/bin/sh\nexit 0\n")
+        (target / "bin/worker").chmod(0o755)
+
+    monkeypatch.setattr(installer.venv.EnvBuilder, "create", create)
+    monkeypatch.setattr(
+        installer,
+        "artifact",
+        lambda spec, cache: source if spec.get("type") == "python-source" else wheel,
+    )
+    monkeypatch.setattr(
+        installer,
+        "run",
+        lambda args, env, log: commands.append((list(map(str, args)), env)),
+    )
+    path = recipe(
+        kind="venv",
+        artifacts=[
+            {"name": "build", "sha256": installer.checksum(wheel)},
+            {
+                "name": "worker",
+                "type": "python-source",
+                "subdirectory": "quantum-tools",
+                "sha256": installer.checksum(source),
+            },
+        ],
+    )
+    result = installer.install(path, prefix, True)
+    assert result["status"] == "INSTALLED_AND_CHECKED"
+    assert len(commands) == 2
+    wheels, src = (c[0] for c in commands)
+    assert "worker.tar.gz" not in " ".join(wheels)
+    assert "--no-build-isolation" in src and "--no-index" in src and "--no-deps" in src
+    assert (
+        src[-1]
+        == source.as_uri()
+        + "#sha256="
+        + installer.checksum(source)
+        + "&subdirectory=quantum-tools"
+    )
+    assert commands[1][1]["PYTHONNOUSERSITE"] == "1"
+    assert commands[1][1]["AIIDA_PATH"] != str(Path.home() / ".aiida")
+
+
+def test_native_mpi_libraries_and_compiler_survive_install_and_import_probe(
+    tmp_path, monkeypatch
+):
+    prefix = tmp_path / "native"
+    assert installer.runtime_library_path(
+        prefix, {"library_paths": ["/user-environment/env/default/lib"]}
+    ) == (str(prefix / "lib") + ":/user-environment/env/default/lib")
+    for bad in ("relative/lib", "/outside/../lib", "/bad\npath"):
+        with pytest.raises(ValueError, match="absolute"):
+            installer.runtime_library_path(prefix, {"library_paths": [bad]})
+    observed = []
+    monkeypatch.setattr(
+        installer, "run", lambda args, env, log, cwd=None: observed.append(env)
+    )
+    prefix.mkdir()
+    installer.verify(
+        prefix,
+        {
+            "kind": "venv",
+            "library_paths": ["/user-environment/env/default/lib"],
+            "checks": [["@PREFIX/bin/python", "-c", "pass"]],
+        },
+        {"PATH": "/usr/bin", "MPICC": "/selected/mpicc"},
+        tmp_path / "log",
+    )
+    assert observed[0]["LD_LIBRARY_PATH"].endswith(":/user-environment/env/default/lib")
+    assert observed[0]["MPICC"] == "/selected/mpicc"
+
+
 def test_failed_install_retains_receipt_and_partial_files(
     recipe, tmp_path, monkeypatch
 ):
@@ -221,6 +304,7 @@ def test_all_versioned_artifacts_have_hashes_and_expected_owners():
                     "https://julialang-s3.julialang.org/",
                     "https://codeload.github.com/nanotech-empa/",
                     "https://codeload.github.com/aoterodelaroza/critic2/",
+                    "https://codeload.github.com/aiidaplugins/aiida-skeaf/",
                     "https://download.open-mpi.org/release/open-mpi/v4.1/",
                 )
             )

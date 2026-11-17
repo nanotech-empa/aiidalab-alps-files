@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "id": "quantum-energy-4d92f718-aarch64",
+  "kind": "venv",
+  "architecture": "aarch64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "source-selected; installation-and-scientific-qualification-pending",
+  "scope": "modern quantum-energy/v1 only; no retired research workers",
+  "artifacts": [
+    {
+      "name": "pyscf",
+      "version": "2.14.0",
+      "url": "https://files.pythonhosted.org/packages/89/f2/24c58dad0c33ab417c5a090695a6788292d5d4edceae59bad055e5377e92/pyscf-2.14.0-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "2c01234a5480e545e5e156d1fabe9b97264bf87ee274c62d14478ab9fe644100"
+    },
+    {
+      "name": "qiskit",
+      "version": "2.5.2",
+      "url": "https://files.pythonhosted.org/packages/43/42/0eb83d0eefd6a1d3752db43839c327c39d67b2ef060b2b1da8fcd3424dc5/qiskit-2.5.2-cp310-abi3-manylinux_2_28_aarch64.whl",
+      "sha256": "2835e38af67932e592562c7b1b6b7fadd015bd1101a1320e2c5051de12508428"
+    },
+    {
+      "name": "qiskit-fermions",
+      "version": "0.3.1",
+      "url": "https://files.pythonhosted.org/packages/e0/e4/000fff691bca43725775da1b61d3f783139e3109b4c3c77b9c2bfbb05ad4/qiskit_fermions-0.3.1-cp311-abi3-manylinux_2_28_aarch64.whl",
+      "sha256": "868c5e79f92c62a3264a419a1bee764b3b95cde9b32d785bb30a12c457954dca"
+    },
+    {
+      "name": "qiskit-ibm-runtime",
+      "version": "0.51.0",
+      "url": "https://files.pythonhosted.org/packages/71/c5/7c14b2f83b526aa9fb2df8802b631853fb7ad5a644f19cb1e5e6c1f5bcd7/qiskit_ibm_runtime-0.51.0-py3-none-any.whl",
+      "sha256": "eb3fd3dbf09e7a066106fc557bb4beb8a3cbf3cbc40623c8e9647db00ed7c28c"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.5",
+      "url": "https://files.pythonhosted.org/packages/c2/22/82184e9a5b50a4a298e9f8fe0bd8cfc483672dbfea8a3b57c78e2376b139/numpy-2.5.5-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "a0750f2156d53446caca85663d0b65d67214e1664b9050454a731ea1418d176a"
+    },
+    {
+      "name": "ibm-quantum-schemas",
+      "version": "0.13.20261016",
+      "url": "https://files.pythonhosted.org/packages/ac/fb/02f6739f78510819aa6a561ee699456424312adf7b542e40bf4ac12c5949/ibm_quantum_schemas-0.13.20261016-py3-none-any.whl",
+      "sha256": "5d957996e367baac8d74a3885a0bf6c3b0aefa5d943beed173a83db45619cf11"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.14.3",
+      "url": "https://files.pythonhosted.org/packages/72/b8/b864503789ef5c58597d2a7b4adbee62c26440ab1e682581fc6838df8947/pydantic-2.14.3-py3-none-any.whl",
+      "sha256": "3f7b347782ab7e4cf4c798496ae3a82787d9f21ec12676a9c564355eeef8daa8"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.50.4",
+      "url": "https://files.pythonhosted.org/packages/61/a0/8028ef3e014be522ce43060aeac82a5be2288215e660866f5e6260acc123/pydantic_core-2.50.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "16902a147b3da4840612164a5e67947104d63e978f7a57c395877a5e26690b9c"
+    },
+    {
+      "name": "qiskit-qasm3-import",
+      "version": "0.6.0",
+      "url": "https://files.pythonhosted.org/packages/3e/7e/b8bbfbf1acfe0b40872727ef4741b54794beb65da34c4c327dc31a73d35d/qiskit_qasm3_import-0.6.0-py3-none-any.whl",
+      "sha256": "2109b65a6859bec4a51e7b61bd525365f298f67f19b3952bf602423c6d21d697"
+    },
+    {
+      "name": "openqasm3",
+      "version": "1.0.2",
+      "url": "https://files.pythonhosted.org/packages/cd/dc/a68f5266f933e4cc42c5eab5bd96155e38b2ace336934c486ab2a58230d8/openqasm3-1.0.2-py3-none-any.whl",
+      "sha256": "e5fa81d67279bb17808bd4825c81b2a18a90f27a60e577c6cebb4f23b602b7e7"
+    },
+    {
+      "name": "antlr4-python3-runtime",
+      "version": "4.13.2",
+      "url": "https://files.pythonhosted.org/packages/89/03/a851e84fcbb85214dc637b6378121ef9a0dd61b4c65264675d8a5c9b1ae7/antlr4_python3_runtime-4.13.2-py3-none-any.whl",
+      "sha256": "fe3835eb8d33daece0e799090eda89719dbccee7aa39ef94eed3818cafa5a7e8"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "url": "https://files.pythonhosted.org/packages/75/9a/2e71719f31eaefe0e3a1706c4a1ded94e664bfd95ffca2b219a671faee01/scipy-1.18.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "3c085faa2cfa879c5141df483f836f4d691045a078224a670fa570fa01612d89"
+    },
+    {
+      "name": "setuptools",
+      "version": "84.2.1",
+      "url": "https://files.pythonhosted.org/packages/ef/55/6dc6d6bb953bdfc52519a0059592c52b6e3b8ad51cf8256dffceb55b0610/setuptools-84.2.1-py3-none-any.whl",
+      "sha256": "ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2"
+    },
+    {
+      "name": "wheel",
+      "version": "0.48.0",
+      "url": "https://files.pythonhosted.org/packages/2e/29/69cfbb602cd91690c55d38ba9fe53e6a7e76a6fa647bf38f19c138d25449/wheel-0.48.0-py3-none-any.whl",
+      "sha256": "3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "url": "https://files.pythonhosted.org/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl",
+      "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0"
+    },
+    {
+      "name": "dill",
+      "version": "0.4.1",
+      "url": "https://files.pythonhosted.org/packages/1e/77/dc8c558f7593132cf8fefec57c4f60c83b16941c574ac5f619abb3ae7933/dill-0.4.1-py3-none-any.whl",
+      "sha256": "1e1ce33e978ae97fcfcff5638477032b801c46c7c65cf717f95fbc2248f79a9d"
+    },
+    {
+      "name": "h5py",
+      "version": "3.16.0",
+      "url": "https://files.pythonhosted.org/packages/89/84/06281c82d4d1686fde1ac6b0f307c50918f1c0151062445ab3b6fa5a921d/h5py-3.16.0-cp312-cp312-manylinux_2_28_aarch64.whl",
+      "sha256": "ff24039e2573297787c3063df64b60aab0591980ac898329a08b0320e0cf2527"
+    },
+    {
+      "name": "ibm-platform-services",
+      "version": "0.77.2",
+      "url": "https://files.pythonhosted.org/packages/17/6a/bb5afed257a8addb087e4890a459d316af37f2b41addf959ddb3c8492c69/ibm_platform_services-0.77.2-py3-none-any.whl",
+      "sha256": "71f71063db5f15fbb97b787d88633445a3576b6b7714ef1a5580896b49f9e8de"
+    },
+    {
+      "name": "ibm-cloud-sdk-core",
+      "version": "3.28.2",
+      "url": "https://files.pythonhosted.org/packages/7e/34/6ef89aa82cd22ac79e6ea630f42fd7ec204a553d15b0952557293566befb/ibm_cloud_sdk_core-3.28.2-py3-none-any.whl",
+      "sha256": "9ea551afbd0f627709b8d8a67db4a41d9d16c713014c5a6b1ce1617fae29b2c5"
+    },
+    {
+      "name": "PyJWT",
+      "version": "2.15.1",
+      "url": "https://files.pythonhosted.org/packages/50/ca/44de4e75f8aadc457f0634be3b542815078ded46dca30efb960edeecad6e/pyjwt-2.15.1-py3-none-any.whl",
+      "sha256": "42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "3.0.0",
+      "url": "https://files.pythonhosted.org/packages/5a/17/cebee01d1c0c1441174cf0456ddc91b280d79acb65340c05e41d77866ee8/python_dateutil-3.0.0-py2.py3-none-any.whl",
+      "sha256": "3c79630202e4152c6add678446984236efe4f57e84d8e892aab0637bab82e9fd"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "url": "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl",
+      "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.2",
+      "url": "https://files.pythonhosted.org/packages/c9/87/2fea8c13dc24b3ca9c6f803a5b2dfdeae73eb4f9e12c7885ed908ff0433c/charset_normalizer-3.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "b91363207bd9dc966a691e959bb47f64b30f7ac4b072be9968b366982f7db77c"
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "url": "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl",
+      "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "url": "https://files.pythonhosted.org/packages/92/9d/c4e665119135114480843e7ab388fa94d8480650450e6f8e26b70d323a4c/urllib3-2.8.0-py3-none-any.whl",
+      "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.10.23",
+      "url": "https://files.pythonhosted.org/packages/32/d1/a3652fe2c19134d0d15922177821d863cbd7e842d53a21bbe7e8e3a1b5ac/certifi-2026.10.23-py3-none-any.whl",
+      "sha256": "e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "name": "pybase64",
+      "version": "1.5.2",
+      "url": "https://files.pythonhosted.org/packages/03/7e/7eb4132e3b7aecdbb2f5b0c09f77983d0021b2213fd06fe134d79b9de3ba/pybase64-1.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "9877ee558d256e7e665338f927076cbd8de00ab374c739ecb91110687502fabc"
+    },
+    {
+      "name": "qiskit-mitigation",
+      "version": "0.2.0",
+      "url": "https://files.pythonhosted.org/packages/ac/96/eccc6013b16597bca571c9545facbffa3b5f5778e965e2f40c061bbd524c/qiskit_mitigation-0.2.0-py3-none-any.whl",
+      "sha256": "7a66ce2105c779b1c4e8398aabf2a4c7339ef8d43c31dc3c819aaf5e5cc5566b"
+    },
+    {
+      "name": "requests_ntlm",
+      "version": "1.3.0",
+      "url": "https://files.pythonhosted.org/packages/9e/5d/836b97537a390cf811b0488490c389c5a614f0a93acb23f347bd37a2d914/requests_ntlm-1.3.0-py3-none-any.whl",
+      "sha256": "4c7534a7d0e482bb0928531d621be4b2c74ace437e88c5a357ceb7452d25a510"
+    },
+    {
+      "name": "cryptography",
+      "version": "50.0.2",
+      "url": "https://files.pythonhosted.org/packages/38/6b/61a3f8d8c5e1e49a6cddccafc4015cc1c0021360ab0acb4080e7a423644a/cryptography-50.0.2-cp311-abi3-manylinux_2_28_aarch64.whl",
+      "sha256": "f9f6143a8c75945eb960d9eb98905a441394abfa24afaae239d514ffb2586480"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1",
+      "url": "https://files.pythonhosted.org/packages/44/de/f98430906df1545ffde0d543dd124a7a439bc2cd32b36b9c53f805df7333/cffi-2.1.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+      "sha256": "68e62fe11f30d5ca8289242866f0a5291402d8529ca2178ab8afc5c9694ae890"
+    },
+    {
+      "name": "pyspnego",
+      "version": "0.12.4",
+      "url": "https://files.pythonhosted.org/packages/eb/4e/f6c1bb147890f246c3a24ce836be4f6cfc44fd7be08e0a229e3a1c08b560/pyspnego-0.12.4-py3-none-any.whl",
+      "sha256": "a29a34de1abe9e9b30d9aa1d363f8e49fc159eb7355b1f2ee86ccb3a2ce3bba9"
+    },
+    {
+      "name": "rustworkx",
+      "version": "0.18.1",
+      "url": "https://files.pythonhosted.org/packages/86/6c/e1483aea43fd8be81666cb103aea0f6127f71731de666c156e6b6f8c2338/rustworkx-0.18.1-cp310-abi3-manylinux_2_28_aarch64.whl",
+      "sha256": "c42a0a52463ff78c0dd03426efa7b40b17b433689c2a5ab6aaaf14173c2a9e31"
+    },
+    {
+      "name": "samplomatic",
+      "version": "0.21.0",
+      "url": "https://files.pythonhosted.org/packages/dc/68/387b0f4ac6aae4d0154da1c28bc5834a79b7b1d69f8971a89af690f3bafb/samplomatic-0.21.0-py3-none-any.whl",
+      "sha256": "1224b2ff916895c86adca6df7b03234b7dff5502089e6c404ac4e8ac42b110aa"
+    },
+    {
+      "name": "orjson",
+      "version": "3.13.0",
+      "url": "https://files.pythonhosted.org/packages/46/07/5d1a151bc11600434fe799e73abfc6a4d463d02e149a20e47c59d3a985ae/orjson-3.13.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "ae1d895cf7bbfd50ef34bb63bb727b14514f259f3e3f8dd010783bd38e864c6e"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "url": "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl",
+      "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"
+    },
+    {
+      "name": "stevedore",
+      "version": "5.10.0",
+      "url": "https://files.pythonhosted.org/packages/10/78/918aaff2864a8829d061db40acb9da04c89e5c3a01d65932b34432ebd78b/stevedore-5.10.0-py3-none-any.whl",
+      "sha256": "47c48dc09e75933106c1bba0a7690eef3b5acecdb807df6d47cc40b2532fa927"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.5",
+      "url": "https://files.pythonhosted.org/packages/de/0c/ea2544850a7c135e15033a5c7a8e7211136184b7ae63e2239d557c2b3019/typing_inspection-0.4.5-py3-none-any.whl",
+      "sha256": "bc210535442b39e1bf2805e0c7a17dfd6a4ace760c84c7f7d16245d23a6b1c39"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.12",
+      "url": "https://files.pythonhosted.org/packages/b6/ae/315bbeee126a769cbde43cf4908acb4b40408d8bf8bbf334dd7368d8dadf/pycparser-3.12-py3-none-any.whl",
+      "sha256": "a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6",
+      "url": "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+    },
+    {
+      "name": "modern-quantum-energy-source",
+      "version": "4d92f718aa3d51e055dbe593ab6444fe7322ecbc",
+      "type": "python-source",
+      "subdirectory": "quantum-tools",
+      "filename": "aiidalab-orca-4d92f718aa3d51e055dbe593ab6444fe7322ecbc.tar.gz",
+      "url": "https://codeload.github.com/nanotech-empa/aiidalab-orca/tar.gz/4d92f718aa3d51e055dbe593ab6444fe7322ecbc",
+      "sha256": "e659a2343c9640022f597fdbbb8a7c283875d69237da59ffb87287837e44cc75"
+    }
+  ],
+  "executables": [
+    "bin/python",
+    "bin/quantum-energy"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/python",
+      "-c",
+      "import json,subprocess; d=json.loads(subprocess.check_output([str(__import__('pathlib').Path(__import__('sys').executable).parent/'quantum-energy'),'manifest'])); assert d['protocol']=='quantum-energy/v1'; assert d['source_sha256']=='d5ab99071241dd1479646a73b1d7a5842d96d807f1193800e01b64ef948a4920'; import pyscf,qiskit,qiskit_fermions,qiskit_ibm_runtime; print('modern-quantum-worker-ready')"
+    ],
+    [
+      "@PREFIX/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ]
+  ]
+}
