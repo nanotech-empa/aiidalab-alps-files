@@ -39,6 +39,23 @@ and records the chosen revision. Changed choices/revision require inspection aga
 | Quantum energy | Source-locked modern quantum-energy/v1 SDK worker, native numerical/SDK imports and manifest identity. No hardware-provider calls or credentials. |
 | wan2skeaf | Official aiidaplugins/aiida-skeaf v0.2.1 converter source and licence with NumPy/SciPy; reuse the app-provided console command when already available. |
 
+### Local QE codes provided by another app
+
+**Inspect updates** recognizes existing local QE registrations by their Computer
+transport and calculation plugin, including custom Code labels. They are kept
+unchanged and are not offered for deactivation as unlisted resources. The 15 QE
+roles come from the official QE app, including the `xspec.xspectra` entry point.
+If any are missing, the setup points to the QE app: install that app and complete
+its localhost code setup if you want to run QE locally. This is optional guidance,
+not a blocker for other selected EMPA runtimes. No duplicate QE installer or Code
+registration is scheduled.
+
+Existing local `python3`/PythonJob and `critic2` registrations are also recognized
+as QE postprocessing helpers. EMPA's explicitly selected versioned helper recipes
+keep their own runtime checks. Hidden Codes or Codes on disabled Computers are
+preserved but not counted as available. Inspect reports registration presence;
+it does not claim to have executed or verified these external programs.
+
 Versioned JSON recipes under `runtime-recipes/` contain complete artifact URLs,
 versions/builds and SHA-256. `scripts/install-local-runtime.py` prints a plan by
 default; `--execute` claims a new prefix, checks every downloaded/cached artifact,

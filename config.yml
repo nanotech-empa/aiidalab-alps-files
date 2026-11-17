@@ -1,6 +1,6 @@
 ---
 schema_version: 4
-includes: [runtime-catalog.yml, connection-help.yml]
+includes: [runtime-catalog.yml, connection-help.yml, application-codes.yml]
 variables:
     remotehost1: daint.alps.cscs.ch
     conda_init: source /users/{cscsuser}/miniconda3/bin/activate

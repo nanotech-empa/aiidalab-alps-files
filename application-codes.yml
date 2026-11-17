@@ -1,0 +1,33 @@
+---
+# Recognition only: these declarations never create installation/registration tasks.
+external_code_providers:
+    qe_localhost:
+        computer: mac-localhost
+        title: Quantum ESPRESSO · QE app
+        guidance: If you want QE codes on localhost, install the Quantum ESPRESSO app and complete its code setup. EMPA setup does not install a second copy of QE.
+        url: https://aiidalab-qe.readthedocs.io/
+        codes:
+            pw: quantumespresso.pw
+            projwfc: quantumespresso.projwfc
+            dos: quantumespresso.dos
+            cp: quantumespresso.cp
+            epw: quantumespresso.epw
+            matdyn: quantumespresso.matdyn
+            neb: quantumespresso.neb
+            open_grid: quantumespresso.open_grid
+            ph: quantumespresso.ph
+            pp: quantumespresso.pp
+            pw2gw: quantumespresso.pw2gw
+            pw2wannier90: quantumespresso.pw2wannier90
+            q2r: quantumespresso.q2r
+            xspectra: xspec.xspectra
+            hp: quantumespresso.hp
+    qe_pp_localhost:
+        computer: mac-localhost
+        title: Existing QE postprocessing helpers
+        guidance: QE-PP can provide these helpers. Keep working registrations; use the selected EMPA helper recipes when you need a separate managed runtime.
+        url: https://github.com/aiidalab/aiidalab-qe-pp
+        show_when_missing: false
+        codes:
+            python: pythonjob.pythonjob
+            critic2: critic2
