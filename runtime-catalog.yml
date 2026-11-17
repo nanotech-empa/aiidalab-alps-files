@@ -38,13 +38,14 @@ variables:
     conversion_uenv: empa-conversion/0.2.1:3077666140
 runtime_settings:
     tigu_empa_username:
+        user_input: true
         description: Empa/Tigu username
         format: ssh_username
-        computers: [tigu]
+        computers: [tigu, tigu-modules]
     tigu_ela_key:
         description: Tigu key on ELA (blank = defaults)
         format: ssh_key_path
-        computers: [tigu]
+        computers: [tigu, tigu-modules]
     local_orca_root:
         description: local orca root
         deployments:
@@ -167,6 +168,7 @@ runtime_settings:
         computers:
             - mac-localhost
     local_default_mpi:
+        user_input: true
         description: Local MPI tasks/machine
         format: positive_integer
         deployments:
@@ -174,6 +176,7 @@ runtime_settings:
         computers:
             - mac-localhost
     local_memory_kib:
+        user_input: true
         description: Local memory [KiB]
         format: positive_integer
         deployments:
@@ -215,6 +218,7 @@ runtime_settings:
             - mac-localhost
 computers:
     mac-localhost:
+        display_name: Localhost
         deployments:
             - personal
         setup:
@@ -232,6 +236,7 @@ computers:
             use_double_quotes: false
         config: {}
     tigu-modules:
+        display_name: Tigu
         ssh_help: tigu
         ssh_host: tigu
         ssh_dependencies:

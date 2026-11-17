@@ -1,6 +1,6 @@
 # Runtime installation and selected deployments
 
-This candidate uses configuration **schema4** and the matching [nanotech-empa/aiidalab-empa-setup#14](https://github.com/nanotech-empa/aiidalab-empa-setup/pull/14).
+This candidate uses configuration **schema5** and the matching [nanotech-empa/aiidalab-empa-setup#14](https://github.com/nanotech-empa/aiidalab-empa-setup/pull/14).
 Record both complete source heads. Older setup consumers refuse this protocol;
 keep both PRs unmerged until the new-instance test is assessed.
 
@@ -20,8 +20,8 @@ PythTB's localhost solver uses its app dependency. The separately maintained
 Tigu worker/CalcJob supplies remote execution; see the
 [deployment matrix](deployment-matrix.md).
 
-Keep **Install selected localhost runtimes** enabled for a new installation.
-Uncheck it to use existing programs; runtime checks still apply. Opening the app
+Installed apps determine required Codes and runtimes automatically. Matching
+existing programs are verified and reused; the normal UI has no Code/path selector. Opening the app
 and changing a configuration branch do not fetch. **Inspect updates** synchronizes
 and records the chosen revision. Changed choices/revision require inspection again.
 
@@ -179,8 +179,9 @@ sends no email and cannot grant first access. Preserve unrelated SSH entries,
 trusted host keys and existing registrations. Do not copy agent sockets or keys
 between instances as an installation shortcut.
 
-Quantum-worker updates/new deployments remain separately deferred; old research
-workers are not a restore list. Modern DMRG/model capabilities remain included.
+The selected modern quantum worker and modern DMRG/model capabilities remain
+included. Older experimental/research-worker changes remain deferred; their
+records are not a restore list.
 Runtime checks, Code registration and actual tiny application execution are
 separate verdicts; use the setup app's clean-instance acceptance checklist.
 

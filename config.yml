@@ -1,6 +1,6 @@
 ---
-schema_version: 4
-includes: [runtime-catalog.yml, connection-help.yml, application-codes.yml]
+schema_version: 5
+includes: [runtime-catalog.yml, connection-help.yml, application-codes.yml, applications.yml]
 variables:
     remotehost1: daint.alps.cscs.ch
     conda_init: source /users/{cscsuser}/miniconda3/bin/activate
@@ -81,6 +81,7 @@ widgets:
 
 computers:
     tigu:
+        user_visible: false
         ssh_help: tigu
         ssh_host: tigu
         ssh_dependencies:
@@ -109,6 +110,7 @@ computers:
             authentication_script: None
             use_login_shell: true
     daint.alps:
+        display_name: Daint
         ssh_help: alps
         grants:
             - lp168
@@ -149,6 +151,7 @@ computers:
             use_login_shell: true
             username: '{cscsuser}'
     eiger.alps:
+        user_visible: false
         ssh_help: alps
         grants:
             - mr34
