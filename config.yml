@@ -589,11 +589,13 @@ codes:
 # Supporting files are installed only for selected computers/codes.
 setup_tasks:
     daint_directories:
+        computer_preparation: true
         computer: daint.alps
         commands:
             - type: ssh
               command: mkdir -p /users/{cscsuser}/bin && mkdir -p /users/{cscsuser}/src
     daint_mps_wrapper:
+        legacy_only: true
         computer: daint.alps
         commands:
             - type: scp

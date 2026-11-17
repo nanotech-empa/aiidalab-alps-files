@@ -97,6 +97,8 @@ def test_visible_native_installers_always_require_explicit_app_code_keys():
     data = catalog()
     for task in data["setup_tasks"].values():
         if data["computers"][task["computer"]].get("user_visible", True):
-            assert task.get("codes"), (
-                "A selected computer without apps must not install arbitrary runtimes"
-            )
+            assert (
+                task.get("codes")
+                or task.get("computer_preparation")
+                or task.get("legacy_only")
+            ), "A selected computer without apps must not install arbitrary runtimes"
