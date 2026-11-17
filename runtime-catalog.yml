@@ -30,7 +30,7 @@ variables:
     local_orca_archive_sha256: 927c9f165ac6ec7547d543215a5d02c662c691c1659ba5bcd3d687817e8a6757
     tigu_stack_root: /store/{tigu_empa_username}/opt/empa-stack-20261116
     tigu_module_root: '{tigu_stack_root}/modulefiles'
-    tigu_stack_source_id: 5579ed7f95db66d6193f87e64e6a0511496572b3b67471fb8295458a16829520
+    tigu_stack_source_id: dcc91914fe879625c4e0a6432f1db7780d0a07844876bba930efab7eb21711b6
     local_quantum_prefix: /home/jovyan/opt/native-runtimes/quantum-energy-4d92f718-aarch64
     daint_model_root: /users/{cscsuser}/opt/empa-native-20261116
     daint_model_prefix: '{daint_model_root}/model-4f7f2f963b'
@@ -234,7 +234,8 @@ computers:
     tigu-modules:
         ssh_help: tigu
         ssh_host: tigu
-        ssh_dependencies: [ela.cscs.ch]
+        ssh_dependencies:
+            - ela.cscs.ch
         grants:
             - free
         setup:
@@ -245,33 +246,19 @@ computers:
             label: tigu-modules_{grant}
             mpiprocs_per_machine: 12
             mpirun_command: mpirun -np {tot_num_mpiprocs}
-            prepend_text: |
-                export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
-                ulimit -s unlimited
+            prepend_text: "export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}\nulimit -s unlimited\n"
             scheduler: core.slurm
             shebang: '#!/bin/bash -l'
-            transport: core.ssh
+            transport: core.ssh_async
             use_double_quotes: false
             work_dir: /scratch/{username}/aiida/
         config:
-            allow_agent: true
-            compress: true
-            gss_auth: false
-            gss_deleg_creds: false
-            gss_host: 10.128.1.11
-            gss_kex: false
-            key_filename: /home/jovyan/.ssh/cscs-key
-            key_policy: RejectPolicy
-            load_system_host_keys: true
-            look_for_keys: true
-            port: 22
-            proxy_command: ssh -oBatchMode=yes -oStrictHostKeyChecking=yes -oConnectTimeout=20 -W 10.128.1.11:22 -oProxyCommand="ssh -oBatchMode=yes -oStrictHostKeyChecking=yes
-                -oConnectTimeout=20 -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 {tigu_ela_key} && nc jump1.empa.ch 22'" {tigu_empa_username}@jump1.empa.ch
-            proxy_jump: ''
+            host: tigu
+            backend: openssh
             safe_interval: 30.0
-            timeout: 60
+            max_io_allowed: 8
+            authentication_script: None
             use_login_shell: true
-            username: '{tigu_empa_username}'
 codes:
     tigu_orca:
         computer: tigu
@@ -372,7 +359,7 @@ codes:
         description: banduppy-python-1.0.0 on tigu
         filepath_executable: '{tigu_banduppy_python}'
         default_calc_job_plugin: nanotech_empa.qe_banduppy
-        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
         append_text: ''
         use_double_quotes: false
         runtime_checks:
@@ -390,7 +377,7 @@ codes:
         description: banduppy-python-1.0.0 on daint.alps
         filepath_executable: '{daint_banduppy_python}'
         default_calc_job_plugin: nanotech_empa.qe_banduppy
-        prepend_text: "#SBATCH --uenv={python_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        prepend_text: "#SBATCH --uenv={python_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
         append_text: ''
         use_double_quotes: false
         runtime_checks:
@@ -408,7 +395,7 @@ codes:
         description: banduppy-python-1.0.0 on mac-localhost
         filepath_executable: '{local_banduppy_python}'
         default_calc_job_plugin: nanotech_empa.qe_banduppy
-        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
         append_text: ''
         use_double_quotes: false
         runtime_checks:
@@ -601,7 +588,7 @@ codes:
     local_critic2:
         computer: mac-localhost
         label: critic2-1.6-local
-        description: critic2-1.6-local in a managed native prefix
+        description: Official Critic2 source tag 1.6 (native banner 1.4.339)
         filepath_executable: '{local_support_prefix}/bin/critic2'
         default_calc_job_plugin: critic2
         prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
@@ -616,9 +603,13 @@ codes:
             - arguments:
                   - '{local_support_prefix}/bin/critic2'
                   - --version
-              contains: '1.6'
+              contains: critic2 (development), version 1.4.339
         architectures:
             - aarch64
+        runtime_receipt:
+            path: '{local_support_prefix}/empa-runtime.json'
+            recipe_sha256: da7449eb9f781ca27d58446e9d2295d38b950aa738c858d09d5e41a39469593b
+            extras: {}
     local_wannier90:
         computer: mac-localhost
         label: wannier90-4.0.3-local
@@ -857,7 +848,7 @@ codes:
             module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
             recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_stm:
         default_calc_job_plugin: nanotech_empa.stm
         with_mpi: true
@@ -877,7 +868,7 @@ codes:
             module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
             recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_overlap:
         default_calc_job_plugin: nanotech_empa.overlap
         with_mpi: true
@@ -897,7 +888,7 @@ codes:
             module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
             recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_sparse_overlap:
         default_calc_job_plugin: nanotech_empa.sparse_overlap
         with_mpi: false
@@ -917,7 +908,7 @@ codes:
             module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
             recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_cp2k_unfolding:
         default_calc_job_plugin: nanotech_empa.cp2k_unfolding
         with_mpi: true
@@ -937,7 +928,7 @@ codes:
             module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
             recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_qe_pw:
         default_calc_job_plugin: quantumespresso.pw
         with_mpi: true
@@ -957,7 +948,7 @@ codes:
             module: empa/qe/7.5-eb8ef0b463
             recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_qe_pp:
         default_calc_job_plugin: quantumespresso.pp
         with_mpi: true
@@ -977,7 +968,7 @@ codes:
             module: empa/qe/7.5-eb8ef0b463
             recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_qe_projwfc:
         default_calc_job_plugin: quantumespresso.projwfc
         with_mpi: true
@@ -997,7 +988,7 @@ codes:
             module: empa/qe/7.5-eb8ef0b463
             recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_qe_dos:
         default_calc_job_plugin: quantumespresso.dos
         with_mpi: true
@@ -1017,7 +1008,7 @@ codes:
             module: empa/qe/7.5-eb8ef0b463
             recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_qe_pw2wannier90:
         default_calc_job_plugin: quantumespresso.pw2wannier90
         with_mpi: true
@@ -1037,7 +1028,7 @@ codes:
             module: empa/qe/7.5-eb8ef0b463
             recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_banduppy:
         default_calc_job_plugin: nanotech_empa.qe_banduppy
         with_mpi: false
@@ -1046,7 +1037,7 @@ codes:
         label: banduppy-python-1.0.0
         description: Versioned banduppy module on Tigu
         filepath_executable: '{tigu_stack_root}/banduppy-1.0.0/bin/python'
-        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/banduppy/1.0.0"
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/banduppy/1.0.0\nexport MPLBACKEND=Agg\n"
         append_text: ''
         runtime_provider:
             host: tigu
@@ -1057,7 +1048,7 @@ codes:
             module: empa/banduppy/1.0.0
             recipe_sha256: d7fbdbed8c06a59fbcf5fa92313aa00aa43bd7946c8b095a533ceff02d7008a4
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_block2:
         default_calc_job_plugin: empa_orca.dmrg
         with_mpi: false
@@ -1077,7 +1068,7 @@ codes:
             module: empa/block2/0.5.4-47d160a62a
             recipe_sha256: 47d160a62ae6a9e52a8728c6fececfa6e01633d95e82c97f60a256fd58fd6c90
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 block2:
                     version: 0.5.4
@@ -1101,7 +1092,7 @@ codes:
             module: empa/cubehandler/245db38-f65efc7eb9
             recipe_sha256: f65efc7eb9c800fb46b694928865ff738f8f41d6b3047170ac6fe0b8bb4e9490
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca_cube_render:
         default_calc_job_plugin: empa_orca.cube_render
         with_mpi: false
@@ -1121,7 +1112,7 @@ codes:
             module: empa/cubehandler/245db38-f65efc7eb9
             recipe_sha256: f65efc7eb9c800fb46b694928865ff738f8f41d6b3047170ac6fe0b8bb4e9490
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_itensor_gs:
         default_calc_job_plugin: itensor_spin.ground_state
         with_mpi: false
@@ -1141,7 +1132,7 @@ codes:
             module: empa/itensor/0.4.3-4f7f2f96-offline
             recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
                 engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
@@ -1165,7 +1156,7 @@ codes:
             module: empa/itensor/0.4.3-4f7f2f96-offline
             recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
                 engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
@@ -1190,7 +1181,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_wannier90:
         default_calc_job_plugin: wannier90.wannier90
         with_mpi: true
@@ -1210,7 +1201,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_skeaf:
         default_calc_job_plugin: skeaf.skeaf
         with_mpi: false
@@ -1230,7 +1221,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_critic2:
         default_calc_job_plugin: critic2
         with_mpi: false
@@ -1250,7 +1241,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_ppafm:
         default_calc_job_plugin: nanotech_empa.afm
         with_mpi: false
@@ -1270,7 +1261,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca:
         default_calc_job_plugin: orca.orca
         with_mpi: false
@@ -1290,7 +1281,7 @@ codes:
             module: empa/orca/6.1.1-mpi4.1.1
             recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca_plot:
         default_calc_job_plugin: empa_orca.orbital_cubes
         with_mpi: false
@@ -1310,7 +1301,7 @@ codes:
             module: empa/orca/6.1.1-mpi4.1.1
             recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca_2json:
         default_calc_job_plugin: empa_orca.orbital_catalog
         with_mpi: false
@@ -1330,7 +1321,7 @@ codes:
             module: empa/orca/6.1.1-mpi4.1.1
             recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca_tools:
         default_calc_job_plugin: empa_orca.electronic_storage
         with_mpi: false
@@ -1350,7 +1341,7 @@ codes:
             module: empa/orca-helpers/4d92f71
             recipe_sha256: 1528318888a4faf960a1280981e95d057176b07002fac6347c881b7a240908ff
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_orca_dyson:
         default_calc_job_plugin: empa_orca.dyson
         with_mpi: false
@@ -1370,7 +1361,7 @@ codes:
             module: empa/orca-helpers/4d92f71
             recipe_sha256: 1528318888a4faf960a1280981e95d057176b07002fac6347c881b7a240908ff
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_gaussian:
         default_calc_job_plugin: gaussian
         use_double_quotes: false
@@ -1389,7 +1380,7 @@ codes:
             module: empa/gaussian/16
             recipe_sha256: 262ee6338e9ba59d871fdc3bded771d936c825913a121e111834034b8b5d93b1
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_module_pythonjob:
         default_calc_job_plugin: pythonjob.pythonjob
         with_mpi: false
@@ -1409,7 +1400,7 @@ codes:
             module: empa/python/20261116-92064f5184
             recipe_sha256: 92064f5184c0b90a7b872943546952da70cbbf96a1338e48b7b2d4ead827b82a
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
         runtime_checks:
             - arguments:
                   - '{tigu_stack_root}/qe-pp-python-20261116-92064f5184/bin/python'
@@ -1436,7 +1427,7 @@ codes:
             module: empa/support/20261116-4e038d5cf9
             recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
     tigu_pythonjob:
         default_calc_job_plugin: pythonjob.pythonjob
         with_mpi: false
@@ -1501,7 +1492,7 @@ codes:
             module: empa/pythtb/2.0.2-be1c21e107
             recipe_sha256: be1c21e107b66fec80e0aa81320c6bf7afb266b5ee2c0857493033f236ce5863
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 pythtb_worker:
                     protocol: empa-pythtb/v1
@@ -1525,7 +1516,7 @@ codes:
             module: empa/quantum/4d92f718-e8c8ef1452
             recipe_sha256: e8c8ef1452ea4bd1f6f565c257ed9ef112244ded9061e25d1cc2c8cd9998c4ea
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras: {}
         manifest:
             source_sha256: d5ab99071241dd1479646a73b1d7a5842d96d807f1193800e01b64ef948a4920
@@ -1667,7 +1658,7 @@ codes:
             module: empa/wan2skeaf/0.2.1-dc1192119d
             recipe_sha256: dc1192119d8cf8c0c62a0b26e4400c7f057a0e7b16bb540a4199741d33c86f7c
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
-            checker_sha256: e097ab76bf9111c3b138ae75d7f189951894d21bcadbbc5496a72dfd0c4605b8
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 wan2skeaf:
                     version: 0.2.1

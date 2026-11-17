@@ -1,8 +1,8 @@
-"""Make a credential-free shallow source capsule for the private Model backend.
+"""Make a credential-free shallow source capsule for the selected Model backend.
 
 Only the verified canonical checkout is used. No local dirty files, credentials,
 full home/profile, old research history or external licensed programs are copied.
-Keep the capsule private; never add it to the public configuration repository.
+The source is public; capsules remain delivery artifacts, not catalog files.
 """
 
 import argparse
@@ -71,7 +71,7 @@ def create(checkout, output):
             archive.add(source, arcname="source")
         output.chmod(0o600)
     result = {
-        "kind": "private-canonical-model-source-capsule",
+        "kind": "canonical-model-source-capsule",
         "source_commit": COMMIT,
         "source_tree": subprocess.check_output(
             ["git", "-C", str(checkout), "rev-parse", "HEAD^{tree}"], text=True
@@ -79,7 +79,7 @@ def create(checkout, output):
         "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "archive": str(output),
         "credentials_included": False,
-        "private_distribution_required": True,
+        "private_distribution_required": False,
     }
     output.with_suffix(output.suffix + ".json").write_text(
         json.dumps(result, indent=2) + "\n"

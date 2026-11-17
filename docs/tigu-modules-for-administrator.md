@@ -129,6 +129,18 @@ launch settings distinct.
 
 ## Setup provider selection
 
+The selected Tigu AiiDA Computers use the supported `core.ssh_async` transport
+with its **OpenSSH backend**, reusing the app-managed `Host tigu` proxy route.
+That route enforces BatchMode and StrictHostKeyChecking; trusted host keys and
+the user's normal CSCS certificate remain prerequisites. Both released AiiDA2.8
+and2.9.4 provide this backend. The plain Paramiko3.5.1 transport can fail for
+certificate-bearing agent keys ([upstream2462](https://github.com/paramiko/paramiko/issues/2462));
+the fixed Paramiko5 line is outside AiiDA2.9.4's `paramiko~=3.0` requirement.
+No private Paramiko wheel, forced dependency upgrade or relaxed host-key policy
+is used by this selection. Existing Computers are preserved unless their
+replacement is explicitly selected in Inspect/Apply; module registration alone
+does not prove transport or scheduler submission.
+
 The intended policy is **compatible shared module first; complete selected
 per-user installation otherwise**. Resolve the provider during setup and retain
 it in the Code/deployment receipt, rather than switching silently inside a job.

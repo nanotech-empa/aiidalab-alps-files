@@ -86,6 +86,7 @@ def isolated_environment(prefix):
         PIP_CACHE_DIR=str(prefix.parent / ".empa-pip-cache"),
         XDG_CACHE_HOME=str(prefix.parent / ".empa-runtime-cache"),
         MPLCONFIGDIR=str(prefix.parent / ".empa-matplotlib"),
+        MPLBACKEND="Agg",
         OMP_NUM_THREADS="1",
         OPENBLAS_NUM_THREADS="1",
         MKL_NUM_THREADS="1",

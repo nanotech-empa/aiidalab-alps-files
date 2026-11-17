@@ -14,6 +14,7 @@ import shlex
 import subprocess
 import tarfile
 import tempfile
+from contextlib import nullcontext
 from pathlib import Path
 from typing import NoReturn
 
@@ -26,6 +27,7 @@ ASSETS = [
     "scripts/prepare-itensor-runtime.py",
     "scripts/prepare-pythtb-runtime.py",
     "scripts/make-pythtb-worker.py",
+    "scripts/source-checkout.py",
     "scripts/check_orca_mpi.c",
 ]
 
@@ -152,28 +154,29 @@ def ssh(host, arguments, data=None):
     return subprocess.run(command, input=data, capture_output=True, check=True)
 
 
+def source_checkout():
+    spec = importlib.util.spec_from_file_location(
+        "selected_source", HERE / "source-checkout.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def stage_model_capsule(host, root):
-    """Use installed verified source; transfer no GitHub credentials to Tigu."""
-    installed = importlib.util.find_spec("aiida_itensor_spin")
-    if installed is None or not installed.origin:
-        fail("Install the selected Model backend before its remote runtime.")
-    checkout = subprocess.check_output(
-        [
-            "git",
-            "-C",
-            str(Path(installed.origin).parent),
-            "rev-parse",
-            "--show-toplevel",
-        ],
-        text=True,
-    ).strip()
+    """Resolve the exact engine even from a non-editable client installation."""
     spec = importlib.util.spec_from_file_location(
         "model_capsule", HERE / "make-model-source.py"
     )
     assert spec is not None and spec.loader is not None
     maker = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(maker)
-    with tempfile.TemporaryDirectory(prefix="private-model-transfer-") as directory:
+    with source_checkout().selected_checkout(
+        "aiida_itensor_spin",
+        "https://github.com/nanotech-empa/aiida-itensor-spin.git",
+        maker.COMMIT,
+    ) as checkout, tempfile.TemporaryDirectory(prefix="model-transfer-") as directory:
         capsule = Path(directory) / "model-source.tar.gz"
         metadata = maker.create(checkout, capsule)
         blob = capsule.read_bytes()
@@ -194,27 +197,24 @@ def stage_model_capsule(host, root):
 
 def stage_pythtb_worker(host, root, checkout=None):
     """Use the clean selected app; an explicit checkout avoids live activation."""
-    if checkout is None:
-        installed = importlib.util.find_spec("aiidalab_tb")
-        if installed is None or not installed.origin:
-            fail("Install the selected PythTB app before its Tigu worker.")
-        checkout = subprocess.check_output(
-            [
-                "git",
-                "-C",
-                str(Path(installed.origin).parent),
-                "rev-parse",
-                "--show-toplevel",
-            ],
-            text=True,
-        ).strip()
     source = importlib.util.spec_from_file_location(
         "pythtb_wheel", HERE / "make-pythtb-worker.py"
     )
     maker = importlib.util.module_from_spec(source)
     source.loader.exec_module(maker)
     recipe = json.loads((HERE.parent / "runtime-recipes/tigu/pythtb.json").read_text())
-    with tempfile.TemporaryDirectory(prefix="private-pythtb-transfer-") as directory:
+    selected = (
+        nullcontext(Path(checkout))
+        if checkout is not None
+        else source_checkout().selected_checkout(
+            "aiidalab_tb",
+            "https://github.com/nanotech-empa/aiidalab-tb.git",
+            "d9ab3fb5760fd6c06c297b280bd08ff79b00b20f",
+        )
+    )
+    with selected as checkout, tempfile.TemporaryDirectory(
+        prefix="private-pythtb-transfer-"
+    ) as directory:
         output = Path(directory) / "wheel"
         metadata = maker.create(checkout, output, recipe["worker"]["engine_sha256"])
         blob = (output / metadata["filename"]).read_bytes()

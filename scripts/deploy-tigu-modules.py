@@ -254,6 +254,8 @@ def module_text(family, prefix, root, mpi=None):
         + "_RECEIPT "
         + tcl(root / "receipts" / (family + ".json")),
     ]
+    if family == "banduppy":
+        lines.append("setenv MPLBACKEND Agg")
     if family == "cp2k":
         lines.append("setenv CP2K_DATA_DIR " + tcl(prefix / "share/cp2k/data"))
     if family == "model":

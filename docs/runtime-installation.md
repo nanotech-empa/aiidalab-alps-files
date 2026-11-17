@@ -46,6 +46,18 @@ installs the complete isolated runtime and records source/data/library fingerpri
 The same CLI is used by the GUI tasks and can be invoked during Docker preparation.
 It imports no AiiDA and does not change the active app environment or services.
 
+Native worker children explicitly use `MPLBACKEND=Agg`. This includes installation
+checks and the BandUPpy Code prepend/module environment: the Jupyter inline
+backend belongs to the notebook, not the separate worker. The notebook's plotting
+backend is unchanged. BandUPpy still uses `nanotech_empa.qe_banduppy`, not PythonJob.
+
+The official Critic2 source **tag1.6** resolves to
+`c478bcb530aaf783788c21c85ddedc719b3d16a2`, whose `VERSION` file is **1.4.339**.
+Consequently its native banner is `critic2 (development), version 1.4.339`.
+The localhost Code checks that banner together with the completed selected support
+recipe and executable hash. A source tag and a program's internal banner are
+separate identities; this is not a downgrade or permission to accept another build.
+
 Example plan (no installation):
 
 ```console
@@ -68,6 +80,10 @@ refused. Output streams to the app, with logs/receipts retained next to the pref
 A failure can leave owned installation files: review them and choose a new prefix
 when needed. No rollback/deletion of someone else's files is claimed.
 
+For an earlier failed BandUPpy import, retain its prefix/log and select a fresh
+absent worker prefix in the GUI before Inspect/Apply. The parent artifact cache
+is reused. A failed prefix is not silently relabelled as a completed installation.
+
 The Block2 receipt supplies the exact nested `block2` version, official artifact
 hash and owned-launcher hash consumed by the ORCA app. Setup verifies the receipt
 and launcher before creating the Code; no later manual extras patch is needed.
@@ -77,6 +93,15 @@ before/after instantiation, exports the app-owned local model runtime and binds
 the supported fallback depot/config for fresh GUI kernels. It never updates an
 existing project, overwrites another depot binding or registers fictional model
 workers. Both local wrappers point at the same committed engine/depot as the GUI.
+
+Remote Model/PythTB preparation also supports ordinary non-editable pip installs.
+When no tracked source checkout backs the installed module, setup fetches the
+exact selected canonical commit into a temporary checkout, verifies it, and
+uses the same capsule/wheel maker. It never treats an unrelated ancestor Git
+repository as the package checkout or transfers GitHub credentials to compute
+nodes. The selected Model source is public; the PythTB source still requires
+authorized repository access. Existing real checkouts retain their clean-source
+and engine-content guards. No `pip install -e` workaround is required.
 
 ## Licensed ORCA and MPI
 

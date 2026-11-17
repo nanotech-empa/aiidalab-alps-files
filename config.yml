@@ -83,7 +83,8 @@ computers:
     tigu:
         ssh_help: tigu
         ssh_host: tigu
-        ssh_dependencies: [ela.cscs.ch]
+        ssh_dependencies:
+            - ela.cscs.ch
         grants:
             - free
         setup:
@@ -94,33 +95,19 @@ computers:
             label: tigu_{grant}
             mpiprocs_per_machine: 12
             mpirun_command: srun
-            prepend_text: |
-                export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
-                ulimit -s unlimited
+            prepend_text: "export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}\nulimit -s unlimited\n"
             scheduler: core.slurm
             shebang: '#!/bin/bash -l'
-            transport: core.ssh
+            transport: core.ssh_async
             use_double_quotes: false
             work_dir: /scratch/{username}/aiida/
         config:
-            allow_agent: true
-            compress: true
-            gss_auth: false
-            gss_deleg_creds: false
-            gss_host: 10.128.1.11
-            gss_kex: false
-            key_filename: /home/jovyan/.ssh/cscs-key
-            key_policy: RejectPolicy
-            load_system_host_keys: true
-            look_for_keys: true
-            port: 22
-            proxy_command: ssh -oBatchMode=yes -oStrictHostKeyChecking=yes -oConnectTimeout=20 -W 10.128.1.11:22 -oProxyCommand="ssh -oBatchMode=yes -oStrictHostKeyChecking=yes
-                -oConnectTimeout=20 -o 'ForwardAgent yes' ela.cscs.ch 'ssh-add -t 5 {tigu_ela_key} && nc jump1.empa.ch 22'" {tigu_empa_username}@jump1.empa.ch
-            proxy_jump: ''
+            host: tigu
+            backend: openssh
             safe_interval: 30.0
-            timeout: 60
+            max_io_allowed: 8
+            authentication_script: None
             use_login_shell: true
-            username: '{tigu_empa_username}'
     daint.alps:
         ssh_help: alps
         grants:
