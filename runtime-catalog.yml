@@ -30,13 +30,13 @@ variables:
     local_orca_archive_sha256: 927c9f165ac6ec7547d543215a5d02c662c691c1659ba5bcd3d687817e8a6757
     tigu_stack_root: /store/{tigu_empa_username}/opt/empa-stack-20261116
     tigu_module_root: '{tigu_stack_root}/modulefiles'
-    tigu_stack_source_id: 341436c21e5f55f33e4ced143ca2013777914969ec872a0026582a2973333ae8
+    tigu_stack_source_id: 1415300aaf699769cbffb1c08962b90c6169778df91bf97d79033246915f7d06
     local_quantum_prefix: /home/jovyan/opt/native-runtimes/quantum-energy-4d92f718-aarch64
     daint_model_root: /users/{cscsuser}/opt/empa-native-20261116
     daint_model_prefix: '{daint_model_root}/model-4f7f2f963b'
     model_native_uenv: empa-model-native/2026.11:3075642581
     conversion_uenv: empa-conversion/0.2.1:3077666140
-    local_pythtb_prefix: /home/jovyan/opt/native-runtimes/pythtb-2.0.2-2e5d68814e-aarch64
+    local_pythtb_prefix: /home/jovyan/opt/native-runtimes/pythtb-2.0.2-e172eccc1f-aarch64
 runtime_settings:
     tigu_empa_username:
         user_input: true
@@ -1488,7 +1488,7 @@ codes:
               contains: block2-ready
     local_pythtb:
       computer: mac-localhost
-      label: pythtb-2.0.2-local-2e5d68814e
+      label: pythtb-2.0.2-local-e172eccc1f
       description: Native TB/MFH orbital and Wannier worker
       filepath_executable: '{local_pythtb_prefix}/bin/empa-tb-worker'
       default_calc_job_plugin: empa_tb.calculate
@@ -1504,7 +1504,7 @@ codes:
         reviewed app and locked ARM64 dependencies.
       runtime_receipt:
         path: '{local_pythtb_prefix}/empa-pythtb-runtime.json'
-        recipe_sha256: 2e5d68814e062481de72667c175d214c90c53bb47a916ae673b2be246689f9f9
+        recipe_sha256: e172eccc1fec8e6612cdb1eeef36aac210376721f8401fe51e06add2a768e683
         extras:
           pythtb_worker:
             protocol: empa-pythtb/v1

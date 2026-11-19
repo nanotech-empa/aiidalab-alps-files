@@ -9,6 +9,7 @@ import ast
 import hashlib
 import json
 import os
+import re
 import subprocess
 import tomllib
 from pathlib import Path
@@ -60,13 +61,31 @@ def source_contract(checkout, engine):
     }
 
 
+def check_checkout(checkout):
+    git = ["git", "-C", str(checkout)]
+    if subprocess.run([*git, "diff", "--quiet", "HEAD", "--"]).returncode:
+        fail("Use a clean reviewed PythTB app checkout.")
+    tracked = set(
+        subprocess.check_output([*git, "ls-files", "-z", "--", "*.ipynb"]).split(b"\0")
+    )
+    extra = subprocess.check_output(
+        [*git, "ls-files", "--others", "--exclude-standard", "-z"]
+    )
+    for path in filter(None, extra.split(b"\0")):
+        match = re.fullmatch(rb"([^/]+)-[0-9]+\.ipynb", path)
+        candidate = checkout / os.fsdecode(path)
+        if (
+            not match
+            or match[1] + b".ipynb" not in tracked
+            or candidate.is_symlink()
+            or not candidate.is_file()
+        ):
+            fail("Use a clean reviewed PythTB app checkout.")
+
+
 def create(checkout, destination, expected_engine, expected_worker=None):
     checkout, destination = Path(checkout).resolve(), Path(destination).resolve()
-    dirty = subprocess.check_output(
-        ["git", "-C", str(checkout), "status", "--porcelain"], text=True
-    )
-    if dirty:
-        fail("Use a clean reviewed PythTB app checkout.")
+    check_checkout(checkout)
     names = ("model.py", "numerics.py", "remote_worker.py")
     hashes = {
         name: hashlib.sha256((checkout / "aiidalab_tb" / name).read_bytes()).hexdigest()
