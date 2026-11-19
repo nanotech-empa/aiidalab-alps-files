@@ -1,0 +1,20 @@
+gcc-env:
+  compiler:
+  - toolchain: gcc
+    spec: gcc@13
+  unify: true
+  specs:
+  - python@3.12
+  - py-pip
+  - py-setuptools
+  - py-wheel
+  - gcc@13
+  - cray-mpich@8.1.30
+  views:
+    default:
+      link: all
+      uenv:
+        add_compilers: true
+  mpi:
+    spec: cray-mpich@8.1.30
+    gpu: null

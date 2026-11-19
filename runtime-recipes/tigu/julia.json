@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "id": "julia-1.12.6-tigu-x86_64",
+  "kind": "archive",
+  "architecture": "x86_64",
+  "archive_root": "julia-1.12.6",
+  "qualification": "frozen-project-compute-node-check-pending",
+  "artifacts": [
+    {
+      "name": "julia",
+      "version": "1.12.6",
+      "url": "https://julialang-s3.julialang.org/bin/linux/x64/1.12/julia-1.12.6-linux-x86_64.tar.gz",
+      "sha256": "bbabf3bef19421a9dbd24a767d807606ab85e444323b5a1c73ffe293fa3d079a"
+    }
+  ],
+  "executables": [
+    "bin/julia"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/julia",
+      "--startup-file=no",
+      "--version"
+    ]
+  ]
+}

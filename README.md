@@ -19,9 +19,8 @@ The `cp2kunfolding` code runs the `nanotech_empa.cp2k_unfolding` CalcJob with
 the `cp2k-spm-tools` MPI unfolding CLI.
 
 The current `cp2k-spm-tools/1.5.0` uenv provides the Python and MPI runtime but
-does not contain that CLI. Until
-[`cp2k-spm-tools#24`](https://github.com/nanotech-empa/cp2k-spm-tools/pull/24)
-is merged and released, setup therefore checks out the exact tested #24 commit
+does not contain that CLI. The retained production definition therefore checks out the exact tested
+[nanotech-empa/cp2k-spm-tools#24](https://github.com/nanotech-empa/cp2k-spm-tools/pull/24) commit
 under `/users/<cscsuser>/src/cp2k-spm-tools`, and the wrapper prepends that
 source tree to `PYTHONPATH`. Replace this temporary source override with the
 first released version containing the CLI before making the code production.
@@ -76,3 +75,27 @@ Credit the setup configuration and wrapper scripts separately from installed sci
 The [shared credit guide](https://github.com/nanotech-empa/.github/blob/main/CITATION_GUIDANCE.md) keeps software attribution, licence
 compliance and scientific citation requests separate. Scientific citation
 requests are not additional MIT licence conditions.
+
+
+## Selective setup and personal Docker catalog
+
+The schema-5 configuration requires the matching current setup app. Use both
+repositories' merged `main` branches and record the resolved commits for a new
+instance. `runtime-catalog.yml` adds personal Linux-container Codes and scoped
+Tigu/Daint definitions. Source integration and fresh-instance qualification are
+recorded separately. PythTB models, orbitals and Wannier use the native
+`empa_tb.calculate` Code on Localhost or Tigu.
+
+The localhost candidate now includes versioned native installation recipes,
+standard Block2 metadata, frozen Julia/Model preparation and a shared headless
+renderer. Selected source candidates remain distinct from published releases.
+
+Installation tasks are scoped to the selected computer/code subset. The setup
+no longer replaces a user's remote `.bashrc`, and selected Eiger CP2K setup
+installs its own data files. Quantum-worker updates are deferred.
+
+Read [runtime installation and the deployment matrix](docs/runtime-installation.md)
+for what the app installs, native/licensed prerequisites, and the SSH/Ritom
+failure handling. A catalog entry does not establish a qualified deployment.
+
+For Tigu shared modules, see the [administrator handoff and provider policy](docs/tigu-modules-for-administrator.md). Site module deployment and Tigu qualification are distinct from the ARM64 localhost test.

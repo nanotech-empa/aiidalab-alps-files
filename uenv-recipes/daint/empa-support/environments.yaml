@@ -1,0 +1,16 @@
+gcc-env:
+  compiler:
+  - toolchain: gcc
+    spec: gcc@13
+  unify: true
+  specs:
+  - python@3.12
+  - py-pip
+  - py-setuptools
+  - py-wheel
+  - gcc@13
+  views:
+    default:
+      link: all
+      uenv:
+        add_compilers: true

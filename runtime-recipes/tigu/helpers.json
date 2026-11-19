@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "id": "helpers-tigu-cp312-20261116",
+  "kind": "venv",
+  "architecture": "x86_64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "Tigu-install/module-qualification-pending",
+  "artifacts": [
+    {
+      "name": "dyson_orca_tools",
+      "version": "0.1.1",
+      "url": "https://files.pythonhosted.org/packages/e4/b7/b99e606f6a3de13c691bfd06363de110855b96a39d626abdadf47c12b060/dyson_orca_tools-0.1.1-py3-none-any.whl",
+      "sha256": "1899efc1369a7e9ac2a33f634e3264f61a6245abae7e3787f37f2646d5d03d81"
+    },
+    {
+      "name": "ase",
+      "version": "3.29.0",
+      "url": "https://files.pythonhosted.org/packages/66/a6/a3d29378618d3d9ba0962473f8bbf09a5ad15eb8b210c5153fb88d0b8aad/ase-3.29.0-py3-none-any.whl",
+      "sha256": "7b9dd103f007810339c24acfee2f6b677c0c48443b21d3c98e52959246cf4ebf"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.2",
+      "url": "https://files.pythonhosted.org/packages/3a/5f/62d28cf019460c7f1394105b4d49d9911a9c444cb77ab0bd95a204c5a6de/numpy-2.5.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "3cdec01fa790a186d430433fdd4d4ffb70eed6f0eeb4bf05c8dbe2dce0a9bcb8"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.0",
+      "url": "https://files.pythonhosted.org/packages/dd/aa/1b939f6c67ed68635bb538e6752d3dacc02f66535182e939a89581a44e9c/scipy-1.18.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "1f55797419e16e7f30cf88ffb3113ce0467f00cfe3f70d5c281730b21769bfc2"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.10.8",
+      "url": "https://files.pythonhosted.org/packages/3e/f3/c5195b1ae57ef85339fd7285dfb603b22c8b4e79114bae5f4f0fcf688677/matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "3ab4aabc72de4ff77b3ec33a6d78a68227bf1123465887f9905ba79184a1cc04"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "url": "https://files.pythonhosted.org/packages/8b/9d/b3589d3877982d4f2329302ef98a8026e7f4443c765c46cfecc8858c6b4b/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc"
+    },
+    {
+      "name": "h5py",
+      "version": "3.16.0",
+      "url": "https://files.pythonhosted.org/packages/9e/e9/1a19e42cd43cc1365e127db6aae85e1c671da1d9a5d746f4d34a50edb577/h5py-3.16.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "sha256": "dfc21898ff025f1e8e67e194965a95a8d4754f452f83454538f98f8a3fcb207e"
+    },
+    {
+      "name": "pillow",
+      "version": "13.0.0",
+      "url": "https://files.pythonhosted.org/packages/e6/99/fdf65cc539e266ab93546c261bdf98411fe165c6e4e13f9dbf597097192b/pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "42d63be3af4f9b951b199b0a9d23365d37ab14687e6d77b74940432c8515c4ca"
+    },
+    {
+      "name": "contourpy",
+      "version": "1.4.0",
+      "url": "https://files.pythonhosted.org/packages/78/f9/b6831508960d559581c448532ba4df312217072975486dbf2b24fcc5b76f/contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "875f42444c9cf48d56f724f2637e60d0f73b3b12c9041e1484580a233edf9591"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1",
+      "url": "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl",
+      "sha256": "85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.68.0",
+      "url": "https://files.pythonhosted.org/packages/7f/58/fe13db71e3f5a020c6875f349806e84f7550f3f24cb3cdbabdd693968b1d/fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "3edce69ecdefa73ab1041901ca22eefed6ebb93a77bc77e889d940479f25bf7d"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1",
+      "url": "https://files.pythonhosted.org/packages/fc/f4/dadfec469313c7f428efa7e84b4aba9732f813c13ea7131a24b7b008ef57/kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "34633ecf50d16187ab8e5528b7a2530f2feb4e23f300db4672538b51cfc5cd38"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3",
+      "url": "https://files.pythonhosted.org/packages/38/bb/d215ee7c73b61497b28a5503f9f53523f294fcc936762b7caf90e0c1c2b5/pyparsing-3.3.3-py3-none-any.whl",
+      "sha256": "ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "4.0.0",
+      "url": "https://files.pythonhosted.org/packages/2f/a9/52b89563d154433d79b51ed1eb4842bf7334cb2696891a7fe135618853d7/python_dateutil-4.0.0-py3-none-any.whl",
+      "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    },
+    {
+      "name": "pyscf",
+      "version": "2.15.0",
+      "url": "https://files.pythonhosted.org/packages/bd/c4/ae16e0cf2d391e87bfa0e81a764fb5847253eabf1e8bdaf07959244c73e2/pyscf-2.15.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "sha256": "a372e4ac136b969ef4a22fb328905cfbc84513bcd4d85321026af0493345b94b"
+    },
+    {
+      "name": "setuptools",
+      "version": "84.2.1",
+      "url": "https://files.pythonhosted.org/packages/ef/55/6dc6d6bb953bdfc52519a0059592c52b6e3b8ad51cf8256dffceb55b0610/setuptools-84.2.1-py3-none-any.whl",
+      "sha256": "ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2"
+    },
+    {
+      "name": "typer",
+      "version": "0.29.1",
+      "url": "https://files.pythonhosted.org/packages/05/ff/51969745f31cea6bcd12151e668febcf979656316e67a7755942267c1273/typer-0.29.1-py3-none-any.whl",
+      "sha256": "00dbc549c13428bec1be55fe1f4d0fb8c6637a310e4f178ef14abe9534ee7b58"
+    },
+    {
+      "name": "annotated-doc",
+      "version": "0.0.6",
+      "url": "https://files.pythonhosted.org/packages/cd/f5/3dd85d583e55be76cd02b1fc9bbec771b12d63124b01661d9535ccf8721f/annotated_doc-0.0.6-py3-none-any.whl",
+      "sha256": "361ca0950cc7082f53fa69e9328409f40a62c61e57e0a47e1825a08078a58a53"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.14.3",
+      "url": "https://files.pythonhosted.org/packages/72/b8/b864503789ef5c58597d2a7b4adbee62c26440ab1e682581fc6838df8947/pydantic-2.14.3-py3-none-any.whl",
+      "sha256": "3f7b347782ab7e4cf4c798496ae3a82787d9f21ec12676a9c564355eeef8daa8"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.50.4",
+      "url": "https://files.pythonhosted.org/packages/91/23/e0c6e3cd09a0ac809953fea698c816b9f03bf0b35b6820c9553e4f5d85a8/pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+      "sha256": "c81d98e27d9d9261909dcccab1ba5d6ea1c98b0bb9470e368604614fd1d36ddd"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "url": "https://files.pythonhosted.org/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl",
+      "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0"
+    },
+    {
+      "name": "rich",
+      "version": "15.0.0",
+      "url": "https://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl",
+      "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0",
+      "url": "https://files.pythonhosted.org/packages/71/46/17f022dd3e953bf20a04a028a21ec746d942f8d2af30fa0f124fa0e6a684/pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
+    },
+    {
+      "name": "markdown-it-py",
+      "version": "4.3.0",
+      "url": "https://files.pythonhosted.org/packages/c9/31/5f0ac2f1a1c67423c995c731a11cd4ad05d081a2be969d74f868bdb9cc70/markdown_it_py-4.3.0-py3-none-any.whl",
+      "sha256": "7aa1511a46c39138de78d9eba92ce47e63124d8003fc98b3a351909e04239efa"
+    },
+    {
+      "name": "mdurl",
+      "version": "0.1.2",
+      "url": "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl",
+      "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8"
+    },
+    {
+      "name": "shellingham",
+      "version": "1.5.4",
+      "url": "https://files.pythonhosted.org/packages/e0/f9/0595336914c5619e5f28a1fb793285925a8cd4b432c9da0a987836c7f822/shellingham-1.5.4-py2.py3-none-any.whl",
+      "sha256": "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.5",
+      "url": "https://files.pythonhosted.org/packages/de/0c/ea2544850a7c135e15033a5c7a8e7211136184b7ae63e2239d557c2b3019/typing_inspection-0.4.5-py3-none-any.whl",
+      "sha256": "bc210535442b39e1bf2805e0c7a17dfd6a4ace760c84c7f7d16245d23a6b1c39"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6",
+      "url": "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+    },
+    {
+      "name": "orca-canonical-dispatchers",
+      "version": "4d92f718aa3d51e055dbe593ab6444fe7322ecbc",
+      "url": "https://codeload.github.com/nanotech-empa/aiidalab-orca/tar.gz/4d92f718aa3d51e055dbe593ab6444fe7322ecbc",
+      "sha256": "e659a2343c9640022f597fdbbb8a7c283875d69237da59ffb87287837e44cc75",
+      "filename": "aiidalab-orca-4d92f718aa3d51e055dbe593ab6444fe7322ecbc.tar.gz",
+      "type": "source-files"
+    },
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2",
+      "url": "https://files.pythonhosted.org/packages/88/39/799be3f2f0f38cc727ee3b4f1445fe6d5e4133064ec2e4115069418a5bb6/cloudpickle-3.1.2-py3-none-any.whl",
+      "sha256": "9acb47f6afd73f60dc1df93bb801b472f05ff42fa6c84167d25cb206be1fbf4a"
+    }
+  ],
+  "source_files": [
+    {
+      "artifact": "orca-canonical-dispatchers",
+      "member": "aiidalab-orca-4d92f718aa3d51e055dbe593ab6444fe7322ecbc/backend/src/aiida_empa_orca/tools.py",
+      "destination": "share/orca-helpers/tools.py",
+      "sha256": "6db6df6dec1e4ad82ba196ea90848cc3f0b622a565c28ef97321415e78b3db27"
+    },
+    {
+      "artifact": "orca-canonical-dispatchers",
+      "member": "aiidalab-orca-4d92f718aa3d51e055dbe593ab6444fe7322ecbc/backend/src/aiida_empa_orca/dyson_tools.py",
+      "destination": "share/orca-helpers/dyson_tools.py",
+      "sha256": "5a5f8b58bc212167ae544eff9d47f9a2a4558a01845700febaaab1889a4a4b37"
+    }
+  ],
+  "launchers": {
+    "bin/orca-tools": "#!/bin/sh\nroot=@PREFIX@\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexec \"$root/bin/python\" -c 'import runpy,sys; source=sys.argv.pop(1); runpy.run_path(source)[\"main\"]()' \"$root/share/orca-helpers/tools.py\" \"$@\"\n",
+    "bin/orca-dyson": "#!/bin/sh\nroot=@PREFIX@\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexec \"$root/bin/python\" -c 'import runpy,sys; source=sys.argv.pop(1); runpy.run_path(source)[\"main\"]()' \"$root/share/orca-helpers/dyson_tools.py\" \"$@\"\n"
+  },
+  "source_commit": "4d92f718aa3d51e055dbe593ab6444fe7322ecbc",
+  "executables": [
+    "bin/orca-tools",
+    "bin/orca-dyson"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/python",
+      "-c",
+      "import pyscf,dyson_orca_tools,ase,numpy,scipy,matplotlib,h5py,yaml; print('orca-helpers-ready')"
+    ],
+    [
+      "@PREFIX/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ]
+  ]
+}

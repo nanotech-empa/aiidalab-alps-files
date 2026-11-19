@@ -2,6 +2,10 @@
 ci:
     autoupdate_schedule: quarterly
 
+# Immutable inputs of already-built uenvs; retain exact source/hash provenance.
+# Mutable installer controllers and tests below remain subject to every hook.
+exclude: ^uenv-recipes/
+
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v4.6.0
@@ -34,13 +38,15 @@ repos:
       rev: 7.1.0
       hooks:
           - id: flake8
-            args: [--count, --show-source, --statistics]
+            args: [--count, --show-source, --statistics, --max-line-length=88]
             additional_dependencies:
                 - flake8-bugbear
                 - flake8-builtins
                 - flake8-comprehensions
                 - flake8-debugger
                 - flake8-logging-format
+                # This plugin imports pkg_resources, removed in setuptools 82.
+                - setuptools<82
                 - pep8-naming
                 - pyflakes
                 - tryceratops

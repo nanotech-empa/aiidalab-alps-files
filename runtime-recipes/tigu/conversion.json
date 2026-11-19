@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "id": "wan2skeaf-0.2.1-cp312-x86_64",
+  "kind": "venv",
+  "architecture": "x86_64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "byte-identical official v0.2.1 converter; installation/native qualification pending",
+  "artifacts": [
+    {
+      "name": "numpy",
+      "version": "2.5.5",
+      "url": "https://files.pythonhosted.org/packages/99/61/522b973ba38987b22a4a71beaed2ea6ac9fd4f687baaa2bc9a45100625e0/numpy-2.5.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "704d819265e5d1064d932968e9ee85fff2103ccc78c05b878c06943ba27b8507"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "url": "https://files.pythonhosted.org/packages/df/64/ff35eb9e54894cf471ff4716abd3c81eb0a0626869217ce3e6ba4ccf17d7/scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "f55fa87b6c612ecd6b058f167c53231b1d14e412efe361d3d6e38b3631c73218"
+    },
+    {
+      "name": "aiida-skeaf-official-source",
+      "version": "0.2.1",
+      "type": "source-files",
+      "url": "https://codeload.github.com/aiidaplugins/aiida-skeaf/tar.gz/refs/tags/v0.2.1",
+      "sha256": "ba9a6ec904e05abf67d22ac74c8d6e294b4c28ef0d00a16fc8c8008681d05519",
+      "filename": "aiida-skeaf-v0.2.1.tar.gz"
+    }
+  ],
+  "source_files": [
+    {
+      "artifact": "aiida-skeaf-official-source",
+      "member": "aiida-skeaf-0.2.1/aiida_skeaf/utils/wan2skeaf.py",
+      "destination": "share/wan2skeaf.py",
+      "sha256": "79e0a14964ddc042fb209fec2a72f864b591cb0a15af3b5f069d4d1ac6976ae3"
+    },
+    {
+      "artifact": "aiida-skeaf-official-source",
+      "member": "aiida-skeaf-0.2.1/LICENSE",
+      "destination": "share/aiida-skeaf-LICENSE",
+      "sha256": "09891eba4a86244f30ed8d5ccabcd37dcbcc69f0521d90dc2df5ff184134fc14"
+    }
+  ],
+  "launchers": {
+    "bin/wan2skeaf": "#!/bin/sh\nexec @PREFIX@/bin/python @PREFIX@/share/wan2skeaf.py \"$@\"\n"
+  },
+  "executables": [
+    "bin/wan2skeaf",
+    "bin/python"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/wan2skeaf",
+      "--help"
+    ],
+    [
+      "@PREFIX/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ]
+  ],
+  "code_extras": {
+    "wan2skeaf": {
+      "version": "0.2.1",
+      "source_sha256": "79e0a14964ddc042fb209fec2a72f864b591cb0a15af3b5f069d4d1ac6976ae3",
+      "hash_launcher": true
+    }
+  }
+}

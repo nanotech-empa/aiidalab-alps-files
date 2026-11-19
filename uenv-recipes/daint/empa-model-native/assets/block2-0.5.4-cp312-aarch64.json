@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "block2-0.5.4-cp312-aarch64",
+  "kind": "pip-prefix",
+  "architecture": "aarch64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "standard-prefix-recipe-new-install-acceptance-pending",
+  "artifacts": [
+    {
+      "name": "block2",
+      "version": "0.5.4",
+      "url": "https://files.pythonhosted.org/packages/0a/2d/a2e14e8985d9a15a3c85a67003e16314b1394995b5c5863b5cbf185e7430/block2-0.5.4-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "c41922a5f4125a98f20d61c4c89e1d1aeda23293fb8c246097ff5b409a36e25c"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.2",
+      "url": "https://files.pythonhosted.org/packages/e5/21/4947e0e9d6c9fc2e2ff15b8949049ee44f63adb9cacc729ab8793f97e712/numpy-2.5.2-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "8ee9c4eeb8454b3660a8b53493563c3e121c2fc94fbd72b848ef814ed7b676a9"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.0",
+      "url": "https://files.pythonhosted.org/packages/3c/23/21f5e703643d66f21faa6b4c73195bfcad70c55efcb4f1ab327cd7c4101a/scipy-1.18.0-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "52a96e21517c7292375c0e27dd796a811f03fcea5fd4d108fdfea8145dcf17ab"
+    },
+    {
+      "name": "psutil",
+      "version": "7.0.0",
+      "url": "https://files.pythonhosted.org/packages/eb/a2/709e0fe2f093556c17fbafda93ac032257242cabcc7ff3369e2cb76a97aa/psutil-7.0.0-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "a5f098451abc2828f7dc6b58d44b532b22f2088f4999a937557b603ce72b1993"
+    }
+  ],
+  "executables": [
+    "bin/block2main"
+  ],
+  "code_extras": {
+    "block2": {
+      "version": "0.5.4",
+      "artifact_sha256": "c41922a5f4125a98f20d61c4c89e1d1aeda23293fb8c246097ff5b409a36e25c",
+      "hash_launcher": true
+    }
+  },
+  "checks": [
+    [
+      "@PYTHON",
+      "-c",
+      "import block2, pyblock2; from importlib.metadata import version; assert version('block2') == '0.5.4'; print('block2-native-import-ready')"
+    ]
+  ]
+}

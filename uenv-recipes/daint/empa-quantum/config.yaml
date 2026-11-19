@@ -1,0 +1,6 @@
+name: empa-quantum
+spack:
+  repo: https://github.com/spack/spack.git
+  commit: 2bfcc69fa870d3c6919be87593f22647981b648a
+store: /user-environment
+description: Native ARM64 public runtime for empa-quantum; no private model engine or research data

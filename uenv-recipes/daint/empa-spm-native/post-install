@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+export PYTHONNOUSERSITE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 MPICH_GPU_SUPPORT_ENABLED=0
+export PATH=/user-environment/env/default/bin:$PATH
+mkdir -p /user-environment/native
+/user-environment/env/default/bin/python /user-environment/meta/recipe/assets/install-local-runtime.py --recipe /user-environment/meta/recipe/assets/daint-spm.json --prefix /user-environment/native/spm --execute

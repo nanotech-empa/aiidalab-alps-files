@@ -1,0 +1,2320 @@
+---
+# Selected native runtimes; modern workers only, no retired research implementations.
+variables:
+    tigu_empa_username: '{cscsuser}'
+    tigu_ela_key: ''
+    local_orca_root: /home/jovyan/opt/native-runtimes/orca-6.1.1-aarch64
+    local_orca_mpi: /home/jovyan/opt/native-runtimes/openmpi-4.1.8-aarch64
+    local_python: /opt/conda/bin/python
+    local_python_worker_prefix: /home/jovyan/opt/native-runtimes/qe-pp-python-cp312-aarch64
+    local_spm_bin: '{local_cp2k_prefix}/bin'
+    local_banduppy_python: '{local_banduppy_prefix}/bin/python'
+    tigu_orca_root: /store/amsp/ORCA_6_1_1
+    tigu_orca_mpi: /opt/openmpi-4.1.1
+    tigu_banduppy_python: /store/{tigu_empa_username}/opt/banduppy-1.0.0/bin/python
+    daint_banduppy_python: /user-environment/native/banduppy/bin/python
+    local_cp2k_executable: '{local_cp2k_prefix}/bin/cp2k.psmp'
+    local_cp2k_prefix: /home/jovyan/opt/native-runtimes/cp2k-2026.2-aarch64
+    local_support_prefix: /home/jovyan/opt/native-runtimes/qe-support-20261116-aarch64
+    tigu_python: /store/{tigu_empa_username}/opt/cpython-3.12.15-20261013/python/bin/python3.12
+    tigu_orca_helpers: /store/{tigu_empa_username}/opt/orca-dyson-20261021
+    local_helper_bin: /home/jovyan/.local/bin
+    local_render_prefix: /home/jovyan/opt/native-runtimes/cube-render-20261116-aarch64
+    local_block2_prefix: /home/jovyan/opt/native-runtimes/block2-0.5.4-cp312-aarch64
+    local_julia_prefix: /home/jovyan/opt/julia-1.12.6
+    local_model_prefix: /home/jovyan/opt/native-runtimes/itensor-julia-1.12.6-82e919f11c29
+    local_banduppy_prefix: /home/jovyan/opt/native-runtimes/banduppy-1.0.0-cp312-aarch64
+    local_default_mpi: '1'
+    local_memory_kib: '1048576'
+    local_orca_archive: ''
+    local_orca_archive_sha256: 927c9f165ac6ec7547d543215a5d02c662c691c1659ba5bcd3d687817e8a6757
+    tigu_stack_root: /store/{tigu_empa_username}/opt/empa-stack-20261116
+    tigu_module_root: '{tigu_stack_root}/modulefiles'
+    tigu_stack_source_id: 341436c21e5f55f33e4ced143ca2013777914969ec872a0026582a2973333ae8
+    local_quantum_prefix: /home/jovyan/opt/native-runtimes/quantum-energy-4d92f718-aarch64
+    daint_model_root: /users/{cscsuser}/opt/empa-native-20261116
+    daint_model_prefix: '{daint_model_root}/model-4f7f2f963b'
+    model_native_uenv: empa-model-native/2026.11:3075642581
+    conversion_uenv: empa-conversion/0.2.1:3077666140
+    local_pythtb_prefix: /home/jovyan/opt/native-runtimes/pythtb-2.0.2-2e5d68814e-aarch64
+runtime_settings:
+    tigu_empa_username:
+        user_input: true
+        description: Empa/Tigu username
+        format: ssh_username
+        computers: [tigu, tigu-modules]
+    tigu_ela_key:
+        description: Tigu key on ELA (blank = defaults)
+        format: ssh_key_path
+        computers: [tigu, tigu-modules]
+    local_pythtb_prefix:
+      description: Source-matching local native PythTB worker
+      deployments:
+      - personal
+      format: local_path
+      computers:
+      - mac-localhost
+    local_orca_root:
+        description: local orca root
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_orca_mpi:
+        description: local orca mpi
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_python:
+        description: local python
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_spm_bin:
+        description: local spm bin
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    tigu_orca_root:
+        description: tigu orca root
+        deployments:
+            - hosted
+            - personal
+    tigu_orca_mpi:
+        description: tigu orca mpi
+        deployments:
+            - hosted
+            - personal
+    tigu_banduppy_python:
+        description: tigu banduppy python
+        deployments:
+            - hosted
+            - personal
+    daint_banduppy_python:
+        description: daint banduppy python
+        deployments:
+            - hosted
+            - personal
+    local_cp2k_executable:
+        description: local cp2k executable
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_cp2k_prefix:
+        description: local cp2k prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_support_prefix:
+        description: local support prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    tigu_python:
+        description: Tigu native Python >=3.11
+        deployments:
+            - hosted
+            - personal
+    tigu_orca_helpers:
+        description: Tigu ORCA helper prefix
+        deployments:
+            - hosted
+            - personal
+    local_helper_bin:
+        description: App helper executables
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_render_prefix:
+        description: Headless renderer prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_block2_prefix:
+        description: Block2 0.5.4 prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_julia_prefix:
+        description: Julia 1.12.6 prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_model_prefix:
+        description: Model engine/depot prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_banduppy_prefix:
+        description: BandUPpy worker prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_default_mpi:
+        user_input: true
+        description: Local MPI tasks/machine
+        format: positive_integer
+        deployments:
+            - personal
+        computers:
+            - mac-localhost
+    local_memory_kib:
+        user_input: true
+        description: Local memory [KiB]
+        format: positive_integer
+        deployments:
+            - personal
+        computers:
+            - mac-localhost
+    local_orca_archive:
+        description: Licensed ORCA 6.1.1 archive
+        format: local_file
+        computers:
+            - mac-localhost
+        deployments:
+            - personal
+    tigu_stack_root:
+        label: Tigu module software root
+        description: Absolute Tigu path. Existing unrelated installations/modules are preserved.
+        computers:
+            - tigu-modules
+        format: local_path
+    tigu_module_root:
+        label: Tigu modulefile directory
+        description: Absolute Tigu path. Existing unrelated installations/modules are preserved.
+        computers:
+            - tigu-modules
+        format: local_path
+    local_python_worker_prefix:
+        description: QE-PP Python 3.12 worker prefix
+        deployments:
+            - personal
+        format: local_path
+        computers:
+            - mac-localhost
+    local_quantum_prefix:
+        description: Modern quantum worker prefix
+        format: local_path
+        deployments:
+            - personal
+        computers:
+            - mac-localhost
+computers:
+    mac-localhost:
+        display_name: Localhost
+        deployments:
+            - personal
+        setup:
+            label: localhost
+            hostname: localhost
+            description: Personal Docker container (Linux, on the personal computer)
+            transport: core.local
+            scheduler: core.direct
+            shebang: '#!/bin/bash'
+            work_dir: /home/jovyan/aiida_run
+            mpirun_command: mpirun -np {tot_num_mpiprocs}
+            mpiprocs_per_machine: '{local_default_mpi}'
+            default_memory_per_machine: '{local_memory_kib}'
+            prepend_text: ''
+            use_double_quotes: false
+        config: {}
+    tigu-modules:
+        display_name: Tigu
+        ssh_help: tigu
+        ssh_host: tigu
+        ssh_dependencies:
+            - ela.cscs.ch
+        grants:
+            - free
+        setup:
+            append_text: ''
+            default_memory_per_machine: 125829120
+            description: Tigu versioned EMPA modules (separate from existing Computer)
+            hostname: 10.128.1.11
+            label: tigu-modules_{grant}
+            mpiprocs_per_machine: 12
+            mpirun_command: mpirun -np {tot_num_mpiprocs}
+            prepend_text: "export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}\nulimit -s unlimited\n"
+            scheduler: core.slurm
+            shebang: '#!/bin/bash -l'
+            transport: core.ssh_async
+            use_double_quotes: false
+            work_dir: /scratch/{username}/aiida/
+        config:
+            host: tigu
+            backend: openssh
+            safe_interval: 30.0
+            max_io_allowed: 8
+            authentication_script: None
+            use_login_shell: true
+codes:
+    tigu_orca:
+        computer: tigu
+        label: orca-6.1.1
+        description: orca-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca'
+        default_calc_job_plugin: orca.orca
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - ldd
+                  - '{tigu_orca_root}/orca'
+              not_contains: not found
+    tigu_orca_plot:
+        computer: tigu
+        label: orca-plot-6.1.1
+        description: orca-plot-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca_plot'
+        default_calc_job_plugin: empa_orca.orbital_cubes
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+    tigu_orca_2json:
+        computer: tigu
+        label: orca-2json-6.1.1
+        description: orca-2json-6.1.1 on tigu
+        filepath_executable: '{tigu_orca_root}/orca_2json'
+        default_calc_job_plugin: empa_orca.orbital_catalog
+        prepend_text: "export PATH=\"{tigu_orca_mpi}/bin:{tigu_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{tigu_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: See docs/runtime-installation.md. Supply the licensed native ORCA distribution and matching MPI before registration.
+        with_mpi: false
+    local_orca:
+        computer: mac-localhost
+        label: orca-6.1.1
+        description: orca-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca'
+        default_calc_job_plugin: orca.orca
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: Supply the licensed ORCA archive shown in runtime settings. The selected task verifies its SHA-256, builds matching Fortran-enabled
+            MPI and checks native numeric types before registration.
+        deployments: &id001
+            - personal
+        architectures: &id002
+            - aarch64
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - ldd
+                  - '{local_orca_root}/orca'
+              not_contains: not found
+    local_orca_plot:
+        computer: mac-localhost
+        label: orca-plot-6.1.1
+        description: orca-plot-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca_plot'
+        default_calc_job_plugin: empa_orca.orbital_cubes
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: Supply the licensed ORCA archive shown in runtime settings. The selected task verifies its SHA-256, builds matching Fortran-enabled
+            MPI and checks native numeric types before registration.
+        deployments: *id001
+        architectures: *id002
+        with_mpi: false
+    local_orca_2json:
+        computer: mac-localhost
+        label: orca-2json-6.1.1
+        description: orca-2json-6.1.1 on mac-localhost
+        filepath_executable: '{local_orca_root}/orca_2json'
+        default_calc_job_plugin: empa_orca.orbital_catalog
+        prepend_text: "export PATH=\"{local_orca_mpi}/bin:{local_orca_root}:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_orca_mpi}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport OMPI_MCA_osc_sm_backing_directory=\"$PWD\"\n"
+        append_text: ''
+        use_double_quotes: false
+        install_help: Supply the licensed ORCA archive shown in runtime settings. The selected task verifies its SHA-256, builds matching Fortran-enabled
+            MPI and checks native numeric types before registration.
+        deployments: *id001
+        architectures: *id002
+        with_mpi: false
+    tigu_banduppy:
+        computer: tigu
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on tigu
+        filepath_executable: '{tigu_banduppy_python}'
+        default_calc_job_plugin: nanotech_empa.qe_banduppy
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{tigu_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    daint_banduppy:
+        computer: daint.alps
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on daint.alps
+        filepath_executable: '{daint_banduppy_python}'
+        default_calc_job_plugin: nanotech_empa.qe_banduppy
+        prepend_text: "#SBATCH --uenv={python_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{daint_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    local_banduppy:
+        computer: mac-localhost
+        label: banduppy-python-1.0.0
+        description: banduppy-python-1.0.0 on mac-localhost
+        filepath_executable: '{local_banduppy_python}'
+        default_calc_job_plugin: nanotech_empa.qe_banduppy
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MPLBACKEND=Agg\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_banduppy_python}'
+                  - -c
+                  - import banduppy, numpy, scipy, ase, cloudpickle; from importlib.metadata import version; assert version("banduppy")=="1.0.0"; print("banduppy-ready")
+              contains: banduppy-ready
+        install_help: Install the separate native BandUPpy Python runtime as described in docs/runtime-installation.md. Registration does not install Python
+            dependencies.
+        with_mpi: false
+    local_stm:
+        computer: mac-localhost
+        label: stm-source-a0e486a
+        description: stm-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-stm-sts-wfn'
+        default_calc_job_plugin: nanotech_empa.stm
+        prepend_text: "export PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k/data\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_cp2k_prefix}/bin/python'
+                  - -c
+                  - import json; from importlib.metadata import distribution; import mpi4py, cp2k_spm_tools; direct=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json'));
+                    assert direct.get('archive_info',{}).get('hashes',{}).get('sha256') == '0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b';
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: The selected task installs the versioned CP2K/SPM artifact recipe. Fresh CP2K 2026.2 execution remains to be qualified.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_overlap:
+        computer: mac-localhost
+        label: overlap-source-a0e486a
+        description: overlap-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-overlap-from-wfns'
+        default_calc_job_plugin: nanotech_empa.overlap
+        prepend_text: "export PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k/data\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_cp2k_prefix}/bin/python'
+                  - -c
+                  - import json; from importlib.metadata import distribution; import mpi4py, cp2k_spm_tools; direct=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json'));
+                    assert direct.get('archive_info',{}).get('hashes',{}).get('sha256') == '0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b';
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: The selected task installs the versioned CP2K/SPM artifact recipe. Fresh CP2K 2026.2 execution remains to be qualified.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_sparse_overlap:
+        computer: mac-localhost
+        label: sparse_overlap-source-a0e486a
+        description: sparse_overlap-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-overlap-to-sparse-npz'
+        default_calc_job_plugin: nanotech_empa.sparse_overlap
+        prepend_text: "export PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k/data\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_cp2k_prefix}/bin/python'
+                  - -c
+                  - import json; from importlib.metadata import distribution; import mpi4py, cp2k_spm_tools; direct=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json'));
+                    assert direct.get('archive_info',{}).get('hashes',{}).get('sha256') == '0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b';
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: The selected task installs the versioned CP2K/SPM artifact recipe. Fresh CP2K 2026.2 execution remains to be qualified.
+        with_mpi: false
+        architectures:
+            - aarch64
+    local_cp2k_unfolding:
+        computer: mac-localhost
+        label: cp2k_unfolding-source-a0e486a
+        description: cp2k_unfolding-source-a0e486a on mac-localhost
+        filepath_executable: '{local_spm_bin}/cp2k-unfold-wfn-sparse-mpi'
+        default_calc_job_plugin: nanotech_empa.cp2k_unfolding
+        prepend_text: "export PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k/data\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_cp2k_prefix}/bin/python'
+                  - -c
+                  - import json; from importlib.metadata import distribution; import mpi4py, cp2k_spm_tools; direct=json.loads(distribution('cp2k-spm-tools').read_text('direct_url.json'));
+                    assert direct.get('archive_info',{}).get('hashes',{}).get('sha256') == '0b41980194f8ba0d25c13f03c4cea494f95f02176b4231c6a16535abd84bd44b';
+                    print('spm-ready')
+              contains: spm-ready
+        deployments:
+            - personal
+        install_help: The selected task installs the versioned CP2K/SPM artifact recipe. Fresh CP2K 2026.2 execution remains to be qualified.
+        with_mpi: true
+        architectures:
+            - aarch64
+    local_pythonjob:
+        computer: mac-localhost
+        label: python
+        description: Python 3.12 worker for QE-PP cube reduction (PythonJob)
+        filepath_executable: '{local_python_worker_prefix}/bin/python'
+        default_calc_job_plugin: pythonjob.pythonjob
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        runtime_checks:
+            - arguments:
+                  - '{local_python_worker_prefix}/bin/python'
+                  - -c
+                  - import sys,cloudpickle,numpy,scipy; from pymatgen.io.common import VolumetricData; from skimage.transform import resize; from skimage.metrics
+                    import structural_similarity; assert sys.version_info[:2] == (3,12); print('qe-pp-python-ready')
+              contains: qe-pp-python-ready
+        deployments:
+            - personal
+        with_mpi: false
+    local_cp2k:
+        computer: mac-localhost
+        label: cp2k-2026.2-native
+        description: CP2K 2026.2 native ARM64, matching OpenMPI and data
+        filepath_executable: '{local_cp2k_executable}'
+        default_calc_job_plugin: cp2k
+        prepend_text: "export PATH=\"{local_cp2k_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_cp2k_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport CP2K_DATA_DIR=\"{local_cp2k_prefix}/share/cp2k/data\"\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: The selected task installs the versioned CP2K/SPM artifact recipe. Fresh CP2K 2026.2 execution remains to be qualified.
+        architectures:
+            - aarch64
+        runtime_checks:
+            - arguments:
+                  - /bin/sh
+                  - -c
+                  - test -r "$CP2K_DATA_DIR/dftd3.dat"
+    local_bader:
+        computer: mac-localhost
+        label: bader-1.0.5-local
+        description: bader-1.0.5-local in a managed native prefix
+        filepath_executable: '{local_support_prefix}/bin/bader'
+        default_calc_job_plugin: nanotech_empa.bader
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Selected support task installs official native programs and data. Verify the fresh CLI/parser behavior before scientific use.
+        architectures:
+            - aarch64
+    local_cubehandler:
+        computer: mac-localhost
+        label: cubehandler-local
+        description: cubehandler-local in personal Linux container
+        filepath_executable: '{local_render_prefix}/bin/cubehandler-render'
+        default_calc_job_plugin: nanotech_empa.cubehandler
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Selected task installs the headless CPU Mesa/EGL renderer and exact reviewed CubeHandler source. Validate a real render separately.
+    local_phonopy:
+        computer: mac-localhost
+        label: phonopy-local
+        description: phonopy-local in personal Linux container
+        filepath_executable: '{local_helper_bin}/phonopy'
+        default_calc_job_plugin: phonopy.phonopy
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: See docs/runtime-installation.md and the personal Docker recreation guide. Resolve native executable paths before registration.
+    local_critic2:
+        computer: mac-localhost
+        label: critic2-1.6-local
+        description: Official Critic2 source tag 1.6 (native banner 1.4.339)
+        filepath_executable: '{local_support_prefix}/bin/critic2'
+        default_calc_job_plugin: critic2
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Selected support task installs official native programs and data. Verify the fresh CLI/parser behavior before scientific use.
+        runtime_checks:
+            - arguments:
+                  - '{local_support_prefix}/bin/critic2'
+                  - --version
+              contains: critic2 (development), version 1.4.339
+        architectures:
+            - aarch64
+        runtime_receipt:
+            path: '{local_support_prefix}/empa-runtime.json'
+            recipe_sha256: da7449eb9f781ca27d58446e9d2295d38b950aa738c858d09d5e41a39469593b
+            extras: {}
+    local_wannier90:
+        computer: mac-localhost
+        label: wannier90-4.0.3-local
+        description: wannier90-4.0.3-local in a managed native prefix
+        filepath_executable: '{local_support_prefix}/bin/wannier90.x'
+        default_calc_job_plugin: wannier90.wannier90
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: true
+        deployments:
+            - personal
+        install_help: Selected support task installs official native programs and data. Verify the fresh CLI/parser behavior before scientific use.
+        architectures:
+            - aarch64
+    tigu_orca_tools:
+        computer: tigu
+        label: orca-tools
+        description: ORCA tools helper on tigu
+        filepath_executable: '{tigu_orca_helpers}/orca-tools'
+        default_calc_job_plugin: empa_orca.electronic_storage
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - hosted
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    tigu_orca_dyson:
+        computer: tigu
+        label: orca-dyson
+        description: ORCA dyson helper on tigu
+        filepath_executable: '{tigu_orca_helpers}/orca-dyson'
+        default_calc_job_plugin: empa_orca.dyson
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - hosted
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_orca_tools:
+        computer: mac-localhost
+        label: orca-tools
+        description: ORCA tools helper on mac-localhost
+        filepath_executable: '{local_helper_bin}/orca-tools'
+        default_calc_job_plugin: empa_orca.electronic_storage
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_orca_dyson:
+        computer: mac-localhost
+        label: orca-dyson
+        description: ORCA dyson helper on mac-localhost
+        filepath_executable: '{local_helper_bin}/orca-dyson'
+        default_calc_job_plugin: empa_orca.dyson
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the matching standalone ORCA helper from the selected app source; verify its native dependencies. Quantum-worker updates remain
+            deferred.
+    local_skeaf:
+        computer: mac-localhost
+        label: skeaf-1.3.0-local
+        description: skeaf-1.3.0-local in a managed native prefix
+        filepath_executable: '{local_support_prefix}/bin/skeaf'
+        default_calc_job_plugin: skeaf.skeaf
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Selected support task installs official native programs and data. Verify the fresh CLI/parser behavior before scientific use.
+        architectures:
+            - aarch64
+    local_wan2skeaf:
+        computer: mac-localhost
+        label: wan2skeaf-local
+        description: wan2skeaf in personal Linux container
+        filepath_executable: '{local_helper_bin}/wan2skeaf'
+        default_calc_job_plugin: skeaf.wan2skeaf
+        prepend_text: ''
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        install_help: Install the native SKEAF program and the matching aiida-skeaf plugin/wan2skeaf entry point from the local-runtime guide.
+    local_orca_cube_render:
+        computer: mac-localhost
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments: &id003
+            - personal
+        architectures: &id004
+            - aarch64
+        label: cubehandler-render-local
+        description: Shared native headless CubeHandler renderer for ORCA
+        filepath_executable: '{local_render_prefix}/bin/cubehandler-render'
+        default_calc_job_plugin: empa_orca.cube_render
+        install_help: Use the same reviewed headless renderer recipe as Surfaces.
+    local_block2:
+        computer: mac-localhost
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport PYTHONPATH=\"{local_block2_prefix}/lib/python3.12/site-packages\""
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments: *id003
+        architectures: *id004
+        label: block2-0.5.4-local
+        description: Official Block2 0.5.4 cp312 ARM64 runtime
+        filepath_executable: '{local_block2_prefix}/bin/block2main'
+        default_calc_job_plugin: empa_orca.dmrg
+        runtime_receipt:
+            path: '{local_block2_prefix}/empa-runtime.json'
+            recipe_sha256: c5825a5d65b0a61112b14a8b54fe131673936eb2079d46ed78a0d63f72bae297
+            extras:
+                block2:
+                    version: 0.5.4
+                    artifact_sha256: c41922a5f4125a98f20d61c4c89e1d1aeda23293fb8c246097ff5b409a36e25c
+        install_help: The selected task installs official wheels with standard prefix ownership and qualified nested Block2 metadata.
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import block2, pyblock2; from importlib.metadata import version; assert version('block2')=='0.5.4'; print('block2-native-import-ready')
+              contains: block2-native-import-ready
+    local_itensor_gs:
+        computer: mac-localhost
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport ITENSOR_SPIN_CASE_ROOT=\"{local_model_prefix}/source/remote/engine\"\
+            \nexport ITENSOR_SPIN_JULIA=\"{local_julia_prefix}/bin/julia\"\nexport JULIA_DEPOT_PATH=\"{local_model_prefix}/depot\"\nexport GKSwstype=100"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments: *id003
+        architectures: *id004
+        label: itensor-spin-gs-0.4.3.dev0-local-4f7f2f96
+        description: Committed local Julia/ITensor engine 4f7f2f96
+        filepath_executable: '{local_model_prefix}/source/remote/itensor-spin-gs-local'
+        default_calc_job_plugin: itensor_spin.ground_state
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json,pathlib; r=json.loads(pathlib.Path('{local_model_prefix}/empa-model-runtime.json').read_text()); assert r['status']=='INSTALLED_AND_CHECKED'
+                    and r['source_commit']=='4f7f2f963bacb5e870fc118842004e31609c7c55'; print('itensor-runtime-ready')
+              contains: itensor-runtime-ready
+        install_help: Selected task installs official Julia and instantiates the exact committed Project/Manifest in a private depot; the Model app must
+            be installed first.
+        runtime_receipt:
+            path: '{local_model_prefix}/empa-model-runtime.json'
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spin_graph: true
+    local_itensor_segment:
+        computer: mac-localhost
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1\nexport ITENSOR_SPIN_CASE_ROOT=\"{local_model_prefix}/source/remote/engine\"\
+            \nexport ITENSOR_SPIN_JULIA=\"{local_julia_prefix}/bin/julia\"\nexport JULIA_DEPOT_PATH=\"{local_model_prefix}/depot\"\nexport GKSwstype=100"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments: *id003
+        architectures: *id004
+        label: itensor-spin-segment-0.4.3.dev0-local-4f7f2f96
+        description: Committed local Julia/ITensor engine 4f7f2f96
+        filepath_executable: '{local_model_prefix}/source/remote/itensor-spin-segment-local'
+        default_calc_job_plugin: itensor_spin.spectral_segment
+        runtime_checks:
+            - arguments:
+                  - '{local_python}'
+                  - -c
+                  - import json,pathlib; r=json.loads(pathlib.Path('{local_model_prefix}/empa-model-runtime.json').read_text()); assert r['status']=='INSTALLED_AND_CHECKED'
+                    and r['source_commit']=='4f7f2f963bacb5e870fc118842004e31609c7c55'; print('itensor-runtime-ready')
+              contains: itensor-runtime-ready
+        install_help: Selected task installs official Julia and instantiates the exact committed Project/Manifest in a private depot; the Model app must
+            be installed first.
+        runtime_receipt:
+            path: '{local_model_prefix}/empa-model-runtime.json'
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spectral_bond_cap: true
+                supports_blas_execution_policy: true
+    local_ppafm:
+        computer: mac-localhost
+        label: ppafm-0.4.1-local
+        description: Official PPAFM0.4.1 native CPU runtime
+        filepath_executable: '{local_support_prefix}/bin/run_ppafm.sh'
+        default_calc_job_plugin: nanotech_empa.afm
+        prepend_text: "export PATH=\"{local_support_prefix}/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"{local_support_prefix}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+            \nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        deployments:
+            - personal
+        architectures:
+            - aarch64
+        install_help: Selected support task builds and verifies the official PPAFM CPU libraries. Native AFM science remains a separate qualification.
+    tigu_module_cp2k:
+        default_calc_job_plugin: cp2k
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: cp2k-2026.2-native
+        description: Versioned cp2k module on Tigu
+        filepath_executable: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7/bin/cp2k.psmp'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cp2k/2026.2-a0e486a-1ceef5cae7"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: cp2k
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7'
+            module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
+            recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_stm:
+        default_calc_job_plugin: nanotech_empa.stm
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: stm-source-a0e486a
+        description: Versioned cp2k module on Tigu
+        filepath_executable: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7/bin/cp2k-stm-sts-wfn'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cp2k/2026.2-a0e486a-1ceef5cae7"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: cp2k
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7'
+            module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
+            recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_overlap:
+        default_calc_job_plugin: nanotech_empa.overlap
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: overlap-source-a0e486a
+        description: Versioned cp2k module on Tigu
+        filepath_executable: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7/bin/cp2k-overlap-from-wfns'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cp2k/2026.2-a0e486a-1ceef5cae7"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: cp2k
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7'
+            module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
+            recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_sparse_overlap:
+        default_calc_job_plugin: nanotech_empa.sparse_overlap
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: sparse_overlap-source-a0e486a
+        description: Versioned cp2k module on Tigu
+        filepath_executable: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7/bin/cp2k-overlap-to-sparse-npz'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cp2k/2026.2-a0e486a-1ceef5cae7"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: cp2k
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7'
+            module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
+            recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_cp2k_unfolding:
+        default_calc_job_plugin: nanotech_empa.cp2k_unfolding
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: cp2k_unfolding-source-a0e486a
+        description: Versioned cp2k module on Tigu
+        filepath_executable: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7/bin/cp2k-unfold-wfn-sparse-mpi'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cp2k/2026.2-a0e486a-1ceef5cae7"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: cp2k
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cp2k-2026.2-a0e486a-1ceef5cae7'
+            module: empa/cp2k/2026.2-a0e486a-1ceef5cae7
+            recipe_sha256: 1ceef5cae70cae6805b5ab5b97273cbee05ed580a990cfa3ba80f98af00e146c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_qe_pw:
+        default_calc_job_plugin: quantumespresso.pw
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: pw-7.5
+        description: Versioned qe module on Tigu
+        filepath_executable: '{tigu_stack_root}/qe-7.5-eb8ef0b463/bin/pw.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/qe/7.5-eb8ef0b463"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: qe
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-7.5-eb8ef0b463'
+            module: empa/qe/7.5-eb8ef0b463
+            recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_qe_pp:
+        default_calc_job_plugin: quantumespresso.pp
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: pp-7.5
+        description: Versioned qe module on Tigu
+        filepath_executable: '{tigu_stack_root}/qe-7.5-eb8ef0b463/bin/pp.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/qe/7.5-eb8ef0b463"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: qe
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-7.5-eb8ef0b463'
+            module: empa/qe/7.5-eb8ef0b463
+            recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_qe_projwfc:
+        default_calc_job_plugin: quantumespresso.projwfc
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: projwfc-7.5
+        description: Versioned qe module on Tigu
+        filepath_executable: '{tigu_stack_root}/qe-7.5-eb8ef0b463/bin/projwfc.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/qe/7.5-eb8ef0b463"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: qe
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-7.5-eb8ef0b463'
+            module: empa/qe/7.5-eb8ef0b463
+            recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_qe_dos:
+        default_calc_job_plugin: quantumespresso.dos
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: dos-7.5
+        description: Versioned qe module on Tigu
+        filepath_executable: '{tigu_stack_root}/qe-7.5-eb8ef0b463/bin/dos.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/qe/7.5-eb8ef0b463"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: qe
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-7.5-eb8ef0b463'
+            module: empa/qe/7.5-eb8ef0b463
+            recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_qe_pw2wannier90:
+        default_calc_job_plugin: quantumespresso.pw2wannier90
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: pw2wannier90-7.5
+        description: Versioned qe module on Tigu
+        filepath_executable: '{tigu_stack_root}/qe-7.5-eb8ef0b463/bin/pw2wannier90.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/qe/7.5-eb8ef0b463"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: qe
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-7.5-eb8ef0b463'
+            module: empa/qe/7.5-eb8ef0b463
+            recipe_sha256: eb8ef0b4638aaaee8009ffaebd60b0a5eed4ec7009e9507b75d97b9344de6a37
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_banduppy:
+        default_calc_job_plugin: nanotech_empa.qe_banduppy
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: banduppy-python-1.0.0
+        description: Versioned banduppy module on Tigu
+        filepath_executable: '{tigu_stack_root}/banduppy-1.0.0/bin/python'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/banduppy/1.0.0\nexport MPLBACKEND=Agg\n"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: banduppy
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/banduppy-1.0.0'
+            module: empa/banduppy/1.0.0
+            recipe_sha256: d7fbdbed8c06a59fbcf5fa92313aa00aa43bd7946c8b095a533ceff02d7008a4
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_block2:
+        default_calc_job_plugin: empa_orca.dmrg
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: block2-0.5.4-tigu-module
+        description: Versioned block2 module on Tigu
+        filepath_executable: '{tigu_stack_root}/block2-0.5.4-47d160a62a/bin/block2main'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/block2/0.5.4-47d160a62a"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: block2
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/block2-0.5.4-47d160a62a'
+            module: empa/block2/0.5.4-47d160a62a
+            recipe_sha256: 47d160a62ae6a9e52a8728c6fececfa6e01633d95e82c97f60a256fd58fd6c90
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras:
+                block2:
+                    version: 0.5.4
+                    artifact_sha256: 240162da39913157e99f0c7e8be80f94efc2efff876b1cca685e8bcc39be636a
+    tigu_module_cubehandler:
+        default_calc_job_plugin: nanotech_empa.cubehandler
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: cubehandler-tigu-module
+        description: Versioned render module on Tigu
+        filepath_executable: '{tigu_stack_root}/cubehandler-245db38-f65efc7eb9/bin/cubehandler-render'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cubehandler/245db38-f65efc7eb9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: render
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cubehandler-245db38-f65efc7eb9'
+            module: empa/cubehandler/245db38-f65efc7eb9
+            recipe_sha256: f65efc7eb9c800fb46b694928865ff738f8f41d6b3047170ac6fe0b8bb4e9490
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca_cube_render:
+        default_calc_job_plugin: empa_orca.cube_render
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: cubehandler-render-tigu-module
+        description: Versioned render module on Tigu
+        filepath_executable: '{tigu_stack_root}/cubehandler-245db38-f65efc7eb9/bin/cubehandler-render'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/cubehandler/245db38-f65efc7eb9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: render
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/cubehandler-245db38-f65efc7eb9'
+            module: empa/cubehandler/245db38-f65efc7eb9
+            recipe_sha256: f65efc7eb9c800fb46b694928865ff738f8f41d6b3047170ac6fe0b8bb4e9490
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_itensor_gs:
+        default_calc_job_plugin: itensor_spin.ground_state
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: itensor-spin-gs-0.4.3.dev0-tigu-module-4f7f2f96
+        description: Versioned model module on Tigu
+        filepath_executable: '{tigu_stack_root}/itensor-4f7f2f96-offline/source/remote/itensor-spin-gs-local'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/itensor/0.4.3-4f7f2f96-offline"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: model
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/itensor-4f7f2f96-offline'
+            module: empa/itensor/0.4.3-4f7f2f96-offline
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spin_graph: true
+    tigu_module_itensor_segment:
+        default_calc_job_plugin: itensor_spin.spectral_segment
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: itensor-spin-segment-0.4.3.dev0-tigu-module-4f7f2f96
+        description: Versioned model module on Tigu
+        filepath_executable: '{tigu_stack_root}/itensor-4f7f2f96-offline/source/remote/itensor-spin-segment-local'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/itensor/0.4.3-4f7f2f96-offline"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: model
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/itensor-4f7f2f96-offline'
+            module: empa/itensor/0.4.3-4f7f2f96-offline
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spectral_bond_cap: true
+                supports_blas_execution_policy: true
+    tigu_module_bader:
+        default_calc_job_plugin: nanotech_empa.bader
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: bader-1.0.5-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/bader'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_wannier90:
+        default_calc_job_plugin: wannier90.wannier90
+        with_mpi: true
+        use_double_quotes: false
+        computer: tigu-modules
+        label: wannier90-4.0.3-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/wannier90.x'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_skeaf:
+        default_calc_job_plugin: skeaf.skeaf
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: skeaf-1.3.0-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/skeaf'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_critic2:
+        default_calc_job_plugin: critic2
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: critic2-1.6-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/critic2'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_ppafm:
+        default_calc_job_plugin: nanotech_empa.afm
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: ppafm-0.4.1-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/run_ppafm.sh'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca:
+        default_calc_job_plugin: orca.orca
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: orca-6.1.1
+        description: Versioned orca module on Tigu
+        filepath_executable: /store/amsp/ORCA_6_1_1/orca
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/orca/6.1.1-mpi4.1.1"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: orca
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: /store/amsp/ORCA_6_1_1
+            module: empa/orca/6.1.1-mpi4.1.1
+            recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca_plot:
+        default_calc_job_plugin: empa_orca.orbital_cubes
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: orca-plot-6.1.1
+        description: Versioned orca module on Tigu
+        filepath_executable: /store/amsp/ORCA_6_1_1/orca_plot
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/orca/6.1.1-mpi4.1.1"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: orca
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: /store/amsp/ORCA_6_1_1
+            module: empa/orca/6.1.1-mpi4.1.1
+            recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca_2json:
+        default_calc_job_plugin: empa_orca.orbital_catalog
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: orca-2json-6.1.1
+        description: Versioned orca module on Tigu
+        filepath_executable: /store/amsp/ORCA_6_1_1/orca_2json
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/orca/6.1.1-mpi4.1.1"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: orca
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: /store/amsp/ORCA_6_1_1
+            module: empa/orca/6.1.1-mpi4.1.1
+            recipe_sha256: 90eaad784d3946d44caf411a6bdaaa8c93bb3eeb9cc3329f269a91466c4ca46d
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca_tools:
+        default_calc_job_plugin: empa_orca.electronic_storage
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: orca-tools
+        description: Versioned helpers module on Tigu
+        filepath_executable: '{tigu_stack_root}/orca-helpers-4d92f71/bin/orca-tools'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/orca-helpers/4d92f71"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: helpers
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/orca-helpers-4d92f71'
+            module: empa/orca-helpers/4d92f71
+            recipe_sha256: 1528318888a4faf960a1280981e95d057176b07002fac6347c881b7a240908ff
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_orca_dyson:
+        default_calc_job_plugin: empa_orca.dyson
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: orca-dyson
+        description: Versioned helpers module on Tigu
+        filepath_executable: '{tigu_stack_root}/orca-helpers-4d92f71/bin/orca-dyson'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/orca-helpers/4d92f71"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: helpers
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/orca-helpers-4d92f71'
+            module: empa/orca-helpers/4d92f71
+            recipe_sha256: 1528318888a4faf960a1280981e95d057176b07002fac6347c881b7a240908ff
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_gaussian:
+        default_calc_job_plugin: gaussian
+        use_double_quotes: false
+        computer: tigu-modules
+        label: gaussian-16
+        description: Versioned gaussian module on Tigu
+        filepath_executable: /opt/g16_avx2/g16
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/gaussian/16\nexport GAUSS_SCRDIR=${SLURM_TMPDIR:-$PWD}"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: gaussian
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: /opt/g16_avx2
+            module: empa/gaussian/16
+            recipe_sha256: 262ee6338e9ba59d871fdc3bded771d936c825913a121e111834034b8b5d93b1
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_module_pythonjob:
+        default_calc_job_plugin: pythonjob.pythonjob
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: python
+        description: Python 3.12 worker for QE-PP cube reduction (PythonJob)
+        filepath_executable: '{tigu_stack_root}/qe-pp-python-20261116-92064f5184/bin/python'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/python/20261116-92064f5184"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: python
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/qe-pp-python-20261116-92064f5184'
+            module: empa/python/20261116-92064f5184
+            recipe_sha256: 92064f5184c0b90a7b872943546952da70cbbf96a1338e48b7b2d4ead827b82a
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+        runtime_checks:
+            - arguments:
+                  - '{tigu_stack_root}/qe-pp-python-20261116-92064f5184/bin/python'
+                  - -c
+                  - import sys,cloudpickle,numpy,scipy; from pymatgen.io.common import VolumetricData; from skimage.transform import resize; from skimage.metrics
+                    import structural_similarity; assert sys.version_info[:2] == (3,12); print('qe-pp-python-ready')
+              contains: qe-pp-python-ready
+    tigu_module_phonopy:
+        default_calc_job_plugin: phonopy.phonopy
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu-modules
+        label: phonopy-tigu-module
+        description: Versioned support module on Tigu
+        filepath_executable: '{tigu_stack_root}/support-20261116-4e038d5cf9/bin/phonopy'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/support/20261116-4e038d5cf9"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: support
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/support-20261116-4e038d5cf9'
+            module: empa/support/20261116-4e038d5cf9
+            recipe_sha256: 4e038d5cf9bd89b3b3e3db4bf7ae45159698af070a3e51ebdcbd54825a98022b
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+    tigu_pythonjob:
+        default_calc_job_plugin: pythonjob.pythonjob
+        with_mpi: false
+        use_double_quotes: false
+        computer: tigu
+        label: python
+        description: Python 3.12 worker for QE-PP cube reduction (PythonJob)
+        filepath_executable: '{tigu_stack_root}/qe-pp-python-20261116-92064f5184/bin/python'
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/python/20261116-92064f5184"
+        append_text: ''
+        runtime_checks:
+            - arguments:
+                  - '{tigu_stack_root}/qe-pp-python-20261116-92064f5184/bin/python'
+                  - -c
+                  - import sys,cloudpickle,numpy,scipy; from pymatgen.io.common import VolumetricData; from skimage.transform import resize; from skimage.metrics
+                    import structural_similarity; assert sys.version_info[:2] == (3,12); print('qe-pp-python-ready')
+              contains: qe-pp-python-ready
+    daint_block2:
+        computer: daint.alps
+        label: block2-0.5.4
+        description: Native Block2 standard prefix in shared Daint uenv
+        filepath_executable: /user-environment/native/block2/bin/block2main
+        default_calc_job_plugin: empa_orca.dmrg
+        with_mpi: false
+        use_double_quotes: false
+        prepend_text: "#SBATCH --uenv=empa-model-native/2026.11:3075642581\n#SBATCH --view=default\nexport PYTHONPATH=/user-environment/native/block2/lib/python3.12/site-packages\n\
+            export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        runtime_receipt:
+            host: daint.alps.cscs.ch
+            image: empa-model-native/2026.11:3075642581
+            view: default
+            python: /user-environment/env/default/bin/python
+            path: /user-environment/native/block2/empa-runtime.json
+            recipe_sha256: c5825a5d65b0a61112b14a8b54fe131673936eb2079d46ed78a0d63f72bae297
+            extras:
+                block2:
+                    version: 0.5.4
+                    artifact_sha256: c41922a5f4125a98f20d61c4c89e1d1aeda23293fb8c246097ff5b409a36e25c
+        runtime_checks:
+            - arguments:
+                  - /user-environment/env/default/bin/python
+                  - -c
+                  - import block2,pyblock2; print('block2-ready')
+              contains: block2-ready
+    local_pythtb:
+      computer: mac-localhost
+      label: pythtb-2.0.2-local-2e5d68814e
+      description: Native TB/MFH orbital and Wannier worker
+      filepath_executable: '{local_pythtb_prefix}/bin/empa-tb-worker'
+      default_calc_job_plugin: empa_tb.calculate
+      with_mpi: false
+      prepend_text: export MPLBACKEND=Agg
+      append_text: ''
+      use_double_quotes: false
+      deployments:
+      - personal
+      architectures:
+      - aarch64
+      install_help: The selected task composes the exact native worker from the installed
+        reviewed app and locked ARM64 dependencies.
+      runtime_receipt:
+        path: '{local_pythtb_prefix}/empa-pythtb-runtime.json'
+        recipe_sha256: 2e5d68814e062481de72667c175d214c90c53bb47a916ae673b2be246689f9f9
+        extras:
+          pythtb_worker:
+            protocol: empa-pythtb/v1
+            engine_sha256: 3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3
+            pythtb_version: 2.0.2
+            capabilities:
+            - solve
+            - orbital
+            - wannier
+            postprocess_engine_sha256: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
+      runtime_checks:
+      - arguments:
+        - '{local_pythtb_prefix}/bin/empa-tb-worker'
+        - --manifest
+        contains: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
+    tigu_module_pythtb:
+        computer: tigu-modules
+        label: pythtb-2.0.2-6a338b7425
+        description: Selected native pythtb worker on Tigu
+        default_calc_job_plugin: empa_tb.calculate
+        filepath_executable: '{tigu_stack_root}/pythtb-2.0.2-6a338b7425/bin/empa-tb-worker'
+        with_mpi: false
+        use_double_quotes: false
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/pythtb/2.0.2-6a338b7425"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: pythtb
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/pythtb-2.0.2-6a338b7425'
+            module: empa/pythtb/2.0.2-6a338b7425
+            recipe_sha256: 6a338b742559ffb147a32c1c7d69f1dec92e177163602e9be3388b8137cf5391
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras:
+                pythtb_worker:
+                    protocol: empa-pythtb/v1
+                    engine_sha256: 3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3
+                    pythtb_version: 2.0.2
+                    capabilities: [solve, orbital, wannier]
+                    postprocess_engine_sha256: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
+    tigu_module_quantum:
+        computer: tigu-modules
+        label: quantum-quantum-energy-4d92f718-e8c8ef1452
+        description: Selected native quantum worker on Tigu
+        default_calc_job_plugin: empa_orca.energy_stage
+        filepath_executable: '{tigu_stack_root}/quantum-energy-4d92f718-e8c8ef1452/bin/quantum-energy'
+        with_mpi: false
+        use_double_quotes: false
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/quantum/4d92f718-e8c8ef1452"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: quantum
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/quantum-energy-4d92f718-e8c8ef1452'
+            module: empa/quantum/4d92f718-e8c8ef1452
+            recipe_sha256: e8c8ef1452ea4bd1f6f565c257ed9ef112244ded9061e25d1cc2c8cd9998c4ea
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras: {}
+        manifest:
+            source_sha256: d5ab99071241dd1479646a73b1d7a5842d96d807f1193800e01b64ef948a4920
+            extra: quantum_energy_tools
+    local_quantum_energy:
+        computer: mac-localhost
+        label: quantum-energy-4d92f718-local
+        description: Modern portable quantum-energy/v1 worker
+        default_calc_job_plugin: empa_orca.energy_stage
+        filepath_executable: '{local_quantum_prefix}/bin/quantum-energy'
+        with_mpi: false
+        use_double_quotes: false
+        deployments:
+            - personal
+        architectures:
+            - aarch64
+        prepend_text: "export OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\nexport MKL_NUM_THREADS=1"
+        append_text: ''
+        manifest:
+            source_sha256: d5ab99071241dd1479646a73b1d7a5842d96d807f1193800e01b64ef948a4920
+            extra: quantum_energy_tools
+    daint_itensor_gs:
+        computer: daint.alps
+        prepend_text: "#SBATCH --uenv={model_native_uenv}\n#SBATCH --view=default\nexport ITENSOR_SPIN_CASE_ROOT=\"{daint_model_prefix}/source/remote/engine\"\
+            \nexport ITENSOR_SPIN_JULIA=/user-environment/native/julia/bin/julia\nexport JULIA_DEPOT_PATH=\"{daint_model_prefix}/depot\"\nexport GKSwstype=100"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        label: itensor-spin-gs-4f7f2f96
+        description: Committed local Julia/ITensor engine 4f7f2f96
+        filepath_executable: '{daint_model_prefix}/source/remote/itensor-spin-gs-local'
+        default_calc_job_plugin: itensor_spin.ground_state
+        runtime_checks:
+            - arguments:
+                  - /user-environment/env/default/bin/python
+                  - -c
+                  - import json,pathlib; r=json.loads(pathlib.Path('{daint_model_prefix}/empa-model-runtime.json').read_text()); assert r['status']=='INSTALLED_AND_CHECKED';
+                    assert r['source_commit']=='4f7f2f963bacb5e870fc118842004e31609c7c55'; print('itensor-runtime-ready')
+              contains: itensor-runtime-ready
+        runtime_receipt:
+            path: '{daint_model_prefix}/empa-model-runtime.json'
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spin_graph: true
+            host: daint.alps.cscs.ch
+            image: '{model_native_uenv}'
+            view: default
+            python: /user-environment/env/default/bin/python
+    daint_itensor_segment:
+        computer: daint.alps
+        prepend_text: "#SBATCH --uenv={model_native_uenv}\n#SBATCH --view=default\nexport ITENSOR_SPIN_CASE_ROOT=\"{daint_model_prefix}/source/remote/engine\"\
+            \nexport ITENSOR_SPIN_JULIA=/user-environment/native/julia/bin/julia\nexport JULIA_DEPOT_PATH=\"{daint_model_prefix}/depot\"\nexport GKSwstype=100"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        label: itensor-spin-segment-4f7f2f96
+        description: Committed local Julia/ITensor engine 4f7f2f96
+        filepath_executable: '{daint_model_prefix}/source/remote/itensor-spin-segment-local'
+        default_calc_job_plugin: itensor_spin.spectral_segment
+        runtime_checks:
+            - arguments:
+                  - /user-environment/env/default/bin/python
+                  - -c
+                  - import json,pathlib; r=json.loads(pathlib.Path('{daint_model_prefix}/empa-model-runtime.json').read_text()); assert r['status']=='INSTALLED_AND_CHECKED';
+                    assert r['source_commit']=='4f7f2f963bacb5e870fc118842004e31609c7c55'; print('itensor-runtime-ready')
+              contains: itensor-runtime-ready
+        runtime_receipt:
+            path: '{daint_model_prefix}/empa-model-runtime.json'
+            recipe_sha256: f8851732cb6b2892c8597890d62c54ec7108d81164de5735067968899cd87dc7
+            extras:
+                engine_source_commit: 4f7f2f963bacb5e870fc118842004e31609c7c55
+                engine_sha256: 784c532115ff02208438130c1192a11de9328dfa0b0b3f25a37a92a314f574eb
+                supports_spectral_bond_cap: true
+                supports_blas_execution_policy: true
+            host: daint.alps.cscs.ch
+            image: '{model_native_uenv}'
+            view: default
+            python: /user-environment/env/default/bin/python
+    daint_quantum_energy:
+        computer: daint.alps
+        label: quantum-energy-4d92f718
+        description: Modern portable energy worker in a shared native ARM64 uenv
+        default_calc_job_plugin: empa_orca.energy_stage
+        filepath_executable: /user-environment/native/quantum/bin/quantum-energy
+        with_mpi: false
+        use_double_quotes: false
+        prepend_text: |-
+            #SBATCH --uenv=empa-quantum/4d92f718:3075816173
+            #SBATCH --view=default
+            export OPENBLAS_NUM_THREADS=1
+            export MKL_NUM_THREADS=1
+        append_text: ''
+        manifest:
+            source_sha256: d5ab99071241dd1479646a73b1d7a5842d96d807f1193800e01b64ef948a4920
+            extra: quantum_energy_tools
+    daint_skeaf:
+        computer: daint.alps
+        label: skeaf-1.3.0
+        description: skeaf-1.3.0-local in a managed native prefix
+        filepath_executable: /user-environment/native/support/bin/skeaf
+        default_calc_job_plugin: skeaf.skeaf
+        prepend_text: "#SBATCH --uenv={support_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+    daint_wan2skeaf:
+        computer: daint.alps
+        label: wan2skeaf-0.2.1
+        description: wan2skeaf in personal Linux container
+        filepath_executable: /user-environment/native/conversion/bin/wan2skeaf
+        default_calc_job_plugin: skeaf.wan2skeaf
+        prepend_text: "#SBATCH --uenv={conversion_uenv}\n#SBATCH --view=default\nexport OMP_NUM_THREADS=1\nexport OPENBLAS_NUM_THREADS=1\n"
+        append_text: ''
+        use_double_quotes: false
+        with_mpi: false
+        runtime_checks:
+            - arguments:
+                  - /user-environment/native/conversion/bin/wan2skeaf
+                  - --help
+              contains: Prepare bxsf
+    tigu_module_wan2skeaf:
+        computer: tigu-modules
+        label: wan2skeaf
+        description: Unchanged official v0.2.1 native converter
+        default_calc_job_plugin: skeaf.wan2skeaf
+        filepath_executable: '{tigu_stack_root}/wan2skeaf-0.2.1-dc1192119d/bin/wan2skeaf'
+        with_mpi: false
+        use_double_quotes: false
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/wan2skeaf/0.2.1-dc1192119d"
+        append_text: ''
+        runtime_provider:
+            host: tigu
+            family: conversion
+            root: '{tigu_stack_root}'
+            module_root: '{tigu_module_root}'
+            prefix: '{tigu_stack_root}/wan2skeaf-0.2.1-dc1192119d'
+            module: empa/wan2skeaf/0.2.1-dc1192119d
+            recipe_sha256: dc1192119d8cf8c0c62a0b26e4400c7f057a0e7b16bb540a4199741d33c86f7c
+            checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
+            checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
+            extras:
+                wan2skeaf:
+                    version: 0.2.1
+                    source_sha256: 79e0a14964ddc042fb209fec2a72f864b591cb0a15af3b5f069d4d1ac6976ae3
+setup_tasks:
+    local_pythtb_runtime:
+      computer: mac-localhost
+      codes:
+      - local_pythtb
+      local_runtime_installer: true
+      commands:
+      - type: local
+        arguments:
+        - '{local_python}'
+        - '{config_files}/scripts/apply-local-pythtb.py'
+        - --recipe
+        - '{config_files}/runtime-recipes/pythtb-2.0.2-cp312-aarch64.json'
+        - --prefix
+        - '{local_pythtb_prefix}'
+        - --execute
+        stream: true
+        timeout: 7200
+    local_banduppy_runtime:
+        computer: mac-localhost
+        codes:
+            - local_banduppy
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/banduppy-1.0.0-cp312-aarch64.json'
+                  - --prefix
+                  - '{local_banduppy_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+        local_runtime_installer: true
+    tigu_banduppy_runtime:
+        computer: tigu
+        codes:
+            - tigu_banduppy
+        commands:
+            - type: ssh
+              command: mkdir -p /store/{tigu_empa_username}/opt/empa-setup
+            - type: scp
+              command: scp {config_files}/scripts/install-banduppy-runtime.py tigu:/store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py
+            - type: ssh
+              command: '{tigu_python} /store/{tigu_empa_username}/opt/empa-setup/install-banduppy-runtime.py --executable {tigu_banduppy_python}'
+    eiger_cp2k_data:
+        computer: eiger.alps
+        codes:
+            - cp2keiger
+        commands:
+            - type: ssh
+              command: mkdir -p /users/{cscsuser}/src
+            - type: scp
+              command: scp -r {config_files}/cp2k eiger.alps.cscs.ch:/users/{cscsuser}/src/
+    local_cp2k_spm_runtime:
+        computer: mac-localhost
+        codes:
+            - local_cp2k
+            - local_stm
+            - local_overlap
+            - local_sparse_overlap
+            - local_cp2k_unfolding
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/cp2k-2026.2-linux-aarch64.json'
+                  - --prefix
+                  - '{local_cp2k_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    local_cube_render_runtime:
+        computer: mac-localhost
+        codes:
+            - local_cubehandler
+            - local_orca_cube_render
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/cube-render-linux-aarch64.json'
+                  - --prefix
+                  - '{local_render_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    local_block2_runtime:
+        computer: mac-localhost
+        codes:
+            - local_block2
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/block2-0.5.4-cp312-aarch64.json'
+                  - --prefix
+                  - '{local_block2_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    local_julia_runtime:
+        computer: mac-localhost
+        codes:
+            - local_itensor_gs
+            - local_itensor_segment
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/julia-1.12.6-linux-aarch64.json'
+                  - --prefix
+                  - '{local_julia_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    local_itensor_project:
+        computer: mac-localhost
+        codes:
+            - local_itensor_gs
+            - local_itensor_segment
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/prepare-itensor-runtime.py'
+                  - --prefix
+                  - '{local_model_prefix}'
+                  - --julia
+                  - '{local_julia_prefix}/bin/julia'
+                  - --source-commit
+                  - 4f7f2f963bacb5e870fc118842004e31609c7c55
+                  - --execute
+              stream: true
+              timeout: 7200
+    local_orca_runtime:
+        computer: mac-localhost
+        codes:
+            - local_orca
+            - local_orca_plot
+            - local_orca_2json
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-orca-runtime.py'
+                  - --archive
+                  - '{local_orca_archive}'
+                  - --sha256
+                  - '{local_orca_archive_sha256}'
+                  - --prefix
+                  - '{local_orca_root}'
+                  - --mpi-prefix
+                  - '{local_orca_mpi}'
+              stream: true
+              timeout: 600
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/openmpi-4.1.8-linux-aarch64.json'
+                  - --prefix
+                  - '{local_orca_mpi}'
+                  - --execute
+              stream: true
+              timeout: 7200
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-orca-runtime.py'
+                  - --archive
+                  - '{local_orca_archive}'
+                  - --sha256
+                  - '{local_orca_archive_sha256}'
+                  - --prefix
+                  - '{local_orca_root}'
+                  - --mpi-prefix
+                  - '{local_orca_mpi}'
+                  - --execute
+              stream: true
+              timeout: 1800
+    local_native_support:
+        computer: mac-localhost
+        codes:
+            - local_bader
+            - local_wannier90
+            - local_skeaf
+            - local_critic2
+            - local_ppafm
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/local-support-linux-aarch64.json'
+                  - --prefix
+                  - '{local_support_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    tigu_modules_cp2k:
+        computer: tigu-modules
+        codes:
+            - tigu_module_cp2k
+            - tigu_module_stm
+            - tigu_module_overlap
+            - tigu_module_sparse_overlap
+            - tigu_module_cp2k_unfolding
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - cp2k
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_qe:
+        computer: tigu-modules
+        codes:
+            - tigu_module_qe_pw
+            - tigu_module_qe_pp
+            - tigu_module_qe_projwfc
+            - tigu_module_qe_dos
+            - tigu_module_qe_pw2wannier90
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - qe
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_banduppy:
+        computer: tigu-modules
+        codes:
+            - tigu_module_banduppy
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - banduppy
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_block2:
+        computer: tigu-modules
+        codes:
+            - tigu_module_block2
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - block2
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_render:
+        computer: tigu-modules
+        codes:
+            - tigu_module_cubehandler
+            - tigu_module_orca_cube_render
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - render
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_model:
+        computer: tigu-modules
+        codes:
+            - tigu_module_itensor_gs
+            - tigu_module_itensor_segment
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - model
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_support:
+        computer: tigu-modules
+        codes:
+            - tigu_module_phonopy
+            - tigu_module_bader
+            - tigu_module_wannier90
+            - tigu_module_skeaf
+            - tigu_module_critic2
+            - tigu_module_ppafm
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - support
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_orca:
+        computer: tigu-modules
+        codes:
+            - tigu_module_orca
+            - tigu_module_orca_plot
+            - tigu_module_orca_2json
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - orca
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_helpers:
+        computer: tigu-modules
+        codes:
+            - tigu_module_orca_tools
+            - tigu_module_orca_dyson
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - helpers
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_modules_gaussian:
+        computer: tigu-modules
+        codes:
+            - tigu_module_gaussian
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - gaussian
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    local_python_worker_runtime:
+        computer: mac-localhost
+        codes:
+            - local_pythonjob
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/python-worker-cp312-aarch64.json'
+                  - --prefix
+                  - '{local_python_worker_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    tigu_modules_python:
+        computer: tigu-modules
+        codes:
+            - tigu_module_pythonjob
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - python
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+    tigu_python_runtime:
+        computer: tigu
+        codes:
+            - tigu_pythonjob
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - python
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 10800
+
+    tigu_modules_pythtb:
+        computer: tigu-modules
+        codes:
+            - tigu_module_pythtb
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - pythtb
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 7500
+    tigu_modules_quantum:
+        computer: tigu-modules
+        codes:
+            - tigu_module_quantum
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - quantum
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 7500
+    local_quantum_runtime:
+        computer: mac-localhost
+        codes:
+            - local_quantum_energy
+        local_runtime_installer: true
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/install-local-runtime.py'
+                  - --recipe
+                  - '{config_files}/runtime-recipes/quantum-energy-cp312-aarch64.json'
+                  - --prefix
+                  - '{local_quantum_prefix}'
+                  - --execute
+              stream: true
+              timeout: 7200
+    daint_model_runtime:
+        computer: daint.alps
+        codes:
+            - daint_itensor_gs
+            - daint_itensor_segment
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-daint-model.py'
+                  - --root
+                  - '{daint_model_root}'
+                  - --image
+                  - service::{model_native_uenv}
+                  - --account
+                  - '{grant}'
+                  - --execute
+              stream: true
+              timeout: 7500
+    tigu_modules_conversion:
+        computer: tigu-modules
+        codes:
+            - tigu_module_wan2skeaf
+        commands:
+            - type: local
+              arguments:
+                  - '{local_python}'
+                  - '{config_files}/scripts/apply-tigu-stack.py'
+                  - --host
+                  - tigu
+                  - --root
+                  - '{tigu_stack_root}'
+                  - --module-root
+                  - '{tigu_module_root}'
+                  - --family
+                  - conversion
+                  - --expected-source
+                  - '{tigu_stack_source_id}'
+              stream: true
+              timeout: 7500

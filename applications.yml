@@ -1,0 +1,223 @@
+# Explicit app requirements. Frontends require installed app entry points; property plugins require their host app.
+applications:
+    orca:
+        title: ORCA
+        kind: app
+        distributions:
+        - aiidalab-orca
+        app_ids:
+        - orca
+        - aiidalab-orca
+        codes:
+        - local_orca
+        - local_orca_plot
+        - local_orca_2json
+        - local_orca_tools
+        - local_orca_dyson
+        - local_orca_cube_render
+        - local_block2
+        - tigu_module_block2
+        - tigu_module_orca_cube_render
+        - tigu_module_orca
+        - tigu_module_orca_plot
+        - tigu_module_orca_2json
+        - tigu_module_orca_tools
+        - tigu_module_orca_dyson
+        - daint_block2
+        - tigu_module_quantum
+        - local_quantum_energy
+        - daint_quantum_energy
+    surfaces:
+        title: On-Surface Chemistry
+        kind: app
+        distributions:
+        - surfaces
+        app_ids:
+        - surfaces
+        - aiidalab-empa-surfaces
+        codes:
+        - ppafm
+        - cubehandler
+        - bader
+        - overlapeiger
+        - cp2k
+        - cp2keiger
+        - stm_surfaces_v2_a0e486a
+        - overlap_surfaces_v2_a0e486a
+        - sparse_overlap_surfaces_v2_a0e486a
+        - cp2kunfolding_surfaces_v2_a0e486a
+        - local_stm
+        - local_overlap
+        - local_sparse_overlap
+        - local_cp2k_unfolding
+        - local_cp2k
+        - local_bader
+        - local_cubehandler
+        - local_ppafm
+        - tigu_module_cp2k
+        - tigu_module_stm
+        - tigu_module_overlap
+        - tigu_module_sparse_overlap
+        - tigu_module_cp2k_unfolding
+        - tigu_module_cubehandler
+        - tigu_module_bader
+        - tigu_module_ppafm
+    nanoribbons:
+        title: Nanoribbons
+        kind: app
+        distributions:
+        - nanoribbons
+        app_ids:
+        - nanoribbons
+        - aiidalab-empa-nanoribbons
+        codes:
+        - cubehandler
+        - overlapeiger
+        - cp2k
+        - cp2keiger
+        - stm_surfaces_v2_a0e486a
+        - overlap_surfaces_v2_a0e486a
+        - sparse_overlap_surfaces_v2_a0e486a
+        - cp2kunfolding_surfaces_v2_a0e486a
+        - local_stm
+        - local_overlap
+        - local_sparse_overlap
+        - local_cp2k_unfolding
+        - local_cp2k
+        - local_cubehandler
+        - tigu_module_cp2k
+        - tigu_module_stm
+        - tigu_module_overlap
+        - tigu_module_sparse_overlap
+        - tigu_module_cp2k_unfolding
+        - tigu_module_cubehandler
+    qe:
+        title: Quantum ESPRESSO
+        kind: app
+        distributions:
+        - aiidalab-qe
+        app_ids:
+        - quantum-espresso
+        - aiidalab-qe
+        codes:
+        - pweiger
+        - ppeiger
+        - projwfceiger
+        - pw
+        - pp
+        - projwfc
+        - dos
+        - hp
+        - pw2wannier90
+        - tigu_module_qe_pw
+        - tigu_module_qe_pp
+        - tigu_module_qe_projwfc
+        - tigu_module_qe_dos
+        - tigu_module_qe_pw2wannier90
+    qe_postprocess:
+        title: EMPA QE postprocessing
+        kind: app
+        distributions:
+        - aiidalab-empa-qe-postprocess
+        app_ids:
+        - qe-postprocess
+        - aiidalab-empa-qe-postprocess
+        codes:
+        - pweiger
+        - ppeiger
+        - projwfceiger
+        - pw
+        - pp
+        - projwfc
+        - dos
+        - pw2wannier90
+        - wannier90
+        - daint_banduppy
+        - local_banduppy
+        - local_wannier90
+        - local_skeaf
+        - local_wan2skeaf
+        - tigu_module_qe_pw
+        - tigu_module_qe_pp
+        - tigu_module_qe_projwfc
+        - tigu_module_qe_dos
+        - tigu_module_qe_pw2wannier90
+        - tigu_module_banduppy
+        - tigu_module_wannier90
+        - tigu_module_skeaf
+        - daint_skeaf
+        - daint_wan2skeaf
+        - tigu_module_wan2skeaf
+    qe_pp:
+        title: QE postprocessing property
+        kind: plugin
+        distributions:
+        - aiidalab-qe-pp
+        app_ids: []
+        codes:
+        - python
+        - critic2
+        - ppeiger
+        - pp
+        - local_pythonjob
+        - local_critic2
+        - tigu_module_qe_pp
+        - tigu_module_critic2
+        - tigu_module_pythonjob
+        requires_applications:
+        - qe
+    qe_vibroscopy:
+        title: QE vibrational spectroscopy
+        kind: plugin
+        distributions:
+        - aiidalab-qe-vibroscopy
+        app_ids: []
+        codes:
+        - phonopy
+        - pweiger
+        - pw
+        - local_phonopy
+        - tigu_module_qe_pw
+        - tigu_module_phonopy
+        - local_pythonjob
+        - tigu_module_pythonjob
+        - python
+        requires_applications:
+        - qe
+    model:
+        title: Model Hamiltonians
+        kind: app
+        distributions:
+        - aiidalab-itensor-spectra
+        app_ids:
+        - itensor-spectra
+        - aiidalab-itensor-spectra
+        - model-hamiltonians
+        codes:
+        - local_itensor_gs
+        - local_itensor_segment
+        - tigu_module_itensor_gs
+        - tigu_module_itensor_segment
+        - daint_itensor_gs
+        - daint_itensor_segment
+    pythtb:
+        title: PythTB
+        kind: app
+        distributions:
+        - aiidalab-tb
+        app_ids:
+        - tb
+        - aiidalab-tb
+        codes:
+        - local_pythtb
+        - tigu_module_pythtb
+    gaussian:
+        title: Gaussian
+        kind: app
+        distributions:
+        - aiidalab-empa-gaussian
+        app_ids:
+        - gaussian
+        - aiidalab-empa-gaussian
+        codes:
+        - tigu_module_gaussian
