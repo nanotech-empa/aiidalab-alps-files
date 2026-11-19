@@ -119,4 +119,58 @@ def test_localhost_code_and_locked_recipe_supply_the_complete_native_contract():
     }
     assert data["architecture"] == "aarch64"
     assert all((a["url"], a["sha256"]) in approved for a in data["artifacts"])
-    assert all("x86_64" not in a["url"] for a in data["artifacts"])
+    from packaging.utils import parse_wheel_filename
+
+    # Each dependency is installed with pip into a CPython 3.12 ARM64 venv.
+    from urllib.parse import urlsplit
+
+    for artifact in data["artifacts"]:
+        filename = Path(urlsplit(artifact["url"]).path).name
+        assert filename.endswith(".whl")
+        _, _, _, tags = parse_wheel_filename(filename)
+        assert any(
+            t.interpreter in {"py3", "py312", "cp312"}
+            and (t.platform == "any" or t.platform.endswith("_aarch64"))
+            and t.abi in {"none", "abi3", "cp312"}
+            for t in tags
+        )
+
+
+def test_worker_checkout_accepts_only_numbered_session_notebooks(tmp_path):
+    import runpy
+    import subprocess
+
+    check = runpy.run_path(
+        str(Path(__file__).parents[1] / "scripts/make-pythtb-worker.py")
+    )["check_checkout"]
+    git = ["git", "-C", str(tmp_path)]
+    subprocess.run([*git, "init", "-q"], check=True)
+    (tmp_path / "app.ipynb").write_text("{}")
+    (tmp_path / "numerics.py").write_text("value = 1")
+    subprocess.run([*git, "add", "."], check=True)
+    subprocess.run(
+        [
+            *git,
+            "-c",
+            "user.name=test",
+            "-c",
+            "user.email=test@example.org",
+            "commit",
+            "-qm",
+            "reviewed",
+        ],
+        check=True,
+    )
+    (tmp_path / "app-0.ipynb").write_text("local user session")
+    check(tmp_path)
+    unexpected = tmp_path / "other-0.ipynb"
+    unexpected.touch()
+    with pytest.raises(ValueError, match="clean reviewed"):
+        check(tmp_path)
+    unexpected.unlink()
+    (tmp_path / "numerics.py").write_text("value = 2")
+    with pytest.raises(ValueError, match="clean reviewed"):
+        check(tmp_path)
+    subprocess.run([*git, "add", "numerics.py"], check=True)
+    with pytest.raises(ValueError, match="clean reviewed"):
+        check(tmp_path)
