@@ -172,11 +172,14 @@ def stage_model_capsule(host, root):
     assert spec is not None and spec.loader is not None
     maker = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(maker)
-    with source_checkout().selected_checkout(
-        "aiida_itensor_spin",
-        "https://github.com/nanotech-empa/aiida-itensor-spin.git",
-        maker.COMMIT,
-    ) as checkout, tempfile.TemporaryDirectory(prefix="model-transfer-") as directory:
+    with (
+        source_checkout().selected_checkout(
+            "aiida_itensor_spin",
+            "https://github.com/nanotech-empa/aiida-itensor-spin.git",
+            maker.COMMIT,
+        ) as checkout,
+        tempfile.TemporaryDirectory(prefix="model-transfer-") as directory,
+    ):
         capsule = Path(directory) / "model-source.tar.gz"
         metadata = maker.create(checkout, capsule)
         blob = capsule.read_bytes()
@@ -209,14 +212,20 @@ def stage_pythtb_worker(host, root, checkout=None):
         else source_checkout().selected_checkout(
             "aiidalab_tb",
             "https://github.com/nanotech-empa/aiidalab-tb.git",
-            "d9ab3fb5760fd6c06c297b280bd08ff79b00b20f",
+            "902d3b00023f6d21a09c261cccc65bd72aaaff39",
         )
     )
-    with selected as checkout, tempfile.TemporaryDirectory(
-        prefix="private-pythtb-transfer-"
-    ) as directory:
+    with (
+        selected as checkout,
+        tempfile.TemporaryDirectory(prefix="private-pythtb-transfer-") as directory,
+    ):
         output = Path(directory) / "wheel"
-        metadata = maker.create(checkout, output, recipe["worker"]["engine_sha256"])
+        metadata = maker.create(
+            checkout,
+            output,
+            recipe["worker"]["engine_sha256"],
+            expected_worker=recipe["worker"],
+        )
         blob = (output / metadata["filename"]).read_bytes()
     remote = (
         "import hashlib,pathlib,sys; r=pathlib.Path(sys.argv[1]); h=sys.argv[2]; "

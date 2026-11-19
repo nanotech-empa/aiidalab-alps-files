@@ -30,12 +30,13 @@ variables:
     local_orca_archive_sha256: 927c9f165ac6ec7547d543215a5d02c662c691c1659ba5bcd3d687817e8a6757
     tigu_stack_root: /store/{tigu_empa_username}/opt/empa-stack-20261116
     tigu_module_root: '{tigu_stack_root}/modulefiles'
-    tigu_stack_source_id: dcc91914fe879625c4e0a6432f1db7780d0a07844876bba930efab7eb21711b6
+    tigu_stack_source_id: 341436c21e5f55f33e4ced143ca2013777914969ec872a0026582a2973333ae8
     local_quantum_prefix: /home/jovyan/opt/native-runtimes/quantum-energy-4d92f718-aarch64
     daint_model_root: /users/{cscsuser}/opt/empa-native-20261116
     daint_model_prefix: '{daint_model_root}/model-4f7f2f963b'
     model_native_uenv: empa-model-native/2026.11:3075642581
     conversion_uenv: empa-conversion/0.2.1:3077666140
+    local_pythtb_prefix: /home/jovyan/opt/native-runtimes/pythtb-2.0.2-2e5d68814e-aarch64
 runtime_settings:
     tigu_empa_username:
         user_input: true
@@ -46,6 +47,13 @@ runtime_settings:
         description: Tigu key on ELA (blank = defaults)
         format: ssh_key_path
         computers: [tigu, tigu-modules]
+    local_pythtb_prefix:
+      description: Source-matching local native PythTB worker
+      deployments:
+      - personal
+      format: local_path
+      computers:
+      - mac-localhost
     local_orca_root:
         description: local orca root
         deployments:
@@ -1478,30 +1486,67 @@ codes:
                   - -c
                   - import block2,pyblock2; print('block2-ready')
               contains: block2-ready
+    local_pythtb:
+      computer: mac-localhost
+      label: pythtb-2.0.2-local-2e5d68814e
+      description: Native TB/MFH orbital and Wannier worker
+      filepath_executable: '{local_pythtb_prefix}/bin/empa-tb-worker'
+      default_calc_job_plugin: empa_tb.calculate
+      with_mpi: false
+      prepend_text: export MPLBACKEND=Agg
+      append_text: ''
+      use_double_quotes: false
+      deployments:
+      - personal
+      architectures:
+      - aarch64
+      install_help: The selected task composes the exact native worker from the installed
+        reviewed app and locked ARM64 dependencies.
+      runtime_receipt:
+        path: '{local_pythtb_prefix}/empa-pythtb-runtime.json'
+        recipe_sha256: 2e5d68814e062481de72667c175d214c90c53bb47a916ae673b2be246689f9f9
+        extras:
+          pythtb_worker:
+            protocol: empa-pythtb/v1
+            engine_sha256: 3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3
+            pythtb_version: 2.0.2
+            capabilities:
+            - solve
+            - orbital
+            - wannier
+            postprocess_engine_sha256: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
+      runtime_checks:
+      - arguments:
+        - '{local_pythtb_prefix}/bin/empa-tb-worker'
+        - --manifest
+        contains: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
     tigu_module_pythtb:
         computer: tigu-modules
-        label: pythtb-2.0.2-be1c21e107
+        label: pythtb-2.0.2-6a338b7425
         description: Selected native pythtb worker on Tigu
         default_calc_job_plugin: empa_tb.calculate
-        filepath_executable: '{tigu_stack_root}/pythtb-2.0.2-be1c21e107/bin/empa-tb-worker'
+        filepath_executable: '{tigu_stack_root}/pythtb-2.0.2-6a338b7425/bin/empa-tb-worker'
         with_mpi: false
         use_double_quotes: false
-        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/pythtb/2.0.2-be1c21e107"
+        prepend_text: "source /etc/profile.d/lmod.sh\nmodule use \"{tigu_module_root}\"\nmodule load empa/pythtb/2.0.2-6a338b7425"
         append_text: ''
         runtime_provider:
             host: tigu
             family: pythtb
             root: '{tigu_stack_root}'
             module_root: '{tigu_module_root}'
-            prefix: '{tigu_stack_root}/pythtb-2.0.2-be1c21e107'
-            module: empa/pythtb/2.0.2-be1c21e107
-            recipe_sha256: be1c21e107b66fec80e0aa81320c6bf7afb266b5ee2c0857493033f236ce5863
+            prefix: '{tigu_stack_root}/pythtb-2.0.2-6a338b7425'
+            module: empa/pythtb/2.0.2-6a338b7425
+            recipe_sha256: 6a338b742559ffb147a32c1c7d69f1dec92e177163602e9be3388b8137cf5391
             checker: '{tigu_stack_root}/sources/{tigu_stack_source_id}/scripts/deploy-tigu-modules.py'
             checker_sha256: c846723f3d86e210ce92864c079f7fa77044f4d2f907cd85a23f33ca80a4a6f6
             extras:
                 pythtb_worker:
                     protocol: empa-pythtb/v1
-                    engine_sha256: 845f6f8fcf5bdd09e05345165ade365709fbdce3c5d93f67cdfc442a9d8163db
+                    engine_sha256: 3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3
+                    pythtb_version: 2.0.2
+                    capabilities: [solve, orbital, wannier]
+                    postprocess_engine_sha256: 488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809
     tigu_module_quantum:
         computer: tigu-modules
         label: quantum-quantum-energy-4d92f718-e8c8ef1452
@@ -1669,6 +1714,23 @@ codes:
                     version: 0.2.1
                     source_sha256: 79e0a14964ddc042fb209fec2a72f864b591cb0a15af3b5f069d4d1ac6976ae3
 setup_tasks:
+    local_pythtb_runtime:
+      computer: mac-localhost
+      codes:
+      - local_pythtb
+      local_runtime_installer: true
+      commands:
+      - type: local
+        arguments:
+        - '{local_python}'
+        - '{config_files}/scripts/apply-local-pythtb.py'
+        - --recipe
+        - '{config_files}/runtime-recipes/pythtb-2.0.2-cp312-aarch64.json'
+        - --prefix
+        - '{local_pythtb_prefix}'
+        - --execute
+        stream: true
+        timeout: 7200
     local_banduppy_runtime:
         computer: mac-localhost
         codes:

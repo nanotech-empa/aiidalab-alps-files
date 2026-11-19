@@ -209,6 +209,7 @@ applications:
         - tb
         - aiidalab-tb
         codes:
+        - local_pythtb
         - tigu_module_pythtb
     gaussian:
         title: Gaussian

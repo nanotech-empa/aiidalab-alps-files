@@ -20,16 +20,18 @@ artifacts and machine-matched MPI. Never infer exclusion from a missing recipe.
 | Block2/modern DMRG | Standard prefix and required metadata | Native module | Shared standard prefix/native runtime; application qualification pending |
 | Julia/ITensor/Model | Exact engine/Project/Manifest/depot and supported GUI bindings | Same frozen engine and native modules | Shared libraries/runtime; private engine remains access-controlled |
 | Modern quantum-energy/simulator worker | Explicit source-locked native task and manifest check | Matching native module/task | Public native uenv build and manifest check |
-| PythTB | Application's local solver | Native Python environment **and app-to-Slurm execution integration** | **Excluded** |
+| PythTB | Native worker and `empa_tb.calculate` | Same native driver and app-to-Slurm integration | **Excluded** |
 | Gaussian | **Excluded** | Existing licensed site distribution | **Excluded** |
 
 PythTB being a Python library does not limit execution to the notebook host.
 Installing its package on Tigu alone does not implement submission, result
 retrieval or reopening in the app. Keep that connected app change explicit.
-The connected candidate is
+The merged integration is
 [nanotech-empa/aiidalab-tb#8](https://github.com/nanotech-empa/aiidalab-tb/pull/8).
-Its numerical and builder tests pass; actual Tigu GUI/HPC qualification remains
-pending. Wannier and interactive orbital operations remain on the notebook host.
+Models, orbitals and Wannier run through the same native driver on Localhost
+and Tigu. Both Codes require PythTB 2.0.2, matching model/postprocessing hashes
+and all three capabilities. The prior exact-source GUI/native campaign covered
+both targets; a new instance must still qualify its own installation and jobs.
 
 The native quantum task selects the current public `quantum-energy/v1` source,
 not the retained older research worker. It installs the SDK without credentials

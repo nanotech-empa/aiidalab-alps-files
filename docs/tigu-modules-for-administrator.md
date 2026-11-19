@@ -90,8 +90,8 @@ exact module name; no dependency installation runs inside scientific jobs.
 | Rendering | Selected CubeHandler source/release, compatible VTK/PyVista and a working headless CPU graphics backend; full-grid geometry/camera/slice/render comparison. |
 | Other support | Bader, Wannier90, SKEAF, Critic2 with its installed data, PPAFM native libraries and wrappers, and Phonopy where used. Record the actual supplying package for every executable. |
 
-PythTB's local solver uses the application dependency. Its source-matching
-Tigu worker is paired with the maintained app CalcJob/parser in
+PythTB uses a source-matching native worker on Localhost and Tigu. The worker
+provides models, orbitals and Wannier through the maintained app CalcJob/parser in
 [nanotech-empa/aiidalab-tb#8](https://github.com/nanotech-empa/aiidalab-tb/pull/8).
 Install that client plugin in AiiDAlab separately from the native compute
 program. GUI-local execution still needs its local runtime; a Tigu module alone

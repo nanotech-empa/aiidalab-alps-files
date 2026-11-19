@@ -5,10 +5,12 @@ installation, AiiDA import or scientific execution is performed here.
 """
 
 import argparse
+import ast
 import hashlib
 import json
 import os
 import subprocess
+import tomllib
 from pathlib import Path
 from typing import NoReturn
 
@@ -17,7 +19,48 @@ def fail(message: str) -> NoReturn:
     raise ValueError(message)
 
 
-def create(checkout, destination, expected_engine):
+def source_contract(checkout, engine):
+    """Read the reviewed native-driver contract without importing app/AiiDA code."""
+    package = checkout / "aiidalab_tb"
+    names = ("wannier.py", "wannier_io.py", "remote_wannier.py", "native_driver.py")
+    hashes = {
+        name: hashlib.sha256((package / name).read_bytes()).hexdigest()
+        for name in names
+    }
+    worker_tree = ast.parse((package / "remote_worker.py").read_text())
+    protocol = next(
+        ast.literal_eval(node.value)
+        for node in worker_tree.body
+        if isinstance(node, ast.Assign)
+        and any(isinstance(t, ast.Name) and t.id == "PROTOCOL" for t in node.targets)
+    )
+    tree = ast.parse((package / "native_driver.py").read_text())
+    function = next(
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "manifest"
+    )
+    result = next(node.value for node in function.body if isinstance(node, ast.Return))
+    fields = {
+        key.value: value for key, value in zip(result.keys, result.values, strict=True)
+    }
+    capabilities = ast.literal_eval(fields["capabilities"])
+    scripts = tomllib.loads((checkout / "worker/pyproject.toml").read_text())[
+        "project"
+    ]["scripts"]
+    if scripts.get("empa-tb-worker") != "aiidalab_tb.native_driver:main":
+        fail("Build the unified native-driver entry point, not a model-only worker.")
+    return {
+        "protocol": protocol,
+        "engine_sha256": engine,
+        "capabilities": capabilities,
+        "postprocess_engine_sha256": hashlib.sha256(
+            json.dumps(hashes, sort_keys=True).encode()
+        ).hexdigest(),
+    }
+
+
+def create(checkout, destination, expected_engine, expected_worker=None):
     checkout, destination = Path(checkout).resolve(), Path(destination).resolve()
     dirty = subprocess.check_output(
         ["git", "-C", str(checkout), "status", "--porcelain"], text=True
@@ -32,6 +75,13 @@ def create(checkout, destination, expected_engine):
     engine = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
     if engine != expected_engine:
         fail("The selected PythTB app differs from the catalog's worker source.")
+    contract = None
+    if expected_worker is not None:
+        contract = source_contract(checkout, engine)
+        if any(contract[key] != expected_worker.get(key) for key in contract):
+            fail(
+                "The selected PythTB capabilities/postprocessing source differ from the catalog."
+            )
     head = subprocess.check_output(
         ["git", "-C", str(checkout), "rev-parse", "HEAD"], text=True
     ).strip()
@@ -96,6 +146,8 @@ def create(checkout, destination, expected_engine):
         "private_distribution_required": True,
         "scientific_jobs": 0,
     }
+    if contract is not None:
+        record["worker_contract"] = contract
     metadata = destination / "pythtb-worker.json"
     metadata.write_text(json.dumps(record, indent=2) + "\n")
     metadata.chmod(0o600)

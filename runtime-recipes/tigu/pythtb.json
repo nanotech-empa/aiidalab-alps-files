@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "id": "pythtb-2.0.2-tigu-9d554481af",
+  "id": "pythtb-2.0.2-tigu-native-wannier",
   "kind": "venv",
   "architecture": "x86_64",
   "python": [
@@ -118,6 +118,13 @@
   ],
   "worker": {
     "protocol": "empa-pythtb/v1",
-    "engine_sha256": "845f6f8fcf5bdd09e05345165ade365709fbdce3c5d93f67cdfc442a9d8163db"
+    "engine_sha256": "3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3",
+    "pythtb_version": "2.0.2",
+    "capabilities": [
+      "solve",
+      "orbital",
+      "wannier"
+    ],
+    "postprocess_engine_sha256": "488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809"
   }
 }

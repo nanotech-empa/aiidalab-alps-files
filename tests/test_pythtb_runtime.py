@@ -55,3 +55,68 @@ def test_unowned_or_incomplete_runtime_is_preserved(tmp_path):
     (prefix / "empa-pythtb-runtime.json").write_text('{"status":"FAILED_RETAINED"}')
     with pytest.raises(ValueError, match="incomplete"):
         module.prepare(prefix, recipe)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        {"capabilities": ["solve"]},
+        {"postprocess_engine_sha256": "0" * 64},
+        {"pythtb_version": "2.0.1"},
+    ],
+)
+def test_model_only_or_stale_postprocessor_is_rejected(changed):
+    recipe = Path(__file__).parents[1] / "runtime-recipes/tigu/pythtb.json"
+    expected = json.loads(recipe.read_text())["worker"]
+    module.validate_worker_manifest({**expected, "extra_diagnostic": True}, expected)
+    with pytest.raises(ValueError, match="capabilities or source identity"):
+        module.validate_worker_manifest({**expected, **changed}, expected)
+
+
+def test_localhost_plan_does_not_fetch_build_install_or_create_prefix(
+    tmp_path, monkeypatch
+):
+    path = Path(__file__).parents[1] / "scripts/apply-local-pythtb.py"
+    spec = importlib.util.spec_from_file_location("local_pythtb", path)
+    local = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(local)
+    original = local.load
+
+    def only_runtime(name):
+        assert name == "prepare-pythtb-runtime.py", "Planning must not fetch or build"
+        return original(name)
+
+    monkeypatch.setattr(local, "load", only_runtime)
+    recipe = (
+        Path(__file__).parents[1] / "runtime-recipes/pythtb-2.0.2-cp312-aarch64.json"
+    )
+    prefix = tmp_path / "new-native-worker"
+    result = local.prepare(prefix, recipe)
+    assert result["status"] == "PLAN" and not prefix.exists()
+    assert result["worker"]["capabilities"] == ["solve", "orbital", "wannier"]
+
+
+def test_localhost_code_and_locked_recipe_supply_the_complete_native_contract():
+    import yaml
+
+    root = Path(__file__).parents[1]
+    recipe = root / "runtime-recipes/pythtb-2.0.2-cp312-aarch64.json"
+    data = json.loads(recipe.read_text())
+    catalog = yaml.safe_load((root / "runtime-catalog.yml").read_text())
+    apps = yaml.safe_load((root / "applications.yml").read_text())
+    assert "local_pythtb" in apps["applications"]["pythtb"]["codes"]
+    code = catalog["codes"]["local_pythtb"]
+    assert code["computer"] == "mac-localhost" and not code["with_mpi"]
+    assert code["default_calc_job_plugin"] == "empa_tb.calculate"
+    assert code["runtime_receipt"]["extras"]["pythtb_worker"] == data["worker"]
+    assert code["runtime_receipt"]["recipe_sha256"] == module.installer.checksum(recipe)
+    assert catalog["setup_tasks"]["local_pythtb_runtime"]["codes"] == ["local_pythtb"]
+    approved = {
+        (a["url"], a["sha256"])
+        for p in (root / "runtime-recipes").rglob("*.json")
+        if p != recipe
+        for a in json.loads(p.read_text()).get("artifacts", [])
+    }
+    assert data["architecture"] == "aarch64"
+    assert all((a["url"], a["sha256"]) in approved for a in data["artifacts"])
+    assert all("x86_64" not in a["url"] for a in data["artifacts"])

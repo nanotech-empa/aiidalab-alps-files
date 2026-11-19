@@ -1,8 +1,9 @@
 # Runtime installation and selected deployments
 
-This candidate uses configuration **schema5** and the matching [nanotech-empa/aiidalab-empa-setup#14](https://github.com/nanotech-empa/aiidalab-empa-setup/pull/14).
-Record both complete source heads. Older setup consumers refuse this protocol;
-keep both PRs unmerged until the new-instance test is assessed.
+This catalog uses configuration **schema5** and the matching [nanotech-empa/aiidalab-empa-setup#14](https://github.com/nanotech-empa/aiidalab-empa-setup/pull/14).
+Use both merged `main` branches and record the complete selected commits. Older
+setup consumers refuse this protocol. Fresh-instance installation, registration
+and scientific qualification remain separate from source integration.
 
 The app first inspects a selection. Apply runs only its selected tasks, verifies
 programs/dependencies, then registers Codes. It preserves unselected/custom
@@ -16,9 +17,12 @@ MPI tasks/machine and memory to the actual container allocation.
 
 Install the corresponding applications/plugins with AiiDAlab's normal app manager
 first. The setup app diagnoses missing plugins rather than creating fake Codes.
-PythTB's localhost solver uses its app dependency. The separately maintained
-Tigu worker/CalcJob supplies remote execution; see the
-[deployment matrix](deployment-matrix.md).
+PythTB models, orbitals and Wannier use the same native `empa_tb.calculate`
+route on Localhost and Tigu; see the [deployment matrix](deployment-matrix.md).
+The local installer builds the worker from merged app source
+`902d3b00023f6d21a09c261cccc65bd72aaaff39`, reuses the locked ARM64 dependency
+artifacts and checks the full manifest before Code registration. Planning alone
+never fetches source, builds or installs the worker.
 
 Installed apps determine required Codes and runtimes automatically. Matching
 existing programs are verified and reused; the normal UI has no Code/path selector. Opening the app
@@ -31,6 +35,7 @@ and records the chosen revision. Changed choices/revision require inspection aga
 | QE7.5 | Supplied and registered by the official QE app. EMPA setup preserves/reuses those Codes and does not run a second QE installer. |
 | QE-PP Python | Dedicated hashed Python3.12 wheel closure with cloudpickle, NumPy/SciPy, pymatgen and scikit-image; required PythonJob Code. |
 | BandUPpy | banduppy-1.0.0-cp312-aarch64: isolated venv and full hashed official wheel closure, separate from AiiDA. |
+| PythTB | pythtb-2.0.2-cp312-aarch64: source-matching native worker, locked official dependencies, model/postprocessing hashes and solve/orbital/wannier capability checks. |
 | Block2 | block2-0.5.4-cp312-aarch64: standard pip prefix, official native wheel and numerical dependencies, native import checks and nested Code metadata. |
 | Rendering | cube-render-linux-aarch64: official current PyVista/VTK/Mesa and selected CubeHandler source. CPU EGL/llvmpipe, one thread; no X server or copied old OSMesa path. |
 | Julia/Model | Official Julia1.12.6 artifact, then exact backend4f7f2f963bacb5e870fc118842004e31609c7c55 source and committed Project/Manifest in a private depot. |
@@ -111,7 +116,7 @@ the supported fallback depot/config for fresh GUI kernels. It never updates an
 existing project, overwrites another depot binding or registers fictional model
 workers. Both local wrappers point at the same committed engine/depot as the GUI.
 
-Remote Model/PythTB preparation also supports ordinary non-editable pip installs.
+Model and local/remote PythTB preparation also support ordinary non-editable pip installs.
 When no tracked source checkout backs the installed module, setup fetches the
 exact selected canonical commit into a temporary checkout, verifies it, and
 uses the same capsule/wheel maker. It never treats an unrelated ancestor Git

@@ -79,12 +79,12 @@ requests are not additional MIT licence conditions.
 
 ## Selective setup and personal Docker catalog
 
-The schema-4 configuration requires the companion setup-app branch
-`feature/selective-safe-setup`. Its configuration branch is
-`feature/setup-readiness-checks`; keep both PRs unmerged until the new-instance
-acceptance test. `runtime-catalog.yml` adds optional personal Linux-container
-codes and Tigu ORCA/BandUPpy definitions. The hosted profile keeps scientific
-execution remote; PythTB is an app dependency rather than an AiiDA Code.
+The schema-5 configuration requires the matching current setup app. Use both
+repositories' merged `main` branches and record the resolved commits for a new
+instance. `runtime-catalog.yml` adds personal Linux-container Codes and scoped
+Tigu/Daint definitions. Source integration and fresh-instance qualification are
+recorded separately. PythTB models, orbitals and Wannier use the native
+`empa_tb.calculate` Code on Localhost or Tigu.
 
 The localhost candidate now includes versioned native installation recipes,
 standard Block2 metadata, frozen Julia/Model preparation and a shared headless

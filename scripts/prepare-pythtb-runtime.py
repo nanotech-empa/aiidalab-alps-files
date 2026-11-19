@@ -31,6 +31,14 @@ def installed_files(prefix):
     return result
 
 
+def validate_worker_manifest(manifest, expected):
+    """Require the actual full selected contract, including stored postprocessing."""
+    if any(manifest.get(key) != value for key, value in expected.items()):
+        fail(
+            "The installed PythTB capabilities or source identity differ from the selected app."
+        )
+
+
 def prepare(prefix, recipe, wheel=None, wheel_sha256=None, execute=False):
     prefix = installer.guarded_path(prefix)
     recipe = Path(recipe)
@@ -85,10 +93,7 @@ def prepare(prefix, recipe, wheel=None, wheel_sha256=None, execute=False):
             [str(runtime / "bin/empa-tb-worker"), "--manifest"], env=env, text=True
         )
         manifest = json.loads(response)
-        if any(
-            manifest.get(key) != worker[key] for key in ("protocol", "engine_sha256")
-        ):
-            fail("The installed PythTB engine differs from the selected app source.")
+        validate_worker_manifest(manifest, worker)
         installer.run([runtime / "bin/python", "-m", "pip", "check"], env, log)
         # A stable owned launcher is shared by module and direct Code bindings.
         launcher = prefix / "bin/empa-tb-worker"

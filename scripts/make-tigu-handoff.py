@@ -72,6 +72,7 @@ def package(checkout, output, pythtb_checkout):
             pythtb_checkout,
             private / "pythtb",
             worker_recipe["worker"]["engine_sha256"],
+            expected_worker=worker_recipe["worker"],
         )
         worker_metadata = dict(worker, filename="pythtb/" + worker["filename"])
         (private / "pythtb-worker.json").write_text(
@@ -114,9 +115,10 @@ def package(checkout, output, pythtb_checkout):
             )
             + "\n"
         )
-        with output.open("xb") as stream, tarfile.open(
-            fileobj=stream, mode="w:gz"
-        ) as archive:
+        with (
+            output.open("xb") as stream,
+            tarfile.open(fileobj=stream, mode="w:gz") as archive,
+        ):
             archive.add(root, arcname=root.name)
         output.chmod(0o600)
     report = {

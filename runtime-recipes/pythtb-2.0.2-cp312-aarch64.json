@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "id": "pythtb-2.0.2-native-aarch64",
+  "kind": "venv",
+  "architecture": "aarch64",
+  "python": [
+    3,
+    12
+  ],
+  "qualification": "native-worker-install-and-GUI-acceptance-pending",
+  "artifacts": [
+    {
+      "name": "pythtb",
+      "version": "2.0.2",
+      "url": "https://files.pythonhosted.org/packages/d4/ab/bd69c37a93fc804da448ec0363f4303bcca3774191c070f0f879d2e0f009/pythtb-2.0.2-py3-none-any.whl",
+      "sha256": "bfa169c0bbb949788044fccb1ede3f3cbe058e9a3f5cc6cdff862fc730b19d26"
+    },
+    {
+      "name": "ase",
+      "version": "3.29.0",
+      "url": "https://files.pythonhosted.org/packages/66/a6/a3d29378618d3d9ba0962473f8bbf09a5ad15eb8b210c5153fb88d0b8aad/ase-3.29.0-py3-none-any.whl",
+      "sha256": "7b9dd103f007810339c24acfee2f6b677c0c48443b21d3c98e52959246cf4ebf"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.5",
+      "build": "py312hfb93532_0",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/numpy-2.5.5-py312hfb93532_0.conda",
+      "sha256": "7be1254c6ad0c46fee6434e8d73218aa3ad752fae8ae9f11469e63425d5af6fe"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "build": "py312h3e7234c_2",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/scipy-1.18.1-py312h3e7234c_2.conda",
+      "sha256": "f164e16a2a058385260ec1f55e430bc02aea955016fd1765a99c31de8692feb3"
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.11.2",
+      "url": "https://files.pythonhosted.org/packages/f4/84/32549e7a462dc311aed2ab62e5d2538028840b5c53a8be0195c789937c3d/matplotlib-3.11.2-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl",
+      "sha256": "1b9a7ad579856284135e401ecc918c5f8a017ee30539298862a109f51b971710"
+    },
+    {
+      "name": "contourpy",
+      "version": "1.4.0",
+      "build": "py312he33898b_1",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/contourpy-1.4.0-py312he33898b_1.conda",
+      "sha256": "be6097de681583ab151497b7abbabe1753b5779826d227c8573cb4f69a95273d"
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1",
+      "url": "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl",
+      "sha256": "85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"
+    },
+    {
+      "name": "fonttools",
+      "version": "4.68.0",
+      "build": "py312h363f31d_0",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/fonttools-4.68.0-py312h363f31d_0.conda",
+      "sha256": "eeb05edf85c46fea0e00dee17c97513eca1ab36ccc15d3e5b88b352515acf2aa"
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1",
+      "build": "py312he33898b_4",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/kiwisolver-1.5.1-py312he33898b_4.conda",
+      "sha256": "39ee5bb1481ecb51e2330e7298175f4e59cf1ecebae727a645310e8eb02e51e1"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "name": "pillow",
+      "version": "13.0.0",
+      "build": "py312h7f6b78e_0",
+      "url": "https://conda.anaconda.org/conda-forge/linux-aarch64/pillow-13.0.0-py312h7f6b78e_0.conda",
+      "sha256": "b6864f0ed53eb631e398c6c9a19b8c1fa7a7ad9276db024234b2915b7b1e25d2"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3",
+      "url": "https://files.pythonhosted.org/packages/38/bb/d215ee7c73b61497b28a5503f9f53523f294fcc936762b7caf90e0c1c2b5/pyparsing-3.3.3-py3-none-any.whl",
+      "sha256": "ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "4.0.0",
+      "url": "https://files.pythonhosted.org/packages/2f/a9/52b89563d154433d79b51ed1eb4842bf7334cb2696891a7fe135618853d7/python_dateutil-4.0.0-py3-none-any.whl",
+      "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.6",
+      "url": "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+    }
+  ],
+  "executables": [
+    "bin/python"
+  ],
+  "checks": [
+    [
+      "@PREFIX/bin/python",
+      "-c",
+      "import pythtb,ase,numpy,scipy; from importlib.metadata import version; assert version('pythtb') == '2.0.2'; print('pythtb-ready')"
+    ],
+    [
+      "@PREFIX/bin/python",
+      "-m",
+      "pip",
+      "check"
+    ]
+  ],
+  "worker": {
+    "protocol": "empa-pythtb/v1",
+    "engine_sha256": "3e19ed6e153c5678687e7ab2b2e240f52b0ac620655ff03a30848f92c049fca3",
+    "pythtb_version": "2.0.2",
+    "capabilities": [
+      "solve",
+      "orbital",
+      "wannier"
+    ],
+    "postprocess_engine_sha256": "488b15042c6ce0c0de5589d21b2a58b07d79ffc5f075156582b1fa841a3df809"
+  }
+}
